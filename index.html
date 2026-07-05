@@ -52,6 +52,20 @@ html[data-theme="light"][data-accent="ember"]{
   --blue:#C9921E; --blue-hi:#A87710; --purple:#C9921E; --purple-hi:#A87710;
   --green:#0EA95D; --red:#D42430;
 }
+/* ===== IVORY: crisp white + refined gold ===== */
+html[data-theme="light"][data-accent="ivory"]{
+  --bg:#FFFFFF;
+  --bkt-today:#B8860B; --bkt-week:#C06A1E; --bkt-later:#8A6A2E;
+  --panel:#FCFAF6; --panel2:#F7F3EC;
+  --card:#FFFFFF; --pop-bg:#FFFFFF;
+  --line:rgba(40,30,10,.1); --line-hi:rgba(40,30,10,.2);
+  --txt:#1C1710; --muted:#6E6558; --faint:#A69E8E;
+  --blue:#B8860B; --blue-hi:#9A6F08; --purple:#B8860B; --purple-hi:#9A6F08;
+  --green:#0E9C57; --red:#CE2130;
+  --ring:linear-gradient(120deg,#E8C56A,#D4A62E 45%,#C08A1E 75%,#A0742A);
+  --grad:linear-gradient(100deg,#D4A62E,#B8860B);
+  --gA:200,150,40; --gB:190,120,30; --gC:210,165,60; --gD:180,150,90;
+}
 html[data-theme="light"]{
   --bg:#F4F2F3;
   --bkt-today:#E0338A; --bkt-week:#2E6FE8; --bkt-later:#0E9C94;
@@ -90,6 +104,9 @@ html[data-accent="ember"] .bg-layer{background:
 html[data-theme="light"][data-accent="ember"] .bg-layer{background:
   radial-gradient(720px 280px at 72% -16%, rgba(var(--gA),.2), transparent 62%),
   var(--bg)}
+html[data-theme="light"][data-accent="ivory"] .bg-layer{background:
+  radial-gradient(640px 240px at 76% -18%, rgba(var(--gA),.1), transparent 60%),
+  var(--bg)}
 .wrap{max-width:760px;margin:0 auto;padding:0 18px 90px}
 
 /* ===== SIGNATURE: GLOWING GRADIENT RING ===== */
@@ -105,6 +122,8 @@ header::before{content:'';position:absolute;top:-30px;right:-50px;
   background:radial-gradient(closest-side at 76% 10%, rgba(var(--gA),.75), rgba(var(--gB),.35) 50%, transparent 78%);
   -webkit-mask-image:linear-gradient(to bottom, black 50%, transparent 94%);
   mask-image:linear-gradient(to bottom, black 50%, transparent 94%)}
+html[data-accent="ivory"] header::before{
+  background:radial-gradient(closest-side at 76% 10%, rgba(var(--gA),.4), rgba(var(--gB),.15) 50%, transparent 78%)}
 header>*{position:relative;z-index:1}
 .brandrow{display:inline-flex;align-items:center;gap:12px;justify-content:center}
 .brandmark{width:30px;height:30px;flex:none;filter:drop-shadow(0 0 12px rgba(var(--gA),.55))}
@@ -122,6 +141,22 @@ nav{display:flex;justify-content:center;gap:5px;margin:24px 0 8px;flex-wrap:wrap
 .tab.on .cnt{color:var(--purple-hi)}
 .archive-link{position:absolute;top:32px;right:0;background:none;border:none;color:var(--faint);font-size:12px;cursor:pointer;font-family:inherit}
 .archive-link:hover{color:var(--muted)}
+.manage-link{position:absolute;top:32px;right:64px;background:none;border:none;color:var(--faint);font-size:12px;cursor:pointer;font-family:inherit}
+.manage-link:hover{color:var(--muted)}
+.mng-add{display:flex;gap:8px;margin:0 0 12px}
+.mng-add input{flex:1;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
+.mng-add input:focus{border-color:var(--purple)}
+.mng-add button{background:var(--grad);border:none;color:#fff;font-weight:600;font-size:12.5px;padding:8px 16px;border-radius:10px;cursor:pointer;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
+.mng-add button:hover{filter:brightness(1.12)}
+.mng-list{margin-bottom:8px}
+.mng-row{display:flex;align-items:center;gap:10px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:10px;padding:9px 13px;margin-bottom:6px}
+.mng-name{flex:1;font-size:13.5px;color:var(--txt)}
+.mng-use{font-size:11px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
+.mng-edit,.mng-del{background:none;border:none;cursor:pointer;font-size:12px;font-family:inherit;color:var(--faint);padding:2px 4px}
+.mng-edit:hover{color:var(--purple-hi)}
+.mng-del:hover{color:var(--red)}
+.mng-rename{flex:1;background:var(--panel2);border:1px solid var(--purple);border-radius:7px;color:var(--txt);padding:5px 9px;font-size:13px;font-family:inherit;outline:none}
+.mng-save{background:var(--grad);border:none;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:7px;cursor:pointer;font-family:inherit}
 .theme-toggle{position:absolute;top:26px;left:0;width:34px;height:34px;border-radius:50%;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .theme-toggle:hover{border-color:var(--line-hi);color:var(--txt);box-shadow:0 0 16px -5px rgba(var(--gA),.8)}
 .accent-toggle{position:absolute;top:26px;left:42px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);transition:all .15s}
@@ -348,6 +383,7 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
   .trow{flex-wrap:wrap}
   .tmeta{width:100%;justify-content:flex-start;padding-left:29px}
   .archive-link{position:static;display:block;margin:6px auto 0}
+  .manage-link{position:static;display:block;margin:6px auto 0}
   .theme-toggle{top:20px;left:12px}
   .accent-toggle{top:20px;left:54px}
 }
@@ -383,6 +419,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <button class="theme-toggle" id="themeToggle" title="Switch light / dark">☾</button>
     <button class="accent-toggle" id="accentToggle" title="Switch palette: Aurora / Ember"></button>
     <button class="archive-link" onclick="setView('archive')">Archive</button>
+    <button class="manage-link" onclick="setView('manage')">Manage</button>
     <div class="brandrow"><img class="brandmark" id="brandmark" alt="Ascent" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMDAwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg=="><span class="brandword">ASCENT</span></div>
     <div class="brand-rule"></div>
     <div class="hdate" id="hdate"></div>
@@ -1082,6 +1119,35 @@ function ruleForm(){
     +'<div class="actions"><button class="btn-ghost" id="rf_cancel">Cancel</button><button class="btn-grad" id="rf_save">Save Rule</button></div>'
     +'</div>';
 }
+function renderManage(){
+  const tagUse = tag => state.tasks.filter(t=>(t.tags||[]).includes(tag)).length + state.rules.filter(r=>(r.tags||[]).includes(tag)).length;
+  const personUse = p => state.tasks.filter(t=>t.person===p).length;
+  let h='';
+  // TAGS
+  h+=secHead('TAGS','');
+  h+='<div class="mng-add"><input id="mngTagIn" placeholder="New tag..."><button id="mngTagBtn">+ Add</button></div>';
+  h+='<div class="mng-list">';
+  h+= state.tags.length? state.tags.map(tag=>
+    '<div class="mng-row" data-tagrow="'+esc(tag)+'"><span class="mng-name">'+esc(tag)+'</span>'
+    +'<span class="mng-use">'+tagUse(tag)+' use'+(tagUse(tag)!==1?'s':'')+'</span>'
+    +'<button class="mng-edit" data-tagedit="'+esc(tag)+'" title="Rename">✎</button>'
+    +'<button class="mng-del" data-tagdel="'+esc(tag)+'" title="Delete">✕</button></div>'
+  ).join('') : '<div class="empty">No tags yet.</div>';
+  h+='</div>';
+  // PEOPLE
+  h+=secHead('PEOPLE','');
+  h+='<div class="hint" style="margin:0 2px 8px">People you follow up with. Attach one to any task set to Follow-up.</div>';
+  h+='<div class="mng-add"><input id="mngPersonIn" placeholder="New person..."><button id="mngPersonBtn">+ Add</button></div>';
+  h+='<div class="mng-list">';
+  h+= state.people.length? state.people.map(p=>
+    '<div class="mng-row" data-personrow="'+esc(p)+'"><span class="mng-name">'+esc(p)+'</span>'
+    +'<span class="mng-use">'+personUse(p)+' follow-up'+(personUse(p)!==1?'s':'')+'</span>'
+    +'<button class="mng-edit" data-personedit="'+esc(p)+'" title="Rename">✎</button>'
+    +'<button class="mng-del" data-persondel="'+esc(p)+'" title="Delete">✕</button></div>'
+  ).join('') : '<div class="empty">No people yet.</div>';
+  h+='</div>';
+  return h;
+}
 function renderArchive(){
   const a=archivedTasks().sort((x,y)=>y.completedAt-x.completedAt);
   let h='<div class="hint" style="margin-top:16px">Completed tasks rest here for 7 days, then vanish automatically. Restore if completed by mistake — or purge everything now.</div>';
@@ -1111,6 +1177,7 @@ function render(){
   else if(view==='active') main.innerHTML=renderList('active');
   else if(view==='backlog') main.innerHTML=renderList('backlog');
   else if(view==='recurring') main.innerHTML=renderRecurring();
+  else if(view==='manage') main.innerHTML=renderManage();
   else if(view==='archive') main.innerHTML=secHead('ARCHIVE','')+renderArchive();
 
   bindTaskEvents(main);
@@ -1288,12 +1355,78 @@ function render(){
     state.tasks=state.tasks.filter(t=>t.status!=='Done');
     purgeArmed=false; save(); render();
   });
+
+  // ===== MANAGE: tags =====
+  const mtBtn=document.getElementById('mngTagBtn');
+  if(mtBtn){
+    const mtIn=document.getElementById('mngTagIn');
+    const addTag=()=>{ const v=mtIn.value.trim(); if(!v) return; if(!state.tags.includes(v)) state.tags.push(v); save(); render(); };
+    mtBtn.addEventListener('click',addTag);
+    mtIn.addEventListener('keydown',e=>{ if(e.key==='Enter') addTag(); });
+  }
+  document.querySelectorAll('[data-tagedit]').forEach(b=>b.addEventListener('click',()=>{
+    const old=b.dataset.tagedit;
+    const row=b.closest('.mng-row');
+    row.querySelector('.mng-name').outerHTML='<input class="mng-rename" value="'+esc(old)+'"><button class="mng-save" data-tsave="'+esc(old)+'">Save</button>';
+    const inp=row.querySelector('.mng-rename'); inp.focus(); inp.select();
+    const commit=()=>{
+      const name=inp.value.trim();
+      if(name && name!==old){
+        state.tags=state.tags.map(x=>x===old?name:x);
+        state.tasks.forEach(t=>{ t.tags=(t.tags||[]).map(x=>x===old?name:x); });
+        state.rules.forEach(r=>{ r.tags=(r.tags||[]).map(x=>x===old?name:x); });
+        save();
+      }
+      render();
+    };
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') commit(); if(e.key==='Escape') render(); });
+    row.querySelector('.mng-save').addEventListener('click',commit);
+  }));
+  document.querySelectorAll('[data-tagdel]').forEach(b=>b.addEventListener('click',()=>{
+    const tag=b.dataset.tagdel;
+    state.tags=state.tags.filter(x=>x!==tag);
+    state.tasks.forEach(t=>{ t.tags=(t.tags||[]).filter(x=>x!==tag); });
+    state.rules.forEach(r=>{ r.tags=(r.tags||[]).filter(x=>x!==tag); });
+    save(); render();
+  }));
+
+  // ===== MANAGE: people =====
+  const mpBtn=document.getElementById('mngPersonBtn');
+  if(mpBtn){
+    const mpIn=document.getElementById('mngPersonIn');
+    const addP=()=>{ const v=mpIn.value.trim(); if(!v) return; if(!state.people.includes(v)) state.people.push(v); save(); render(); };
+    mpBtn.addEventListener('click',addP);
+    mpIn.addEventListener('keydown',e=>{ if(e.key==='Enter') addP(); });
+  }
+  document.querySelectorAll('[data-personedit]').forEach(b=>b.addEventListener('click',()=>{
+    const old=b.dataset.personedit;
+    const row=b.closest('.mng-row');
+    row.querySelector('.mng-name').outerHTML='<input class="mng-rename" value="'+esc(old)+'"><button class="mng-save">Save</button>';
+    const inp=row.querySelector('.mng-rename'); inp.focus(); inp.select();
+    const commit=()=>{
+      const name=inp.value.trim();
+      if(name && name!==old){
+        state.people=state.people.map(x=>x===old?name:x);
+        state.tasks.forEach(t=>{ if(t.person===old) t.person=name; });
+        save();
+      }
+      render();
+    };
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') commit(); if(e.key==='Escape') render(); });
+    row.querySelector('.mng-save').addEventListener('click',commit);
+  }));
+  document.querySelectorAll('[data-persondel]').forEach(b=>b.addEventListener('click',()=>{
+    const p=b.dataset.persondel;
+    state.people=state.people.filter(x=>x!==p);
+    state.tasks.forEach(t=>{ if(t.person===p) t.person=null; });
+    save(); render();
+  }));
 }
 
 /* ================= THEME ================= */
 const BOOT_BG = {
-  'dark-aurora':'#070810', 'dark-ember':'#0B0805',
-  'light-aurora':'#F4F2F3', 'light-ember':'#F6F1E7'
+  'dark-aurora':'#070810', 'dark-ember':'#0B0805', 'dark-ivory':'#0B0805',
+  'light-aurora':'#F4F2F3', 'light-ember':'#F6F1E7', 'light-ivory':'#FFFFFF'
 };
 function applyTheme(){
   const t = state.ui.theme || 'light';
@@ -1311,10 +1444,15 @@ function applyTheme(){
 }
 document.getElementById('themeToggle').addEventListener('click',()=>{
   state.ui.theme = (state.ui.theme==='light') ? 'dark' : 'light';
+  if(state.ui.theme==='dark' && state.ui.accent==='ivory') state.ui.accent='ember';
   applyTheme(); save();
 });
 document.getElementById('accentToggle').addEventListener('click',()=>{
-  state.ui.accent = (state.ui.accent==='ember') ? 'aurora' : 'ember';
+  const order=['ember','ivory','aurora'];
+  const i=order.indexOf(state.ui.accent||'ember');
+  state.ui.accent = order[(i+1)%order.length];
+  // ivory is a light-only look
+  if(state.ui.accent==='ivory') state.ui.theme='light';
   applyTheme(); save();
 });
 
