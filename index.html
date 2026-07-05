@@ -1472,6 +1472,8 @@ window.startAscentApp = async function(){
   generateFromRules();
   setDate();
   render();
+  // re-assert theme on next frame in case of any late style application
+  requestAnimationFrame(applyTheme);
   setInterval(()=>{ generateFromRules(); }, 60*60*1000);
 };
 </script>
