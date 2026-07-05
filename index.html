@@ -27,7 +27,7 @@
   --gA:139,92,255; --gB:255,92,168; --gC:62,139,255; --gD:69,216,208;
   --bkt-today:#FF5CA8; --bkt-week:#6FAEFF; --bkt-later:#45D8D0;
   --blur:blur(16px) saturate(1.3);
-  --r:14px;
+  --r:11px;
 }
 /* ===== EMBER ACCENT — gold / orange / warm brown ===== */
 html[data-accent="ember"]{
@@ -68,7 +68,7 @@ html{background:var(--bg) !important}
 body{
   background:transparent !important;
   color:var(--txt);
-  font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:13.5px;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:12.5px;
   -webkit-font-smoothing:antialiased;min-height:100vh;position:relative;
 }
 /* ===== AURORA BACKGROUND ===== */
@@ -107,13 +107,13 @@ header::before{content:'';position:absolute;top:-30px;right:-50px;
   mask-image:linear-gradient(to bottom, black 50%, transparent 94%)}
 header>*{position:relative;z-index:1}
 .brandrow{display:inline-flex;align-items:center;gap:12px;justify-content:center}
-.brandmark{width:38px;height:38px;flex:none;filter:drop-shadow(0 0 12px rgba(var(--gA),.55))}
-.brandword{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:25px;letter-spacing:.34em;text-indent:.34em;color:var(--txt)}
-.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:25px;letter-spacing:.34em;text-indent:.34em;color:var(--txt)}
+.brandmark{width:30px;height:30px;flex:none;filter:drop-shadow(0 0 12px rgba(var(--gA),.55))}
+.brandword{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;letter-spacing:.34em;text-indent:.34em;color:var(--txt)}
+.brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;letter-spacing:.34em;text-indent:.34em;color:var(--txt)}
 .brand-rule{width:150px;height:2px;border-radius:2px;background:var(--ring);margin:11px auto 8px;filter:blur(.2px);box-shadow:0 0 18px rgba(var(--gA),.8),0 0 30px rgba(var(--gB),.4)}
-.hdate{font-family:'Space Grotesk',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:.28em;text-indent:.28em;color:var(--muted);text-transform:uppercase}
+.hdate{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:500;letter-spacing:.28em;text-indent:.28em;color:var(--muted);text-transform:uppercase}
 nav{display:flex;justify-content:center;gap:5px;margin:24px 0 8px;flex-wrap:wrap}
-.tab{background:none;border:1px solid transparent;color:var(--muted);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:999px;cursor:pointer;transition:all .15s}
+.tab{background:none;border:1px solid transparent;color:var(--muted);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;padding:6px 13px;border-radius:999px;cursor:pointer;transition:all .15s}
 .tab:hover{color:var(--txt)}
 .tab.on{color:var(--txt);border:1px solid transparent;border-radius:999px;
   background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
@@ -130,7 +130,7 @@ nav{display:flex;justify-content:center;gap:5px;margin:24px 0 8px;flex-wrap:wrap
 
 /* ============ SECTIONS ============ */
 .sec-head{display:flex;align-items:center;gap:10px;margin:28px 0 12px}
-.sec-title{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.22em;color:var(--txt);white-space:nowrap}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:.22em;color:var(--txt);white-space:nowrap}
 .sec-dot{width:6px;height:6px;border-radius:50%;background:var(--ring);box-shadow:0 0 10px rgba(var(--gA),.9);flex:none}
 .sec-line{flex:1;height:1px;background:var(--line)}
 .sec-count{font-size:12px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
@@ -206,17 +206,17 @@ html[data-theme="light"] .daily-note{box-shadow:0 0 26px -10px rgba(var(--gA),.3
 .addbar button:hover{filter:brightness(1.15)}
 
 /* ============ TASK ROW — frosted glass ============ */
-.task{background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);margin-bottom:8px;transition:border-color .15s,opacity .3s,transform .3s,box-shadow .15s}
+.task{background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);margin-bottom:6px;transition:border-color .15s,opacity .3s,transform .3s,box-shadow .15s}
 .task:hover{border-color:var(--line-hi);box-shadow:0 0 22px -12px rgba(var(--gA),.6)}
 .task.overdue{border-left:3px solid var(--red);box-shadow:0 0 24px -9px rgba(255,77,94,.7)}
 .task.leaving{opacity:0;transform:translateX(24px)}
-.trow{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer;position:relative}
-.ck{flex:none;width:19px;height:19px;border:1.5px solid var(--faint);border-radius:50%;background:none;cursor:pointer;transition:all .15s}
+.trow{display:flex;align-items:center;gap:8px;padding:9px 11px;cursor:pointer;position:relative}
+.ck{flex:none;width:17px;height:17px;border:1.5px solid var(--faint);border-radius:50%;background:none;cursor:pointer;transition:all .15s}
 .ck:hover{border-color:var(--green);background:rgba(59,229,139,.16);box-shadow:0 0 12px -2px rgba(59,229,139,.8)}
-.ttitle{flex:1;min-width:0;font-size:14.5px;line-height:1.35;color:var(--txt);overflow-wrap:break-word}
+.ttitle{flex:1;min-width:0;font-size:13px;line-height:1.35;color:var(--txt);overflow-wrap:break-word}
 .tmeta{display:flex;align-items:center;gap:6px;flex:none;flex-wrap:wrap;justify-content:flex-end}
 
-.chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:11px;font-weight:500;padding:3.5px 9px;border-radius:999px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:10px;font-weight:500;padding:3.5px 9px;border-radius:999px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s}
 .chip:hover{border-color:var(--line-hi);color:var(--txt)}
 .chip .dd{font-size:8px;color:var(--faint);margin-left:1px}
 .chip.bucket-Today{color:var(--txt);border:1px solid transparent;
@@ -331,6 +331,13 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 /* ============ MISC ============ */
 .empty{color:var(--faint);font-size:13.5px;text-align:center;padding:26px 0}
 .week-preview .task{opacity:.72}
+.pipe-day{font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:.16em;color:var(--muted);font-weight:600;margin:12px 2px 5px;text-transform:uppercase}
+.ghost{display:flex;align-items:center;gap:8px;padding:8px 11px;margin-bottom:6px;border:1px dashed var(--line-hi);border-radius:10px;background:transparent;opacity:.9}
+.ghost:hover{border-color:var(--purple-hi)}
+.ghost-ic{color:var(--purple-hi);font-size:12px;flex:none}
+.ghost-title{flex:1;min-width:0;font-size:13px;color:var(--muted);overflow-wrap:break-word}
+.ghost-pull{background:none;border:1px solid rgba(var(--gA),.5);color:var(--blue-hi);font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:999px;cursor:pointer;font-family:inherit;white-space:nowrap;flex:none}
+.ghost-pull:hover{background:var(--grad);color:#fff;border-color:transparent}
 .arch-row{display:flex;align-items:center;gap:10px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);padding:10px 13px;margin-bottom:7px}
 .arch-row .t{flex:1;color:var(--muted);font-size:14px;text-decoration:line-through}
 .arch-row .d{font-size:11px;color:var(--faint)}
@@ -510,12 +517,91 @@ function generateFromRules(){
     state.tasks.push({
       id:uid(), title:r.title, status:'Not Started', bucket:'Today',
       tags:[...(r.tags||[])], subtasks:[], notes:r.notesTemplate||'',
-      source:'recurring', list:'active', createdAt:Date.now(), pinned:false, person:null,
+      source:'recurring', ruleId:r.id, list:'active', createdAt:Date.now(), pinned:false, person:null,
       todayDate:due, completedAt:null
     });
     r.lastGen=due; changed=true;
   });
   if(changed) save();
+}
+
+// next occurrence of a rule strictly on/after a given date
+function nextDueOnOrAfter(r, ref){
+  const refD=new Date(ref+'T00:00:00');
+  const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  if(r.type==='weekly'){
+    const d=new Date(refD); const diff=(r.weekday-d.getDay()+7)%7; d.setDate(d.getDate()+diff); return fmt(d);
+  }
+  if(r.type==='monthly'){
+    let y=refD.getFullYear(), m=refD.getMonth();
+    for(let i=0;i<3;i++){
+      const dim=new Date(y,m+1,0).getDate();
+      const cand=new Date(y,m,Math.min(r.monthday,dim));
+      if(cand>=refD) return fmt(cand);
+      m++; if(m>11){m=0;y++;}
+    }
+    return null;
+  }
+  if(r.type==='quarterly'){
+    const qm=[0,3,6,9]; let y=refD.getFullYear();
+    for(let yy=y; yy<=y+1; yy++){
+      for(let i=0;i<qm.length;i++){
+        const dim=new Date(yy,qm[i]+1,0).getDate();
+        const cand=new Date(yy,qm[i],Math.min(r.monthday,dim));
+        if(cand>=refD) return fmt(cand);
+      }
+    }
+    return null;
+  }
+  if(r.type==='interval'){
+    const anchor=new Date((r.anchor||todayStr())+'T00:00:00');
+    let d=new Date(anchor);
+    if(anchor<refD){
+      const days=Math.ceil((refD-anchor)/86400000);
+      const k=Math.ceil(days/r.intervalDays);
+      d.setDate(d.getDate()+k*r.intervalDays);
+    }
+    return fmt(d);
+  }
+  return null;
+}
+// upcoming recurring occurrences within the next `days` days (default 7), excluding ones already materialized as a real task
+function upcomingRuleOccurrences(days){
+  const today=todayStr();
+  const horizon=new Date(today+'T00:00:00'); horizon.setDate(horizon.getDate()+ (days||7));
+  const out=[];
+  state.rules.forEach(r=>{
+    let cur=nextDueOnOrAfter(r, today);
+    let guard=0;
+    while(cur && guard<20){
+      const curD=new Date(cur+'T00:00:00');
+      if(curD>horizon) break;
+      // skip if a real task already exists for this rule+date
+      const exists=state.tasks.some(t=>t.source==='recurring' && t.ruleId===r.id && t.todayDate===cur && t.status!=='Done');
+      const alreadyGen = r.lastGen && r.lastGen>=cur;
+      if(!exists && !alreadyGen){
+        out.push({ruleId:r.id, title:r.title, date:cur, tags:[...(r.tags||[])], category:r.category||'General'});
+      }
+      // advance one day past cur, find next
+      const nx=new Date(curD); nx.setDate(nx.getDate()+1);
+      cur=nextDueOnOrAfter(r, nx.getFullYear()+'-'+String(nx.getMonth()+1).padStart(2,'0')+'-'+String(nx.getDate()).padStart(2,'0'));
+      guard++;
+    }
+  });
+  return out.sort((a,b)=>a.date.localeCompare(b.date));
+}
+// pull a future recurring occurrence into Today as a real task
+function materializeRuleNow(ruleId, date){
+  const r=state.rules.find(x=>x.id===ruleId); if(!r) return;
+  state.tasks.push({
+    id:uid(), title:r.title, status:'Not Started', bucket:'Today',
+    tags:[...(r.tags||[])], subtasks:[], notes:r.notesTemplate||'',
+    source:'recurring', ruleId:r.id, list:'active', createdAt:Date.now(), pinned:false, person:null,
+    todayDate:todayStr(), completedAt:null
+  });
+  // mark that cycle handled so it won't regenerate on its real day
+  if(!r.lastGen || r.lastGen < date) r.lastGen = date;
+  save(); render();
 }
 
 /* ================= ARCHIVE PURGE ================= */
@@ -873,8 +959,38 @@ function renderDashboard(){
   h+=secHead('TODAY', today.length, '', BUCKET_COLOR.Today, 'Today', tOpen);
   if(tOpen) h+= today.length? renderBucketBody(today) : '<div class="empty">The day is clear. Add what must be done.</div>';
   const wOpen=state.ui.bucketOpen.Week;
-  h+=secHead('THIS WEEK', week.length, '', BUCKET_COLOR.Week, 'Week', wOpen);
-  if(wOpen) h+='<div class="week-preview">'+(week.length? renderBucketBody(week):'<div class="empty">Nothing queued for this week.</div>')+'</div>';
+  const upcoming = filterActive() ? [] : upcomingRuleOccurrences(7);
+  const weekTotal = week.length + upcoming.length;
+  h+=secHead('THIS WEEK', weekTotal, '', BUCKET_COLOR.Week, 'Week', wOpen);
+  if(wOpen){
+    let wh='';
+    // 1. manual this-week tasks
+    wh += week.length ? renderBucketBody(week) : '';
+    // 2. upcoming recurring ghosts, grouped by day
+    if(upcoming.length){
+      const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      let lastDate=null;
+      const todayS=todayStr();
+      upcoming.forEach(u=>{
+        if(u.date!==lastDate){
+          const d=new Date(u.date+'T00:00:00');
+          const isToday=u.date===todayS;
+          const label = isToday ? 'TODAY' : days[d.getDay()].toUpperCase()+' · '+d.getDate()+' '+mons[d.getMonth()];
+          wh+='<div class="pipe-day">'+label+'</div>';
+          lastDate=u.date;
+        }
+        wh+='<div class="ghost" data-ghost="'+u.ruleId+'|'+u.date+'">'
+          +'<span class="ghost-ic">↻</span>'
+          +'<span class="ghost-title">'+esc(u.title)+'</span>'
+          + u.tags.map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
+          +'<button class="ghost-pull" data-pull="'+u.ruleId+'|'+u.date+'" title="Complete early — pull into Today">Pull to today</button>'
+          +'</div>';
+      });
+    }
+    if(!wh) wh='<div class="empty">Nothing planned and no recurring tasks in the next 7 days.</div>';
+    h+='<div class="week-preview">'+wh+'</div>';
+  }
   return h;
 }
 function renderList(list){
@@ -998,6 +1114,13 @@ function render(){
   else if(view==='archive') main.innerHTML=secHead('ARCHIVE','')+renderArchive();
 
   bindTaskEvents(main);
+
+  // pipeline ghost: pull to today
+  document.querySelectorAll('[data-pull]').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    const [rid,date]=b.dataset.pull.split('|');
+    materializeRuleNow(rid, date);
+  }));
 
   // daily note collapse
   const nt2=document.getElementById('noteToggle');
