@@ -68,7 +68,7 @@ html{background:var(--bg) !important}
 body{
   background:transparent !important;
   color:var(--txt);
-  font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:15px;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:13.5px;
   -webkit-font-smoothing:antialiased;min-height:100vh;position:relative;
 }
 /* ===== AURORA BACKGROUND ===== */
@@ -90,7 +90,7 @@ html[data-accent="ember"] .bg-layer{background:
 html[data-theme="light"][data-accent="ember"] .bg-layer{background:
   radial-gradient(720px 280px at 72% -16%, rgba(var(--gA),.2), transparent 62%),
   var(--bg)}
-.wrap{max-width:860px;margin:0 auto;padding:0 18px 90px}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px 90px}
 
 /* ===== SIGNATURE: GLOWING GRADIENT RING ===== */
 .gb{border:1px solid transparent;border-radius:var(--r);
@@ -502,6 +502,8 @@ function generateFromRules(){
   state.rules.forEach(r=>{
     const due = lastDueOnOrBefore(r, today);
     if(!due) return;
+    // never back-fill: skip any due date on or before the rule's creation day
+    if(r.createdOn && due < r.createdOn) return;
     const age=(new Date(today+'T00:00:00')-new Date(due+'T00:00:00'))/86400000;
     if(age>7) return;
     if(r.lastGen && r.lastGen>=due) return;
@@ -1151,7 +1153,7 @@ function render(){
         notesTemplate:document.getElementById('rf_notes').value
       };
       if(typeof editingRule==='object' && editingRule){ Object.assign(editingRule,obj); }
-      else { obj.id=uid(); obj.lastGen=null; state.rules.push(obj); }
+      else { obj.id=uid(); obj.lastGen=null; obj.createdOn=todayStr(); state.rules.push(obj); }
       editingRule=null; formTags=[]; save(); generateFromRules(); render();
     });
   }
