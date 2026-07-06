@@ -130,7 +130,7 @@ header>*{position:relative;z-index:1}
 .brandmark{width:26px;height:26px;flex:none;filter:drop-shadow(0 0 10px rgba(var(--gA),.5))}
 .brandword{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;letter-spacing:.28em;text-indent:.28em;color:var(--txt)}
 .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;letter-spacing:.28em;text-indent:.28em;color:var(--txt)}
-.hdate{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;margin-left:auto;white-space:nowrap}
+.hdate{font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;margin-left:8px;white-space:nowrap}
 .gear{flex:none;width:32px;height:32px;margin-left:10px;border-radius:9px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .gear:hover{border-color:var(--line-hi);color:var(--txt);box-shadow:0 0 14px -5px rgba(var(--gA),.7)}
 nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:wrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -227,22 +227,15 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .opt:hover .opt-mini{visibility:visible}
 .opt-mini:hover{color:var(--purple-hi)}
 
-/* ============ KPI STRIP ============ */
-.kpi-strip{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 15px;border:1px solid transparent;border-radius:var(--r);cursor:pointer;
-  background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
-  box-shadow:0 0 26px -12px rgba(var(--gA),.5)}
-html[data-theme="light"] .kpi-strip{box-shadow:0 6px 20px -12px rgba(20,25,50,.15),0 0 20px -12px rgba(var(--gA),.4)}
-.kpi-left{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
-.kpi-ic{width:26px;height:26px;flex:none;border-radius:8px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-.kpi-label{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.16em;color:var(--muted);font-weight:600}
-.kpi-right{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
-.kpi-num{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--txt)}
-.kpi-sub{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
-.kpi-cmp-wrap{flex:none}
-.kpi-cmp{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap;font-family:'Space Grotesk',sans-serif}
-.kpi-up{color:var(--green);background:rgba(59,229,139,.12);border:1px solid rgba(59,229,139,.3)}
-.kpi-down{color:var(--red);background:rgba(255,77,94,.1);border:1px solid rgba(255,77,94,.28)}
-.kpi-neutral{color:var(--faint);background:var(--panel2);border:1px solid var(--line)}
+/* ============ KPI PILL (compact, in top bar) ============ */
+.kpi-pill{display:inline-flex;align-items:center;gap:5px;margin-left:auto;padding:3px 9px;border-radius:999px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;line-height:1;border:1px solid var(--line);background:var(--panel2);transition:all .12s}
+.kpi-pill:hover{border-color:var(--line-hi)}
+.kp-check{font-size:10px;opacity:.9}
+.kp-num{font-size:13px;font-weight:700}
+.kp-diff{font-size:10px;font-weight:600;opacity:.85}
+.kpi-pill.kpi-up{color:var(--green);background:rgba(59,229,139,.1);border-color:rgba(59,229,139,.3)}
+.kpi-pill.kpi-down{color:var(--red);background:rgba(255,77,94,.09);border-color:rgba(255,77,94,.28)}
+.kpi-pill.kpi-neutral{color:var(--muted);background:var(--panel2);border-color:var(--line)}
 
 /* ============ HISTORY ============ */
 .hist-cards{display:flex;gap:8px;margin:6px 0 18px}
@@ -489,6 +482,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   <header>
     <div class="topbar">
       <div class="brandrow"><img class="brandmark" id="brandmark" alt="Ascent" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMDAwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg=="><span class="brandword">ASCENT</span></div>
+      <span class="kpi-pill" id="kpiPill" onclick="setView('history')" title="Completion history"></span>
       <span class="hdate" id="hdate"></span>
       <button class="gear" id="gearBtn" title="Settings">⚙</button>
     </div>
@@ -1226,24 +1220,6 @@ function renderDashboard(){
   let week=activeTasks().filter(t=>t.bucket==='Week');
   today=applyFilters(today); week=applyFilters(week);
   let h='';
-  // ===== KPI STRIP =====
-  const done=completedToday();
-  const avg=avgLastNDays(30);
-  let compareHtml='';
-  if(avg!==null){
-    const diff=done-avg;
-    const cls = diff>=0 ? 'kpi-up' : 'kpi-down';
-    const sign = diff>=0 ? '+' : '';
-    compareHtml='<span class="kpi-cmp '+cls+'">'+sign+diff.toFixed(diff%1===0?0:1)+' vs avg</span>';
-  } else {
-    compareHtml='<span class="kpi-cmp kpi-neutral">building baseline</span>';
-  }
-  h+='<div class="kpi-strip" onclick="setView(\'history\')" title="View completion history">'
-    +'<div class="kpi-left"><span class="kpi-ic">✓</span><span class="kpi-label">COMPLETED TODAY</span></div>'
-    +'<div class="kpi-right"><span class="kpi-num">'+done+'</span>'
-    +'<span class="kpi-sub">'+(avg!==null?('30d avg '+avg.toFixed(1)):'')+'</span></div>'
-    +'<div class="kpi-cmp-wrap">'+compareHtml+'</div>'
-    +'</div>';
   // ===== NOTES (post-its) =====
   const notes=sortedNotes();
   const first=notes[0];
@@ -1501,6 +1477,15 @@ const VIEWS=[['dashboard','Dashboard'],['active','Active'],['scheduled','Schedul
 function setView(v){ view=v; purgeArmed=false; closePop(); render(); }
 function render(){
   const counts={active:activeTasks().length, scheduled:scheduledTasks().length, backlog:backlogTasks().length, recurring:state.rules.length};
+  const kp=document.getElementById('kpiPill');
+  if(kp){
+    const done=completedToday();
+    const avg=avgLastNDays(30);
+    let cmp='', cls='kpi-neutral';
+    if(avg!==null){ const diff=done-avg; cls=diff>=0?'kpi-up':'kpi-down'; cmp=(diff>=0?'+':'')+diff.toFixed(diff%1===0?0:1); }
+    kp.className='kpi-pill '+cls;
+    kp.innerHTML='<span class="kp-check">✓</span><span class="kp-num">'+done+'</span>'+(cmp?'<span class="kp-diff">'+cmp+'</span>':'');
+  }
   const archLink=document.querySelector('.archive-link');
   if(archLink){ const n=archivedTasks().length; archLink.textContent = n? 'Archive ('+n+')' : 'Archive'; }
   document.getElementById('nav').innerHTML = VIEWS.map(([k,l])=>
