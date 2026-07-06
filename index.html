@@ -227,8 +227,40 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .opt:hover .opt-mini{visibility:visible}
 .opt-mini:hover{color:var(--purple-hi)}
 
+/* ============ KPI STRIP ============ */
+.kpi-strip{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 15px;border:1px solid transparent;border-radius:var(--r);cursor:pointer;
+  background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
+  box-shadow:0 0 26px -12px rgba(var(--gA),.5)}
+html[data-theme="light"] .kpi-strip{box-shadow:0 6px 20px -12px rgba(20,25,50,.15),0 0 20px -12px rgba(var(--gA),.4)}
+.kpi-left{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
+.kpi-ic{width:26px;height:26px;flex:none;border-radius:8px;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.kpi-label{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.16em;color:var(--muted);font-weight:600}
+.kpi-right{display:flex;flex-direction:column;align-items:flex-end;line-height:1.1}
+.kpi-num{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--txt)}
+.kpi-sub{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
+.kpi-cmp-wrap{flex:none}
+.kpi-cmp{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap;font-family:'Space Grotesk',sans-serif}
+.kpi-up{color:var(--green);background:rgba(59,229,139,.12);border:1px solid rgba(59,229,139,.3)}
+.kpi-down{color:var(--red);background:rgba(255,77,94,.1);border:1px solid rgba(255,77,94,.28)}
+.kpi-neutral{color:var(--faint);background:var(--panel2);border:1px solid var(--line)}
+
+/* ============ HISTORY ============ */
+.hist-cards{display:flex;gap:8px;margin:6px 0 18px}
+.hist-card{flex:1;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);padding:14px 12px;text-align:center}
+.hc-num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--txt)}
+.hc-lbl{font-size:10px;color:var(--muted);font-family:'Space Grotesk',sans-serif;letter-spacing:.05em;margin-top:3px}
+.hist-list{display:flex;flex-direction:column;gap:8px}
+.hist-row{display:flex;align-items:center;gap:11px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px}
+.hist-month{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;color:var(--txt);width:96px;flex:none}
+.hist-bar-wrap{flex:1;height:7px;background:var(--panel2);border-radius:999px;overflow:hidden}
+.hist-bar{height:100%;background:var(--grad);border-radius:999px}
+.hist-val{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--txt);flex:none;white-space:nowrap}
+.hist-val-sub{font-size:9px;color:var(--faint);font-weight:500;margin-left:2px}
+.hist-total{font-size:10px;color:var(--faint);flex:none;width:60px;text-align:right;font-family:'Space Grotesk',sans-serif}
+@media (max-width:520px){ .hist-total{display:none} .hist-month{width:74px;font-size:11.5px} }
+
 /* ============ NOTES (post-its) ============ */
-.notes-block{border:1px solid transparent;border-radius:var(--r);margin-top:26px;position:relative;
+.notes-block{border:1px solid transparent;border-radius:var(--r);margin-top:16px;position:relative;
   background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
   box-shadow:0 0 30px -10px rgba(var(--gA),.5),0 0 30px -16px rgba(var(--gB),.45)}
 html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.3),0 8px 22px -12px rgba(20,25,50,.15)}
@@ -473,6 +505,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     </div>
     <div class="ss-row"><span>Views</span></div>
     <div class="ss-opts">
+      <button class="ss-btn" onclick="setView('history');closeSettings()">Completion history</button>
       <button class="ss-btn" onclick="setView('manage');closeSettings()">Manage tags &amp; people</button>
       <button class="ss-btn" onclick="setView('archive');closeSettings()">Archive</button>
     </div>
@@ -491,6 +524,7 @@ const BUCKETS = ['Today','Week','Later'];
 const BUCKET_LABEL = {Today:'Today', Week:'This Week', Later:'Later'};
 let state = {
   dailyNote:'',
+  completions:{},
   notes:[],
   tasks:[],
   rules:[],
@@ -542,6 +576,7 @@ async function load(){
         if(!state.ui.theme) state.ui.theme='light';
         if(!state.ui.accent) state.ui.accent='ivory';
         if(!Array.isArray(state.notes)) state.notes=[];
+        if(!state.completions || typeof state.completions!=='object') state.completions={};
         // migrate legacy single dailyNote string into the notes array
         if(state.dailyNote && state.dailyNote.trim()){
           state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
@@ -759,10 +794,43 @@ function editNote(id, text){ const n=state.notes.find(x=>x.id===id); if(n){ n.te
 function sortedNotes(){
   return [...state.notes].sort((a,b)=>(b.pinned-a.pinned) || (b.createdAt-a.createdAt));
 }
+// ===== COMPLETION STATS =====
+function completedToday(){ return state.completions[todayStr()]||0; }
+function avgLastNDays(n){
+  const today=new Date(todayStr()+'T00:00:00');
+  let sum=0, counted=0;
+  for(let i=1;i<=n;i++){ // exclude today from the baseline average
+    const d=new Date(today); d.setDate(d.getDate()-i);
+    const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(state.completions[key]!==undefined){ sum+=state.completions[key]; counted++; }
+  }
+  // average across the days that have any record; if none, return null
+  return counted? sum/counted : null;
+}
+function monthlyStats(){
+  // {ym: {total, days}} -> avg per active day
+  const map={};
+  Object.keys(state.completions).forEach(day=>{
+    const ym=day.slice(0,7);
+    if(!map[ym]) map[ym]={total:0, days:0};
+    map[ym].total+=state.completions[day];
+    if(state.completions[day]>0) map[ym].days++;
+  });
+  return Object.keys(map).sort().reverse().map(ym=>({
+    ym, total:map[ym].total, days:map[ym].days,
+    avg: map[ym].days? map[ym].total/map[ym].days : 0
+  }));
+}
 function completeTask(id){
   const el=document.querySelector('[data-task="'+id+'"]');
   const t=state.tasks.find(x=>x.id===id); if(!t) return;
-  const fin=()=>{ t.status='Done'; t.completedAt=Date.now(); openTasks.delete(id); save(); render(); };
+  const fin=()=>{
+    t.status='Done'; t.completedAt=Date.now();
+    const day=todayStr();
+    t.countedDay=day;
+    state.completions[day]=(state.completions[day]||0)+1;
+    openTasks.delete(id); save(); render();
+  };
   if(el){ el.classList.add('leaving'); setTimeout(fin,280); } else fin();
 }
 function setBucket(id,b){
@@ -783,7 +851,15 @@ function isOverdue(t){
 }
 function promoteTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t) return; t.list='active'; save(); render(); }
 function deleteTask(id){ state.tasks=state.tasks.filter(x=>x.id!==id); openTasks.delete(id); save(); render(); }
-function restoreTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t) return; t.status='In Progress'; t.completedAt=null; t.list='active'; save(); render(); }
+function restoreTask(id){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  // decrement the day it was counted on
+  if(t.countedDay && state.completions[t.countedDay]){
+    state.completions[t.countedDay]=Math.max(0, state.completions[t.countedDay]-1);
+    t.countedDay=null;
+  }
+  t.status='In Progress'; t.completedAt=null; t.list='active'; save(); render();
+}
 
 /* ================= POPOVERS (dropdowns) ================= */
 function closePop(){ const p=document.querySelector('.pop'); if(p) p.remove(); document.removeEventListener('click', outsidePop, true); }
@@ -1011,8 +1087,29 @@ function bindTaskEvents(container){
       else if(act==='promote'){ e.stopPropagation(); promoteTask(id); }
       else if(act==='pullsched'){ e.stopPropagation(); pullScheduledToToday(id); }
       else if(act==='del'){ e.stopPropagation(); deleteTask(id); }
-      else if(act==='subck'){ e.stopPropagation(); const sid=e.target.closest('[data-sub]').dataset.sub; const s=t.subtasks.find(x=>x.id===sid); s.done=!s.done; save(); render(); }
-      else if(act==='subdel'){ e.stopPropagation(); const sid=e.target.closest('[data-sub]').dataset.sub; t.subtasks=t.subtasks.filter(x=>x.id!==sid); save(); render(); }
+      else if(act==='subck'){
+        e.stopPropagation();
+        const sid=e.target.closest('[data-sub]').dataset.sub;
+        const s=t.subtasks.find(x=>x.id===sid);
+        s.done=!s.done;
+        if(s.done){
+          const day=todayStr(); s.countedDay=day;
+          state.completions[day]=(state.completions[day]||0)+1;
+        } else if(s.countedDay){
+          if(state.completions[s.countedDay]) state.completions[s.countedDay]=Math.max(0,state.completions[s.countedDay]-1);
+          s.countedDay=null;
+        }
+        save(); render();
+      }
+      else if(act==='subdel'){
+        e.stopPropagation();
+        const sid=e.target.closest('[data-sub]').dataset.sub;
+        const s=t.subtasks.find(x=>x.id===sid);
+        if(s && s.done && s.countedDay && state.completions[s.countedDay]){
+          state.completions[s.countedDay]=Math.max(0,state.completions[s.countedDay]-1);
+        }
+        t.subtasks=t.subtasks.filter(x=>x.id!==sid); save(); render();
+      }
       else if(act==='titleedit'){
         e.stopPropagation();
         if(actEl.querySelector('input')) return;
@@ -1129,6 +1226,24 @@ function renderDashboard(){
   let week=activeTasks().filter(t=>t.bucket==='Week');
   today=applyFilters(today); week=applyFilters(week);
   let h='';
+  // ===== KPI STRIP =====
+  const done=completedToday();
+  const avg=avgLastNDays(30);
+  let compareHtml='';
+  if(avg!==null){
+    const diff=done-avg;
+    const cls = diff>=0 ? 'kpi-up' : 'kpi-down';
+    const sign = diff>=0 ? '+' : '';
+    compareHtml='<span class="kpi-cmp '+cls+'">'+sign+diff.toFixed(diff%1===0?0:1)+' vs avg</span>';
+  } else {
+    compareHtml='<span class="kpi-cmp kpi-neutral">building baseline</span>';
+  }
+  h+='<div class="kpi-strip" onclick="setView(\'history\')" title="View completion history">'
+    +'<div class="kpi-left"><span class="kpi-ic">✓</span><span class="kpi-label">COMPLETED TODAY</span></div>'
+    +'<div class="kpi-right"><span class="kpi-num">'+done+'</span>'
+    +'<span class="kpi-sub">'+(avg!==null?('30d avg '+avg.toFixed(1)):'')+'</span></div>'
+    +'<div class="kpi-cmp-wrap">'+compareHtml+'</div>'
+    +'</div>';
   // ===== NOTES (post-its) =====
   const notes=sortedNotes();
   const first=notes[0];
@@ -1337,6 +1452,38 @@ function renderManage(){
   h+='</div>';
   return h;
 }
+function renderHistory(){
+  const stats=monthlyStats();
+  const mons=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const done=completedToday();
+  const avg=avgLastNDays(30);
+  let h=secHead('COMPLETION HISTORY','');
+  h+='<div class="hint" style="margin:0 2px 14px">Every task and subtask you complete, counted per day. A momentum gauge — it survives purging and is your execution record.</div>';
+  // headline cards
+  h+='<div class="hist-cards">';
+  h+='<div class="hist-card"><div class="hc-num">'+done+'</div><div class="hc-lbl">Today</div></div>';
+  h+='<div class="hist-card"><div class="hc-num">'+(avg!==null?avg.toFixed(1):'—')+'</div><div class="hc-lbl">30-day avg / day</div></div>';
+  const totalAll=Object.values(state.completions).reduce((a,b)=>a+b,0);
+  h+='<div class="hist-card"><div class="hc-num">'+totalAll+'</div><div class="hc-lbl">All time</div></div>';
+  h+='</div>';
+  // monthly breakdown
+  if(!stats.length){ h+='<div class="empty">No completions recorded yet. Finish a task to start your record.</div>'; return h; }
+  const maxAvg=Math.max(...stats.map(s=>s.avg),1);
+  h+='<div class="hist-list">';
+  stats.forEach(s=>{
+    const [y,m]=s.ym.split('-');
+    const label=mons[+m-1]+' '+y;
+    const pct=Math.round((s.avg/maxAvg)*100);
+    h+='<div class="hist-row">'
+      +'<div class="hist-month">'+label+'</div>'
+      +'<div class="hist-bar-wrap"><div class="hist-bar" style="width:'+pct+'%"></div></div>'
+      +'<div class="hist-val">'+s.avg.toFixed(1)+'<span class="hist-val-sub">/day</span></div>'
+      +'<div class="hist-total">'+s.total+' total</div>'
+      +'</div>';
+  });
+  h+='</div>';
+  return h;
+}
 function renderArchive(){
   const a=archivedTasks().sort((x,y)=>y.completedAt-x.completedAt);
   let h='<div class="hint" style="margin-top:16px">Completed tasks rest here for 7 days, then vanish automatically. Restore if completed by mistake — or purge everything now.</div>';
@@ -1368,6 +1515,7 @@ function render(){
   else if(view==='backlog') main.innerHTML=renderList('backlog');
   else if(view==='recurring') main.innerHTML=renderRecurring();
   else if(view==='manage') main.innerHTML=renderManage();
+  else if(view==='history') main.innerHTML=renderHistory();
   else if(view==='archive') main.innerHTML=secHead('ARCHIVE','')+renderArchive();
 
   bindTaskEvents(main);
