@@ -223,14 +223,53 @@ nav{display:flex;justify-content:center;gap:5px;margin:24px 0 8px;flex-wrap:wrap
 .opt:hover .opt-mini{visibility:visible}
 .opt-mini:hover{color:var(--purple-hi)}
 
-/* ============ DAILY NOTE — glass + gradient ring ============ */
-.daily-note{border:1px solid transparent;border-radius:var(--r);padding:13px 15px;margin-top:26px;position:relative;
+/* ============ NOTES (post-its) ============ */
+.notes-block{border:1px solid transparent;border-radius:var(--r);margin-top:26px;position:relative;
   background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
   box-shadow:0 0 30px -10px rgba(var(--gA),.5),0 0 30px -16px rgba(var(--gB),.45)}
-html[data-theme="light"] .daily-note{box-shadow:0 0 26px -10px rgba(var(--gA),.3),0 8px 22px -12px rgba(20,25,50,.18)}
-.daily-note label{display:block;font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--purple-hi);font-weight:600;margin-bottom:6px;text-transform:uppercase}
-.daily-note textarea{width:100%;background:none;border:none;color:var(--txt);font-family:inherit;font-size:14px;line-height:1.55;resize:none;outline:none;min-height:22px;overflow:hidden}
-.daily-note textarea::placeholder{color:var(--faint)}
+html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.3),0 8px 22px -12px rgba(20,25,50,.15)}
+.nb-head{display:flex;align-items:center;gap:8px;cursor:pointer;padding:12px 15px}
+.nb-head label{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--purple-hi);font-weight:600;text-transform:uppercase;cursor:pointer}
+.nb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
+.nb-caret{color:var(--purple-hi);font-size:11px}
+.nb-peek{color:var(--faint);font-size:12px;margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}
+.nb-add{display:flex;gap:8px;padding:0 15px 10px}
+.nb-add input{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--txt);padding:8px 11px;font-size:13px;font-family:inherit;outline:none}
+.nb-add input:focus{border-color:var(--purple)}
+.nb-add button{background:var(--grad);border:none;color:#fff;font-weight:600;font-size:12px;padding:8px 15px;border-radius:9px;cursor:pointer;font-family:'Space Grotesk',sans-serif}
+.nb-list{padding:0 15px 14px;display:flex;flex-direction:column;gap:7px}
+.postit{display:flex;align-items:flex-start;gap:9px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--faint);border-radius:9px;padding:9px 11px}
+.postit.pinned{border-left-color:var(--blue-hi);box-shadow:0 0 14px -8px rgba(var(--gA),.7)}
+.postit-pin{background:none;border:none;cursor:pointer;font-size:13px;line-height:1;flex:none;padding:0;opacity:.85}
+.postit-pin:hover{transform:scale(1.15)}
+.postit-text{flex:1;font-size:13px;line-height:1.5;color:var(--txt);cursor:text;word-break:break-word}
+.postit-del{background:none;border:none;color:var(--faint);cursor:pointer;font-size:12px;flex:none}
+.postit-del:hover{color:var(--red)}
+.postit-edit{width:100%;background:var(--card);border:1px solid var(--purple);border-radius:7px;color:var(--txt);padding:8px 10px;font-size:13px;line-height:1.5;font-family:inherit;outline:none;resize:vertical;min-height:56px}
+.postit-actions{display:flex;justify-content:flex-end;margin-top:6px;width:100%}
+.postit-save{background:var(--grad);border:none;color:#fff;font-size:11px;font-weight:600;padding:5px 14px;border-radius:7px;cursor:pointer;font-family:inherit}
+
+/* sub-badge, sched chip, editable title, sub edit */
+.sub-badge{font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.sched-chip{color:var(--blue-hi)!important;border-color:rgba(var(--gA),.4)!important}
+.ttitle[data-act="titleedit"]{cursor:text}
+.ttitle[data-act="titleedit"]:hover{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.title-edit{width:100%;background:var(--card);border:1px solid var(--purple);border-radius:7px;color:var(--txt);padding:5px 8px;font-size:13px;font-family:inherit;outline:none}
+.subtext{cursor:text}
+.subtext:hover{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
+.subedit-in{flex:1;background:var(--card);border:1px solid var(--purple);border-radius:6px;color:var(--txt);padding:4px 8px;font-size:13px;font-family:inherit;outline:none}
+.sched-input{background:var(--panel2);border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 10px;font-size:13px;font-family:inherit;outline:none}
+.sched-input:focus{border-color:var(--purple)}
+.ghost.sched{border-color:rgba(var(--gA),.4)}
+.ghost.sched .ghost-ic{color:var(--blue-hi)}
+
+/* scheduled tab add bar */
+.sched-add{display:flex;gap:8px;margin:12px 0 6px;flex-wrap:wrap}
+.sched-add input[type="text"],.sched-add #schAddTitle{flex:1;min-width:160px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:9px 13px;font-size:13px;font-family:inherit;outline:none}
+.sched-add input[type="date"]{background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:9px 12px;font-size:13px;font-family:inherit;outline:none}
+.sched-add input:focus{border-color:var(--purple)}
+.sched-add button{background:var(--grad);border:none;color:#fff;font-weight:600;font-size:12.5px;padding:9px 18px;border-radius:10px;cursor:pointer;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
+.sched-add button:hover{filter:brightness(1.12)}
 
 /* ============ ADD BAR ============ */
 .addbar{display:flex;gap:8px;margin:16px 0 4px}
@@ -440,6 +479,7 @@ const BUCKETS = ['Today','Week','Later'];
 const BUCKET_LABEL = {Today:'Today', Week:'This Week', Later:'Later'};
 let state = {
   dailyNote:'',
+  notes:[],
   tasks:[],
   rules:[],
   tags:['B Management Services','La María Piscícola','General Accounting'],
@@ -458,6 +498,7 @@ let formTags = [];
 let purgeArmed = false;
 let filterStatus = null;   // null = all, or a status string
 let filterPerson = null;   // null = all, or a person name
+let editingNote = null;    // note id being edited inline
 let renamingCat = null;    // section currently being renamed inline
 
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
@@ -488,7 +529,13 @@ async function load(){
         if(state.ui.groupByStatus===undefined) state.ui.groupByStatus=true;
         if(!state.ui.theme) state.ui.theme='light';
         if(!state.ui.accent) state.ui.accent='ivory';
-        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; });
+        if(!Array.isArray(state.notes)) state.notes=[];
+        // migrate legacy single dailyNote string into the notes array
+        if(state.dailyNote && state.dailyNote.trim()){
+          state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
+          state.dailyNote='';
+        }
+        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; if(t.scheduledDate===undefined) t.scheduledDate=null; });
       }
     }
   }catch(e){ console.error('load failed', e); }
@@ -627,6 +674,17 @@ function upcomingRuleOccurrences(days){
   });
   return out.sort((a,b)=>a.date.localeCompare(b.date));
 }
+// merged 7-day pipeline: recurring rule occurrences + scheduled one-off tasks
+function upcomingPipeline(days){
+  const today=todayStr();
+  const horizon=new Date(today+'T00:00:00'); horizon.setDate(horizon.getDate()+(days||7));
+  const rules=upcomingRuleOccurrences(days).map(r=>({...r, kind:'rule'}));
+  const sched=scheduledTasks()
+    .filter(t=>t.scheduledDate)
+    .filter(t=>{ const d=new Date(t.scheduledDate+'T00:00:00'); return d>=new Date(today+'T00:00:00') && d<=horizon; })
+    .map(t=>({kind:'sched', taskId:t.id, title:t.title, date:t.scheduledDate, tags:[...(t.tags||[])]}));
+  return [...rules, ...sched].sort((a,b)=>a.date.localeCompare(b.date));
+}
 // pull a future recurring occurrence into Today as a real task
 function materializeRuleNow(ruleId, date){
   const r=state.rules.find(x=>x.id===ruleId); if(!r) return;
@@ -653,9 +711,41 @@ function purgeArchive(){
 function addTask(title, list, bucket){
   if(!title.trim()) return;
   state.tasks.push({id:uid(), title:title.trim(), status:'Not Started', bucket:bucket||'Today',
-    tags:[], subtasks:[], notes:'', source:'manual', list:list||'active', pinned:false, person:null,
+    tags:[], subtasks:[], notes:'', source:'manual', list:list||'active', pinned:false, person:null, scheduledDate:null,
     createdAt:Date.now(), todayDate:(bucket||'Today')==='Today'?todayStr():null, completedAt:null});
   save(); render();
+}
+function addScheduledTask(title, date){
+  if(!title.trim() || !date) return;
+  state.tasks.push({id:uid(), title:title.trim(), status:'Not Started', bucket:'Later',
+    tags:[], subtasks:[], notes:'', source:'manual', list:'scheduled', pinned:false, person:null, scheduledDate:date,
+    createdAt:Date.now(), todayDate:null, completedAt:null});
+  save(); render();
+}
+function renameTask(id, name){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  if(name && name.trim()){ t.title=name.trim(); save(); render(); }
+}
+function setScheduledDate(id, date){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  t.scheduledDate=date||null; save(); render();
+}
+function pullScheduledToToday(id){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  t.list='active'; t.bucket='Today'; t.todayDate=todayStr(); t.scheduledDate=null;
+  save(); render();
+}
+// ===== NOTES (post-its) =====
+function addNote(text){
+  if(!text.trim()) return;
+  state.notes.unshift({id:uid(), text:text.trim(), pinned:false, createdAt:Date.now()});
+  save(); render();
+}
+function deleteNote(id){ state.notes=state.notes.filter(n=>n.id!==id); save(); render(); }
+function toggleNotePin(id){ const n=state.notes.find(x=>x.id===id); if(n){ n.pinned=!n.pinned; save(); render(); } }
+function editNote(id, text){ const n=state.notes.find(x=>x.id===id); if(n){ n.text=text.trim(); save(); render(); } }
+function sortedNotes(){
+  return [...state.notes].sort((a,b)=>(b.pinned-a.pinned) || (b.createdAt-a.createdAt));
 }
 function completeTask(id){
   const el=document.querySelector('[data-task="'+id+'"]');
@@ -850,25 +940,41 @@ function taskRow(t, opts){
   if(t.status==='Follow-up'){
     meta+='<button class="chip person-chip" data-act="person" title="Follow up with...">'+(t.person? '@'+esc(t.person) : '+ who?')+'<span class="dd">▾</span></button>';
   }
-  if(!opts.hideBucket) meta+='<button class="chip bucket-'+t.bucket+'" data-act="bucket" title="Move to...">'+BUCKET_LABEL[t.bucket]+'<span class="dd">▾</span></button>';
+  if(opts.scheduled && t.scheduledDate){
+    const d=new Date(t.scheduledDate+'T00:00:00');
+    const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    meta+='<span class="chip sched-chip" title="Scheduled date">📅 '+d.getDate()+' '+mons[d.getMonth()]+' '+d.getFullYear()+'</span>';
+  }
+  if(!opts.hideBucket && !opts.scheduled) meta+='<button class="chip bucket-'+t.bucket+'" data-act="bucket" title="Move to...">'+BUCKET_LABEL[t.bucket]+'<span class="dd">▾</span></button>';
   meta+=t.tags.map(tag=>'<span class="tagb">'+esc(tag)+'</span>').join('');
   meta+='<button class="tagplus" data-act="tags" title="Tags">+</button>';
+  // subtask indicator when collapsed
+  const subDone=t.subtasks.filter(s=>s.done).length;
+  if(t.subtasks.length){
+    meta+='<span class="sub-badge" title="Subtasks">☑ '+subDone+'/'+t.subtasks.length+'</span>';
+  }
   if(t.source==='recurring') meta+='<span class="src-tag" title="Auto-generated by a recurring rule">↻</span>';
   if(opts.promote) meta+='<button class="promote" data-act="promote">Activate</button>';
+  if(opts.scheduled) meta+='<button class="promote" data-act="pullsched" title="Move into Today now">→ Today</button>';
   meta+='<button class="pinbtn '+(t.pinned?'on':'')+'" data-act="pin" title="'+(t.pinned?'Unpin':'Pin')+'">'+(t.pinned?'📌':'📍')+'</button>';
   meta+='<span class="caret">▶</span>';
 
   const subs=t.subtasks.map(s=>
-    '<div class="subtask" data-sub="'+s.id+'"><button class="sck '+(s.done?'done':'')+'" data-act="subck">'+(s.done?'✓':'')+'</button><span class="'+(s.done?'done':'')+'">'+esc(s.text)+'</span><button class="del" data-act="subdel">✕</button></div>'
+    '<div class="subtask" data-sub="'+s.id+'"><button class="sck '+(s.done?'done':'')+'" data-act="subck">'+(s.done?'✓':'')+'</button><span class="subtext '+(s.done?'done':'')+'" data-act="subedit">'+esc(s.text)+'</span><button class="del" data-act="subdel">✕</button></div>'
   ).join('');
+
+  const schedRow = opts.scheduled
+    ? '<div class="dlabel">Scheduled date</div><input type="date" class="sched-input" data-act="scheddate" value="'+(t.scheduledDate||'')+'">'
+    : '';
 
   return '<div class="task '+(od?'overdue':'')+' '+(open?'open':'')+' '+(t.pinned?'pinned':'')+'" data-task="'+t.id+'">'
     +'<div class="trow" data-act="toggle">'
     +'<button class="ck" data-act="complete" title="Complete"></button>'
-    +'<span class="ttitle">'+esc(t.title)+'</span>'
+    +'<span class="ttitle" data-act="titleedit" title="Tap to edit">'+esc(t.title)+'</span>'
     +'<span class="tmeta">'+meta+'</span>'
     +'</div>'
     +'<div class="tdetail">'
+    +schedRow
     +'<div class="dlabel">Subtasks</div>'+subs
     +'<div class="sub-add"><input placeholder="Add subtask + Enter" data-act="subadd"></div>'
     +'<div class="dlabel">Notes</div>'
@@ -891,9 +997,33 @@ function bindTaskEvents(container){
       else if(act==='pin'){ e.stopPropagation(); togglePin(id); }
       else if(act==='tags'){ e.stopPropagation(); openTagPop(actEl, id); }
       else if(act==='promote'){ e.stopPropagation(); promoteTask(id); }
+      else if(act==='pullsched'){ e.stopPropagation(); pullScheduledToToday(id); }
       else if(act==='del'){ e.stopPropagation(); deleteTask(id); }
       else if(act==='subck'){ e.stopPropagation(); const sid=e.target.closest('[data-sub]').dataset.sub; const s=t.subtasks.find(x=>x.id===sid); s.done=!s.done; save(); render(); }
       else if(act==='subdel'){ e.stopPropagation(); const sid=e.target.closest('[data-sub]').dataset.sub; t.subtasks=t.subtasks.filter(x=>x.id!==sid); save(); render(); }
+      else if(act==='titleedit'){
+        e.stopPropagation();
+        if(actEl.querySelector('input')) return;
+        const cur=t.title;
+        actEl.innerHTML='<input class="title-edit" value="'+esc(cur)+'">';
+        const inp=actEl.querySelector('input'); inp.focus(); inp.select();
+        const commit=()=>{ renameTask(id, inp.value); };
+        inp.addEventListener('click',ev=>ev.stopPropagation());
+        inp.addEventListener('keydown',ev=>{ if(ev.key==='Enter') commit(); if(ev.key==='Escape') render(); });
+        inp.addEventListener('blur',commit);
+      }
+      else if(act==='subedit'){
+        e.stopPropagation();
+        const row=e.target.closest('[data-sub]'); const sid=row.dataset.sub;
+        const s=t.subtasks.find(x=>x.id===sid); if(!s) return;
+        if(row.querySelector('.subedit-in')) return;
+        e.target.outerHTML='<input class="subedit-in" value="'+esc(s.text)+'">';
+        const inp=row.querySelector('.subedit-in'); inp.focus(); inp.select();
+        const commit=()=>{ if(inp.value.trim()) s.text=inp.value.trim(); save(); render(); openTasks.add(id); };
+        inp.addEventListener('click',ev=>ev.stopPropagation());
+        inp.addEventListener('keydown',ev=>{ if(ev.key==='Enter') commit(); if(ev.key==='Escape') render(); });
+        inp.addEventListener('blur',commit);
+      }
       else if(act==='toggle'){
         if(e.target.closest('.tdetail')) return;
         if(openTasks.has(id)) openTasks.delete(id); else openTasks.add(id);
@@ -906,12 +1036,15 @@ function bindTaskEvents(container){
     if(sadd){ sadd.addEventListener('click',e=>e.stopPropagation()); sadd.addEventListener('keydown',e=>{
       if(e.key==='Enter' && sadd.value.trim()){ t.subtasks.push({id:uid(),text:sadd.value.trim(),done:false}); save(); render(); openTasks.add(id); }
     });}
+    const sched=el.querySelector('[data-act="scheddate"]');
+    if(sched){ sched.addEventListener('click',e=>e.stopPropagation()); sched.addEventListener('change',()=>{ setScheduledDate(id, sched.value); }); }
   });
 }
 
 /* ================= VIEWS ================= */
 function activeTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='active'); }
 function backlogTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='backlog'); }
+function scheduledTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='scheduled'); }
 function archivedTasks(){ return state.tasks.filter(t=>t.status==='Done'); }
 function sortToday(a,b){ return (isOverdue(b)-isOverdue(a)) || (a.createdAt-b.createdAt); }
 
@@ -984,26 +1117,42 @@ function renderDashboard(){
   let week=activeTasks().filter(t=>t.bucket==='Week');
   today=applyFilters(today); week=applyFilters(week);
   let h='';
-  // collapsible daily note
-  h+='<div class="daily-note '+(state.ui.noteOpen?'open':'')+'">'
-    +'<div class="dn-head" id="noteToggle"><label>Daily Note</label><span class="dn-caret">'+(state.ui.noteOpen?'▾':'▸')+'</span>'
-    +(state.ui.noteOpen?'':'<span class="dn-peek">'+esc((state.dailyNote||'').split('\n')[0]||'Tap to open')+'</span>')+'</div>'
-    +(state.ui.noteOpen?'<textarea id="dailyNote" placeholder="Quick capture — call, remember, idea...">'+esc(state.dailyNote)+'</textarea>':'')
+  // ===== NOTES (post-its) =====
+  const notes=sortedNotes();
+  const first=notes[0];
+  h+='<div class="notes-block '+(state.ui.noteOpen?'open':'')+'">';
+  h+='<div class="nb-head" id="noteToggle"><label>Notes</label>'
+    +'<span class="nb-count">'+(notes.length||'')+'</span>'
+    +'<span class="nb-caret">'+(state.ui.noteOpen?'▾':'▸')+'</span>'
+    +(state.ui.noteOpen?'':'<span class="nb-peek">'+(first?esc(first.text.split('\n')[0]):'Tap to add a note')+'</span>')
     +'</div>';
+  if(state.ui.noteOpen){
+    h+='<div class="nb-add"><input id="noteAddIn" placeholder="Write a note..."><button id="noteAddBtn">Add</button></div>';
+    h+='<div class="nb-list">';
+    h+= notes.length? notes.map(n=>
+      editingNote===n.id
+        ? '<div class="postit '+(n.pinned?'pinned':'')+'"><textarea class="postit-edit" id="postitEdit">'+esc(n.text)+'</textarea><div class="postit-actions"><button class="postit-save" data-notesave="'+n.id+'">Save</button></div></div>'
+        : '<div class="postit '+(n.pinned?'pinned':'')+'">'
+          +'<button class="postit-pin '+(n.pinned?'on':'')+'" data-notepin="'+n.id+'" title="'+(n.pinned?'Unpin':'Pin')+'">'+(n.pinned?'📌':'📍')+'</button>'
+          +'<div class="postit-text" data-noteedit="'+n.id+'">'+esc(n.text).replace(/\n/g,'<br>')+'</div>'
+          +'<button class="postit-del" data-notedel="'+n.id+'" title="Delete">✕</button>'
+          +'</div>'
+    ).join('') : '<div class="empty">No notes yet.</div>';
+    h+='</div>';
+  }
+  h+='</div>';
   h+='<div class="addbar"><input id="dashAdd" placeholder="Add a task for today..."><button id="dashAddBtn">Add</button></div>';
   h+=filterBar();
   const tOpen=state.ui.bucketOpen.Today;
   h+=secHead('TODAY', today.length, '', BUCKET_COLOR.Today, 'Today', tOpen);
   if(tOpen) h+= today.length? renderBucketBody(today) : '<div class="empty">The day is clear. Add what must be done.</div>';
   const wOpen=state.ui.bucketOpen.Week;
-  const upcoming = filterActive() ? [] : upcomingRuleOccurrences(7);
+  const upcoming = filterActive() ? [] : upcomingPipeline(7);
   const weekTotal = week.length + upcoming.length;
   h+=secHead('THIS WEEK', weekTotal, '', BUCKET_COLOR.Week, 'Week', wOpen);
   if(wOpen){
     let wh='';
-    // 1. manual this-week tasks
     wh += week.length ? renderBucketBody(week) : '';
-    // 2. upcoming recurring ghosts, grouped by day
     if(upcoming.length){
       const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1017,15 +1166,24 @@ function renderDashboard(){
           wh+='<div class="pipe-day">'+label+'</div>';
           lastDate=u.date;
         }
-        wh+='<div class="ghost" data-ghost="'+u.ruleId+'|'+u.date+'">'
-          +'<span class="ghost-ic">↻</span>'
-          +'<span class="ghost-title">'+esc(u.title)+'</span>'
-          + u.tags.map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
-          +'<button class="ghost-pull" data-pull="'+u.ruleId+'|'+u.date+'" title="Complete early — pull into Today">Pull to today</button>'
-          +'</div>';
+        if(u.kind==='rule'){
+          wh+='<div class="ghost">'
+            +'<span class="ghost-ic">↻</span>'
+            +'<span class="ghost-title">'+esc(u.title)+'</span>'
+            + u.tags.map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
+            +'<button class="ghost-pull" data-pull="'+u.ruleId+'|'+u.date+'" title="Complete early — pull into Today">Pull to today</button>'
+            +'</div>';
+        } else {
+          wh+='<div class="ghost sched">'
+            +'<span class="ghost-ic">📅</span>'
+            +'<span class="ghost-title">'+esc(u.title)+'</span>'
+            + u.tags.map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
+            +'<button class="ghost-pull" data-pullsched="'+u.taskId+'" title="Move into Today now">Pull to today</button>'
+            +'</div>';
+        }
       });
     }
-    if(!wh) wh='<div class="empty">Nothing planned and no recurring tasks in the next 7 days.</div>';
+    if(!wh) wh='<div class="empty">Nothing planned and nothing scheduled in the next 7 days.</div>';
     h+='<div class="week-preview">'+wh+'</div>';
   }
   return h;
@@ -1046,6 +1204,25 @@ function renderList(list){
     const tasks=base;
     h+= tasks.length? tasks.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('') : '<div class="empty">The backlog is empty. Ideas land here until their time comes.</div>';
   }
+  return h;
+}
+function renderScheduled(){
+  const tasks=scheduledTasks().slice().sort((a,b)=>(a.scheduledDate||'').localeCompare(b.scheduledDate||''));
+  let h='<div class="hint" style="margin-top:16px">Dated one-off tasks (e.g. car maintenance on a specific day). They stay here and preview in the Dashboard when within 7 days — they don\'t clutter your Active buckets.</div>';
+  h+='<div class="sched-add"><input id="schAddTitle" placeholder="Task (e.g. Car maintenance)"><input type="date" id="schAddDate"><button id="schAddBtn">+ Add</button></div>';
+  const todayS=todayStr();
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if(!tasks.length){ h+='<div class="empty">Nothing scheduled yet.</div>'; return h; }
+  // group by month for scanability
+  let lastMonth=null;
+  tasks.forEach(t=>{
+    const d=new Date((t.scheduledDate||todayS)+'T00:00:00');
+    const mk=mons[d.getMonth()]+' '+d.getFullYear();
+    if(mk!==lastMonth){ h+='<div class="pipe-day" style="margin-top:16px">'+mk.toUpperCase()+'</div>'; lastMonth=mk; }
+    const overdue = t.scheduledDate && t.scheduledDate<todayS;
+    h+=taskRow(t,{scheduled:true,hideBucket:true});
+  });
   return h;
 }
 function catColor(c){ return (state.catColors&&state.catColors[c])||'#8B5CFF'; }
@@ -1161,10 +1338,10 @@ function renderArchive(){
 }
 
 /* ================= NAV + MAIN RENDER ================= */
-const VIEWS=[['dashboard','Dashboard'],['active','Active'],['backlog','Projects / Ideas'],['recurring','Recurring']];
+const VIEWS=[['dashboard','Dashboard'],['active','Active'],['scheduled','Scheduled'],['backlog','Projects / Ideas'],['recurring','Recurring']];
 function setView(v){ view=v; purgeArmed=false; closePop(); render(); }
 function render(){
-  const counts={active:activeTasks().length, backlog:backlogTasks().length, recurring:state.rules.length};
+  const counts={active:activeTasks().length, scheduled:scheduledTasks().length, backlog:backlogTasks().length, recurring:state.rules.length};
   const archLink=document.querySelector('.archive-link');
   if(archLink){ const n=archivedTasks().length; archLink.textContent = n? 'Archive ('+n+')' : 'Archive'; }
   document.getElementById('nav').innerHTML = VIEWS.map(([k,l])=>
@@ -1175,6 +1352,7 @@ function render(){
   const main=document.getElementById('main');
   if(view==='dashboard') main.innerHTML=renderDashboard();
   else if(view==='active') main.innerHTML=renderList('active');
+  else if(view==='scheduled') main.innerHTML=renderScheduled();
   else if(view==='backlog') main.innerHTML=renderList('backlog');
   else if(view==='recurring') main.innerHTML=renderRecurring();
   else if(view==='manage') main.innerHTML=renderManage();
@@ -1182,14 +1360,19 @@ function render(){
 
   bindTaskEvents(main);
 
-  // pipeline ghost: pull to today
+  // pipeline ghost: pull rule to today
   document.querySelectorAll('[data-pull]').forEach(b=>b.addEventListener('click',e=>{
     e.stopPropagation();
     const [rid,date]=b.dataset.pull.split('|');
     materializeRuleNow(rid, date);
   }));
+  // pipeline ghost: pull scheduled task to today
+  document.querySelectorAll('[data-pullsched]').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    pullScheduledToToday(b.dataset.pullsched);
+  }));
 
-  // daily note collapse
+  // notes collapse
   const nt2=document.getElementById('noteToggle');
   if(nt2) nt2.addEventListener('click',()=>{ state.ui.noteOpen=!state.ui.noteOpen; save(); render(); });
   // section (bucket) collapse toggles
@@ -1206,13 +1389,36 @@ function render(){
     filterPerson = b.dataset.fperson||null; render();
   }));
 
-  // dashboard
-  const dn=document.getElementById('dailyNote');
-  if(dn){
-    const fit=()=>{ dn.style.height='auto'; dn.style.height=dn.scrollHeight+'px'; };
-    fit();
-    dn.addEventListener('input',()=>{ state.dailyNote=dn.value; fit(); save(); });
+  // ===== NOTES (post-its) =====
+  const naBtn=document.getElementById('noteAddBtn');
+  if(naBtn){
+    const naIn=document.getElementById('noteAddIn');
+    const addN=()=>{ if(naIn.value.trim()){ addNote(naIn.value); } };
+    naBtn.addEventListener('click',addN);
+    naIn.addEventListener('keydown',e=>{ if(e.key==='Enter') addN(); });
   }
+  document.querySelectorAll('[data-notepin]').forEach(b=>b.addEventListener('click',()=>toggleNotePin(b.dataset.notepin)));
+  document.querySelectorAll('[data-notedel]').forEach(b=>b.addEventListener('click',()=>deleteNote(b.dataset.notedel)));
+  document.querySelectorAll('[data-noteedit]').forEach(b=>b.addEventListener('click',()=>{ editingNote=b.dataset.noteedit; render(); const ta=document.getElementById('postitEdit'); if(ta){ ta.focus(); } }));
+  const psave=document.querySelector('[data-notesave]');
+  if(psave){
+    const commit=()=>{ const ta=document.getElementById('postitEdit'); editNote(psave.dataset.notesave, ta.value); editingNote=null; render(); };
+    psave.addEventListener('click',commit);
+    const ta=document.getElementById('postitEdit');
+    if(ta) ta.addEventListener('keydown',e=>{ if(e.key==='Escape'){ editingNote=null; render(); } });
+  }
+
+  // scheduled add
+  const schBtn=document.getElementById('schAddBtn');
+  if(schBtn){
+    const tI=document.getElementById('schAddTitle');
+    const dI=document.getElementById('schAddDate');
+    const go=()=>{ if(tI.value.trim() && dI.value){ addScheduledTask(tI.value, dI.value); } else if(tI.value.trim() && !dI.value){ dI.focus(); } };
+    schBtn.addEventListener('click',go);
+    tI.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  }
+
+  // dashboard task add
   const dAdd=document.getElementById('dashAdd');
   if(dAdd){
     const go=()=>{ addTask(dAdd.value,'active','Today'); };
