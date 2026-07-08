@@ -232,6 +232,10 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .kpi-pill:hover{border-color:var(--line-hi)}
 .kp-check{font-size:10px;opacity:.9}
 .kp-num{font-size:13px;font-weight:700}
+.kp-target{font-size:11px;font-weight:600;opacity:.6}
+.kp-avg{font-size:9.5px;font-weight:600;padding:1px 5px;border-radius:999px;margin-left:1px}
+.kp-avg-up{color:var(--green);background:rgba(59,229,139,.14)}
+.kp-avg-down{color:var(--muted);background:var(--panel2)}
 .kp-diff{font-size:10px;font-weight:600;opacity:.85}
 .kpi-pill.kpi-up{color:var(--green);background:rgba(59,229,139,.1);border-color:rgba(59,229,139,.3)}
 .kpi-pill.kpi-down{color:var(--red);background:rgba(255,77,94,.09);border-color:rgba(255,77,94,.28)}
@@ -241,6 +245,8 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .hist-cards{display:flex;gap:8px;margin:6px 0 18px}
 .hist-card{flex:1;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);padding:14px 12px;text-align:center}
 .hc-num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--txt)}
+.target-num input{width:52px;background:none;border:none;border-bottom:2px solid var(--purple);color:var(--txt);font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;text-align:center;outline:none;padding:0}
+.target-num input::-webkit-outer-spin-button,.target-num input::-webkit-inner-spin-button{opacity:.4}
 .hc-lbl{font-size:10px;color:var(--muted);font-family:'Space Grotesk',sans-serif;letter-spacing:.05em;margin-top:3px}
 .hist-list{display:flex;flex-direction:column;gap:8px}
 .hist-row{display:flex;align-items:center;gap:11px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px}
@@ -519,6 +525,7 @@ const BUCKET_LABEL = {Today:'Today', Week:'This Week', Later:'Later'};
 let state = {
   dailyNote:'',
   completions:{},
+  dailyTarget:5,
   notes:[],
   tasks:[],
   rules:[],
@@ -571,6 +578,7 @@ async function load(){
         if(!state.ui.accent) state.ui.accent='ivory';
         if(!Array.isArray(state.notes)) state.notes=[];
         if(!state.completions || typeof state.completions!=='object') state.completions={};
+        if(typeof state.dailyTarget!=='number') state.dailyTarget=5;
         // migrate legacy single dailyNote string into the notes array
         if(state.dailyNote && state.dailyNote.trim()){
           state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
@@ -1439,6 +1447,7 @@ function renderHistory(){
   h+='<div class="hist-cards">';
   h+='<div class="hist-card"><div class="hc-num">'+done+'</div><div class="hc-lbl">Today</div></div>';
   h+='<div class="hist-card"><div class="hc-num">'+(avg!==null?avg.toFixed(1):'—')+'</div><div class="hc-lbl">30-day avg / day</div></div>';
+  h+='<div class="hist-card"><div class="hc-num target-num"><input type="number" min="1" id="targetIn" value="'+(state.dailyTarget||5)+'"></div><div class="hc-lbl">Daily target</div></div>';
   const totalAll=Object.values(state.completions).reduce((a,b)=>a+b,0);
   h+='<div class="hist-card"><div class="hc-num">'+totalAll+'</div><div class="hc-lbl">All time</div></div>';
   h+='</div>';
@@ -1480,11 +1489,18 @@ function render(){
   const kp=document.getElementById('kpiPill');
   if(kp){
     const done=completedToday();
+    const target=state.dailyTarget||5;
     const avg=avgLastNDays(30);
-    let cmp='', cls='kpi-neutral';
-    if(avg!==null){ const diff=done-avg; cls=diff>=0?'kpi-up':'kpi-down'; cmp=(diff>=0?'+':'')+diff.toFixed(diff%1===0?0:1); }
+    // primary color: met target = green, else red
+    const cls = done>=target ? 'kpi-up' : 'kpi-down';
+    let avgHtml='';
+    if(avg!==null){
+      const diff=done-avg;
+      const avgCls=diff>=0?'kp-avg-up':'kp-avg-down';
+      avgHtml='<span class="kp-avg '+avgCls+'">'+(diff>=0?'+':'')+diff.toFixed(diff%1===0?0:1)+' avg</span>';
+    }
     kp.className='kpi-pill '+cls;
-    kp.innerHTML='<span class="kp-check">✓</span><span class="kp-num">'+done+'</span>'+(cmp?'<span class="kp-diff">'+cmp+'</span>':'');
+    kp.innerHTML='<span class="kp-check">✓</span><span class="kp-num">'+done+'</span><span class="kp-target">/ '+target+'</span>'+avgHtml;
   }
   const archLink=document.querySelector('.archive-link');
   if(archLink){ const n=archivedTasks().length; archLink.textContent = n? 'Archive ('+n+')' : 'Archive'; }
@@ -1700,6 +1716,13 @@ function render(){
   }
 
   document.querySelectorAll('[data-restore]').forEach(b=>b.addEventListener('click',()=>restoreTask(b.dataset.restore)));
+  const targetIn=document.getElementById('targetIn');
+  if(targetIn){
+    targetIn.addEventListener('change',()=>{
+      const v=parseInt(targetIn.value,10);
+      if(v>0){ state.dailyTarget=v; save(); render(); }
+    });
+  }
   const pb=document.getElementById('purgeBtn');
   if(pb) pb.addEventListener('click',()=>{
     if(!purgeArmed){ purgeArmed=true; render(); return; }
