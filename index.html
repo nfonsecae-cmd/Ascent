@@ -472,7 +472,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </style>
 </head>
 <body>
-<div id="authGate" class="auth-gate">
+<div id="authGate" class="auth-gate hidden">
   <div class="auth-card">
     <div class="auth-brand">ASCENT</div>
     <p class="auth-sub">Sign in to sync your tasks across every device.</p>
@@ -658,7 +658,21 @@ function generateFromRules(){
   if(changed) save();
 }
 
-// next occurrence of a rule strictly on/after a given date
+// scheduled one-off tasks whose date has arrived or passed move into Today (where overdue logic applies)
+function promoteDueScheduled(){
+  const today=todayStr();
+  let changed=false;
+  state.tasks.forEach(t=>{
+    if(t.list==='scheduled' && t.status!=='Done' && t.scheduledDate && t.scheduledDate<=today){
+      t.list='active';
+      t.bucket='Today';
+      t.todayDate=t.scheduledDate; // keep original date so overdue shows if it's in the past
+      t.scheduledDate=null;
+      changed=true;
+    }
+  });
+  if(changed) save();
+}
 function nextDueOnOrAfter(r, ref){
   const refD=new Date(ref+'T00:00:00');
   const fmt=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -1850,11 +1864,12 @@ window.startAscentApp = async function(){
   applyTheme();
   purgeArchive();
   generateFromRules();
+  promoteDueScheduled();
   setDate();
   render();
   // re-assert theme on next frame in case of any late style application
   requestAnimationFrame(applyTheme);
-  setInterval(()=>{ generateFromRules(); }, 60*60*1000);
+  setInterval(()=>{ generateFromRules(); promoteDueScheduled(); render(); }, 60*60*1000);
 };
 </script>
 
