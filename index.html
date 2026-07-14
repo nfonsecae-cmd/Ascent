@@ -286,6 +286,13 @@ html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.
 
 /* sub-badge, sched chip, editable title, sub edit */
 .sub-badge{font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.daytrack{font-size:10px;font-weight:600;border-radius:999px;padding:2px 8px;white-space:nowrap;font-family:'Space Grotesk',sans-serif}
+.track-ip{color:var(--green);background:rgba(59,229,139,.1);border:1px solid rgba(59,229,139,.28)}
+.track-fu{color:var(--amber,#FFB454);background:rgba(255,180,84,.12);border:1px solid rgba(255,180,84,.32)}
+.track-stale{color:var(--red)!important;background:rgba(255,77,94,.1)!important;border-color:rgba(255,77,94,.35)!important}
+.rowdel{background:none;border:none;color:var(--faint);cursor:pointer;font-size:12px;flex:none;padding:0 3px;opacity:.6;transition:opacity .12s}
+.rowdel:hover{opacity:1;color:var(--red)}
+.rowdel.armed{opacity:1;color:#fff;background:var(--red);border-radius:6px;padding:2px 8px;font-size:10.5px;font-weight:600;font-family:'Space Grotesk',sans-serif}
 .sched-chip{color:var(--blue-hi)!important;border-color:rgba(var(--gA),.4)!important}
 .ttitle[data-act="titleedit"]{cursor:text}
 .ttitle[data-act="titleedit"]:hover{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
@@ -584,7 +591,7 @@ async function load(){
           state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
           state.dailyNote='';
         }
-        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; if(t.scheduledDate===undefined) t.scheduledDate=null; });
+        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; if(t.scheduledDate===undefined) t.scheduledDate=null; if(t.statusSince===undefined) t.statusSince=((t.status==='In Progress'||t.status==='Follow-up')?todayStr():null); });
       }
     }
   }catch(e){ console.error('load failed', e); }
@@ -856,14 +863,24 @@ function setBucket(id,b){
 }
 function setStatus(id,s){
   const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  const prev=t.status;
   t.status=s;
   if(s!=='Follow-up') t.person=null;
+  // stamp when entering a tracked status (only if newly entering it)
+  if(s==='In Progress' && prev!=='In Progress') t.statusSince=todayStr();
+  else if(s==='Follow-up' && prev!=='Follow-up') t.statusSince=todayStr();
+  else if(s==='Not Started') t.statusSince=null;
   save(); render();
 }
 function togglePin(id){ const t=state.tasks.find(x=>x.id===id); if(!t) return; t.pinned=!t.pinned; save(); render(); }
 function setPerson(id,p){ const t=state.tasks.find(x=>x.id===id); if(!t) return; t.person=p; save(); render(); }
 function isOverdue(t){
-  return t.status!=='Done' && t.bucket==='Today' && t.todayDate && t.todayDate<todayStr();
+  return t.status==='Not Started' && t.bucket==='Today' && t.todayDate && t.todayDate<todayStr();
+}
+function daysSince(dateStr){
+  if(!dateStr) return null;
+  const d=new Date(dateStr+'T00:00:00'); if(isNaN(d)) return null;
+  return Math.floor((new Date(todayStr()+'T00:00:00')-d)/86400000);
 }
 function promoteTask(id){ const t=state.tasks.find(x=>x.id===id); if(!t) return; t.list='active'; save(); render(); }
 function deleteTask(id){ state.tasks=state.tasks.filter(x=>x.id!==id); openTasks.delete(id); save(); render(); }
@@ -1041,6 +1058,16 @@ function taskRow(t, opts){
   let meta='';
   if(od) meta+='<span class="overdue-tag">OVERDUE</span>';
   meta+=statusChip(t);
+  // day tracker for in-progress / follow-up
+  if((t.status==='In Progress'||t.status==='Follow-up') && t.statusSince){
+    const n=daysSince(t.statusSince);
+    if(n!==null && n>=0){
+      const label = n===0 ? 'today' : n===1 ? '1 day' : n+' days';
+      const cls = t.status==='Follow-up' ? 'track-fu' : 'track-ip';
+      const stale = n>=5 ? ' track-stale' : '';
+      meta+='<span class="daytrack '+cls+stale+'" title="Days since '+(t.status==='Follow-up'?'follow-up started':'work started')+'">⏱ '+label+'</span>';
+    }
+  }
   if(t.status==='Follow-up'){
     meta+='<button class="chip person-chip" data-act="person" title="Follow up with...">'+(t.person? '@'+esc(t.person) : '+ who?')+'<span class="dd">▾</span></button>';
   }
@@ -1061,6 +1088,7 @@ function taskRow(t, opts){
   if(opts.promote) meta+='<button class="promote" data-act="promote">Activate</button>';
   if(opts.scheduled) meta+='<button class="promote" data-act="pullsched" title="Move into Today now">→ Today</button>';
   meta+='<button class="pinbtn '+(t.pinned?'on':'')+'" data-act="pin" title="'+(t.pinned?'Unpin':'Pin')+'">'+(t.pinned?'📌':'📍')+'</button>';
+  meta+='<button class="rowdel" data-act="rowdel" title="Delete (does not count)">🗑</button>';
   meta+='<span class="caret">▶</span>';
 
   const subs=t.subtasks.map(s=>
@@ -1099,6 +1127,11 @@ function bindTaskEvents(container){
       else if(act==='status'){ e.stopPropagation(); openStatusMenu(actEl, id); }
       else if(act==='person'){ e.stopPropagation(); openPersonMenu(actEl, id); }
       else if(act==='pin'){ e.stopPropagation(); togglePin(id); }
+      else if(act==='rowdel'){
+        e.stopPropagation();
+        if(actEl.dataset.armed==='1'){ deleteTask(id); }
+        else { actEl.dataset.armed='1'; actEl.textContent='Delete?'; actEl.classList.add('armed'); setTimeout(()=>{ if(actEl){ actEl.dataset.armed=''; actEl.textContent='🗑'; actEl.classList.remove('armed'); } },2500); }
+      }
       else if(act==='tags'){ e.stopPropagation(); openTagPop(actEl, id); }
       else if(act==='promote'){ e.stopPropagation(); promoteTask(id); }
       else if(act==='pullsched'){ e.stopPropagation(); pullScheduledToToday(id); }
