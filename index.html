@@ -371,8 +371,23 @@ html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.
 .sub-add{display:flex;gap:6px;margin-top:6px}
 .sub-add input{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--txt);padding:6px 10px;font-size:13px;font-family:inherit;outline:none}
 .sub-add input:focus{border-color:var(--purple)}
-.notes-ta{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--txt);padding:9px 11px;font-size:13.5px;line-height:1.55;font-family:inherit;outline:none;resize:vertical;min-height:70px}
-.notes-ta:focus{border-color:var(--purple)}
+.notelog{margin-top:2px}
+.nl-add{display:flex;gap:6px;margin-bottom:8px}
+.nl-in{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 10px;font-size:13px;font-family:inherit;outline:none}
+.nl-in:focus{border-color:var(--purple)}
+.nl-send{background:var(--grad);border:none;color:#fff;font-weight:600;font-size:11.5px;padding:7px 14px;border-radius:8px;cursor:pointer;font-family:'Space Grotesk',sans-serif}
+.nl-list{display:flex;flex-direction:column;gap:6px}
+.nl-entry{display:flex;align-items:flex-start;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.nl-body{flex:1;min-width:0}
+.nl-text{font-size:13px;line-height:1.5;color:var(--txt);cursor:text;word-break:break-word}
+.nl-meta{font-size:9.5px;color:var(--faint);font-family:'Space Grotesk',sans-serif;margin-top:3px;letter-spacing:.03em}
+.nl-del{background:none;border:none;color:var(--faint);cursor:pointer;font-size:11px;flex:none}
+.nl-del:hover{color:var(--red)}
+.nl-edit{width:100%;background:var(--card);border:1px solid var(--purple);border-radius:7px;color:var(--txt);padding:7px 9px;font-size:13px;line-height:1.5;font-family:inherit;outline:none;resize:vertical;min-height:52px}
+.nl-entry-actions{display:flex;justify-content:flex-end;margin-top:6px;width:100%}
+.nl-savebtn{background:var(--grad);border:none;color:#fff;font-size:11px;font-weight:600;padding:5px 13px;border-radius:7px;cursor:pointer;font-family:inherit}
+.nl-toggle{background:none;border:none;color:var(--purple-hi);font-size:11.5px;cursor:pointer;font-family:inherit;margin-top:7px;padding:2px 0}
+.nl-toggle:hover{text-decoration:underline}
 .tdel{background:none;border:none;color:var(--faint);font-size:12px;cursor:pointer;margin-top:12px;font-family:inherit}
 .tdel:hover{color:var(--red)}
 
@@ -553,6 +568,8 @@ let purgeArmed = false;
 let filterStatus = null;   // null = all, or a status string
 let filterPerson = null;   // null = all, or a person name
 let editingNote = null;    // note id being edited inline
+let editingTaskNote = null; // task note-log entry being edited
+let noteLogOpen = new Set(); // task ids whose note log is expanded
 let renamingCat = null;    // section currently being renamed inline
 
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
@@ -591,7 +608,7 @@ async function load(){
           state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
           state.dailyNote='';
         }
-        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; if(t.scheduledDate===undefined) t.scheduledDate=null; if(t.statusSince===undefined) t.statusSince=((t.status==='In Progress'||t.status==='Follow-up')?todayStr():null); });
+        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; if(t.scheduledDate===undefined) t.scheduledDate=null; if(t.statusSince===undefined) t.statusSince=((t.status==='In Progress'||t.status==='Follow-up')?todayStr():null); if(!Array.isArray(t.noteLog)){ t.noteLog=[]; if(t.notes && t.notes.trim()){ t.noteLog.push({id:uid(), text:t.notes.trim(), ts:t.createdAt||Date.now()}); } t.notes=''; } });
       }
     }
   }catch(e){ console.error('load failed', e); }
@@ -814,6 +831,22 @@ function addNote(text){
 function deleteNote(id){ state.notes=state.notes.filter(n=>n.id!==id); save(); render(); }
 function toggleNotePin(id){ const n=state.notes.find(x=>x.id===id); if(n){ n.pinned=!n.pinned; save(); render(); } }
 function editNote(id, text){ const n=state.notes.find(x=>x.id===id); if(n){ n.text=text.trim(); save(); render(); } }
+// ===== TASK NOTE LOG =====
+function addTaskNote(taskId, text){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t || !text.trim()) return;
+  if(!t.noteLog) t.noteLog=[];
+  t.noteLog.unshift({id:uid(), text:text.trim(), ts:Date.now()});
+  save(); render(); openTasks.add(taskId);
+}
+function editTaskNote(taskId, noteId, text){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  const n=(t.noteLog||[]).find(x=>x.id===noteId); if(n){ n.text=text.trim(); }
+  editingTaskNote=null; save(); render();
+}
+function deleteTaskNote(taskId, noteId){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  t.noteLog=(t.noteLog||[]).filter(x=>x.id!==noteId); save(); render();
+}
 function sortedNotes(){
   return [...state.notes].sort((a,b)=>(b.pinned-a.pinned) || (b.createdAt-a.createdAt));
 }
@@ -1110,9 +1143,37 @@ function taskRow(t, opts){
     +'<div class="dlabel">Subtasks</div>'+subs
     +'<div class="sub-add"><input placeholder="Add subtask + Enter" data-act="subadd"></div>'
     +'<div class="dlabel">Notes</div>'
-    +'<textarea class="notes-ta" data-act="notes" placeholder="Running notes, progress log...">'+esc(t.notes)+'</textarea>'
+    +noteLogHtml(t)
     +'<button class="tdel" data-act="del">Delete task</button>'
     +'</div></div>';
+}
+function noteLogHtml(t){
+  const log = t.noteLog || [];
+  const open = noteLogOpen.has(t.id);
+  const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtDate=ts=>{ const d=new Date(ts); return d.getDate()+' '+mons[d.getMonth()]+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); };
+  let h='<div class="notelog">';
+  h+='<div class="nl-add"><input class="nl-in" data-act="notelogadd" placeholder="Add a note + Enter"><button class="nl-send" data-act="notelogsend">Send</button></div>';
+  if(log.length){
+    const shown = open ? log : log.slice(0,1);
+    h+='<div class="nl-list">';
+    shown.forEach(n=>{
+      if(editingTaskNote===n.id){
+        h+='<div class="nl-entry"><textarea class="nl-edit" data-notelogedit="'+n.id+'">'+esc(n.text)+'</textarea>'
+          +'<div class="nl-entry-actions"><button class="nl-savebtn" data-notelogsave="'+n.id+'|'+t.id+'">Save</button></div></div>';
+      } else {
+        h+='<div class="nl-entry"><div class="nl-body"><div class="nl-text" data-notelogeditopen="'+n.id+'">'+esc(n.text).replace(/\n/g,'<br>')+'</div>'
+          +'<div class="nl-meta">'+fmtDate(n.ts)+'</div></div>'
+          +'<button class="nl-del" data-notelogdel="'+n.id+'|'+t.id+'" title="Delete note">✕</button></div>';
+      }
+    });
+    h+='</div>';
+    if(log.length>1){
+      h+='<button class="nl-toggle" data-notelogtoggle="'+t.id+'">'+(open?'Show less':'Show all '+log.length+' notes')+'</button>';
+    }
+  }
+  h+='</div>';
+  return h;
 }
 function bindTaskEvents(container){
   container.querySelectorAll('.task').forEach(el=>{
@@ -1182,14 +1243,45 @@ function bindTaskEvents(container){
         inp.addEventListener('keydown',ev=>{ if(ev.key==='Enter') commit(); if(ev.key==='Escape') render(); });
         inp.addEventListener('blur',commit);
       }
+      else if(act==='notelogsend'){
+        e.stopPropagation();
+        const inp=el.querySelector('[data-act="notelogadd"]');
+        if(inp && inp.value.trim()){ addTaskNote(id, inp.value); }
+      }
+      else if(e.target.closest('[data-notelogeditopen]')){
+        e.stopPropagation();
+        editingTaskNote=e.target.closest('[data-notelogeditopen]').dataset.notelogeditopen;
+        render();
+      }
+      else if(e.target.closest('[data-notelogsave]')){
+        e.stopPropagation();
+        const [nid,tid]=e.target.closest('[data-notelogsave]').dataset.notelogsave.split('|');
+        const ta=el.querySelector('[data-notelogedit="'+nid+'"]');
+        if(ta) editTaskNote(tid, nid, ta.value);
+      }
+      else if(e.target.closest('[data-notelogdel]')){
+        e.stopPropagation();
+        const [nid,tid]=e.target.closest('[data-notelogdel]').dataset.notelogdel.split('|');
+        deleteTaskNote(tid, nid);
+      }
+      else if(e.target.closest('[data-notelogtoggle]')){
+        e.stopPropagation();
+        const tid=e.target.closest('[data-notelogtoggle]').dataset.notelogtoggle;
+        if(noteLogOpen.has(tid)) noteLogOpen.delete(tid); else noteLogOpen.add(tid);
+        render();
+      }
       else if(act==='toggle'){
         if(e.target.closest('.tdetail')) return;
         if(openTasks.has(id)) openTasks.delete(id); else openTasks.add(id);
         render();
       }
     });
-    const notes=el.querySelector('[data-act="notes"]');
-    if(notes){ notes.addEventListener('click',e=>e.stopPropagation()); notes.addEventListener('input',()=>{ t.notes=notes.value; save(); }); }
+    const nlAdd=el.querySelector('[data-act="notelogadd"]');
+    if(nlAdd){ nlAdd.addEventListener('click',e=>e.stopPropagation()); nlAdd.addEventListener('keydown',e=>{
+      if(e.key==='Enter' && nlAdd.value.trim()){ addTaskNote(id, nlAdd.value); }
+    });}
+    const nlEdit=el.querySelector('.nl-edit');
+    if(nlEdit){ nlEdit.addEventListener('click',e=>e.stopPropagation()); nlEdit.focus(); nlEdit.addEventListener('keydown',e=>{ if(e.key==='Escape'){ editingTaskNote=null; render(); } }); }
     const sadd=el.querySelector('[data-act="subadd"]');
     if(sadd){ sadd.addEventListener('click',e=>e.stopPropagation()); sadd.addEventListener('keydown',e=>{
       if(e.key==='Enter' && sadd.value.trim()){ t.subtasks.push({id:uid(),text:sadd.value.trim(),done:false}); save(); render(); openTasks.add(id); }
