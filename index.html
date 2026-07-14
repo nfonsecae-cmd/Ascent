@@ -1182,6 +1182,29 @@ function bindTaskEvents(container){
     el.addEventListener('click', e=>{
       const actEl=e.target.closest('[data-act]');
       const act=actEl?.dataset.act;
+      // note-log controls use their own data-attributes (not data-act) — handle before the early return
+      if(e.target.closest('[data-notelogeditopen]')){
+        e.stopPropagation();
+        editingTaskNote=e.target.closest('[data-notelogeditopen]').dataset.notelogeditopen;
+        render(); return;
+      }
+      if(e.target.closest('[data-notelogsave]')){
+        e.stopPropagation();
+        const [nid,tid]=e.target.closest('[data-notelogsave]').dataset.notelogsave.split('|');
+        const ta=el.querySelector('[data-notelogedit="'+nid+'"]');
+        if(ta) editTaskNote(tid, nid, ta.value); return;
+      }
+      if(e.target.closest('[data-notelogdel]')){
+        e.stopPropagation();
+        const [nid,tid]=e.target.closest('[data-notelogdel]').dataset.notelogdel.split('|');
+        deleteTaskNote(tid, nid); return;
+      }
+      if(e.target.closest('[data-notelogtoggle]')){
+        e.stopPropagation();
+        const tid=e.target.closest('[data-notelogtoggle]').dataset.notelogtoggle;
+        if(noteLogOpen.has(tid)) noteLogOpen.delete(tid); else noteLogOpen.add(tid);
+        render(); return;
+      }
       if(!act) return;
       if(act==='complete'){ e.stopPropagation(); completeTask(id); }
       else if(act==='bucket'){ e.stopPropagation(); openBucketMenu(actEl, id); }
@@ -1247,28 +1270,6 @@ function bindTaskEvents(container){
         e.stopPropagation();
         const inp=el.querySelector('[data-act="notelogadd"]');
         if(inp && inp.value.trim()){ addTaskNote(id, inp.value); }
-      }
-      else if(e.target.closest('[data-notelogeditopen]')){
-        e.stopPropagation();
-        editingTaskNote=e.target.closest('[data-notelogeditopen]').dataset.notelogeditopen;
-        render();
-      }
-      else if(e.target.closest('[data-notelogsave]')){
-        e.stopPropagation();
-        const [nid,tid]=e.target.closest('[data-notelogsave]').dataset.notelogsave.split('|');
-        const ta=el.querySelector('[data-notelogedit="'+nid+'"]');
-        if(ta) editTaskNote(tid, nid, ta.value);
-      }
-      else if(e.target.closest('[data-notelogdel]')){
-        e.stopPropagation();
-        const [nid,tid]=e.target.closest('[data-notelogdel]').dataset.notelogdel.split('|');
-        deleteTaskNote(tid, nid);
-      }
-      else if(e.target.closest('[data-notelogtoggle]')){
-        e.stopPropagation();
-        const tid=e.target.closest('[data-notelogtoggle]').dataset.notelogtoggle;
-        if(noteLogOpen.has(tid)) noteLogOpen.delete(tid); else noteLogOpen.add(tid);
-        render();
       }
       else if(act==='toggle'){
         if(e.target.closest('.tdetail')) return;
