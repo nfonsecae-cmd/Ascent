@@ -56,10 +56,10 @@ html[data-theme="light"][data-accent="ember"]{
 html[data-theme="light"][data-accent="ivory"]{
   --bg:#FFFFFF;
   --bkt-today:#B8860B; --bkt-week:#C06A1E; --bkt-later:#8A6A2E;
-  --panel:#FCFAF6; --panel2:#F7F3EC;
+  --panel:#FFFFFF; --panel2:#F6F7F9;
   --card:#FFFFFF; --pop-bg:#FFFFFF;
-  --line:rgba(40,30,10,.1); --line-hi:rgba(40,30,10,.2);
-  --txt:#1C1710; --muted:#6E6558; --faint:#A69E8E;
+  --line:rgba(18,20,26,.09); --line-hi:rgba(18,20,26,.18);
+  --txt:#111318; --muted:#666D79; --faint:#A5AAB4;
   --blue:#B8860B; --blue-hi:#9A6F08; --purple:#B8860B; --purple-hi:#9A6F08;
   --green:#0E9C57; --red:#CE2130;
   --ring:linear-gradient(120deg,#E8C56A,#D4A62E 45%,#C08A1E 75%,#A0742A);
@@ -105,8 +105,20 @@ html[data-theme="light"][data-accent="ember"] .bg-layer{background:
   radial-gradient(720px 280px at 72% -16%, rgba(var(--gA),.2), transparent 62%),
   var(--bg)}
 html[data-theme="light"][data-accent="ivory"] .bg-layer{background:
-  radial-gradient(640px 240px at 76% -18%, rgba(var(--gA),.1), transparent 60%),
-  var(--bg)}
+  radial-gradient(900px 300px at 78% -16%, rgba(212,166,46,.14), transparent 64%),
+  radial-gradient(700px 280px at 6% 104%, rgba(184,134,11,.07), transparent 62%),
+  #FFFFFF}
+/* gold dragées — scattered metallic specks, fading downward */
+html[data-theme="light"][data-accent="ivory"] .bg-layer::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(184,134,11,.42) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle, rgba(212,166,46,.30) 0 1.7px, transparent 2.6px),
+    radial-gradient(circle, rgba(160,116,42,.22) 0 .9px, transparent 1.5px);
+  background-size:196px 174px, 317px 289px, 123px 241px;
+  background-position:23px 41px, 131px 88px, 71px 17px;
+  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.4) 48%, transparent 88%);
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.95), rgba(0,0,0,.4) 48%, transparent 88%)}
 .wrap{max-width:760px;margin:0 auto;padding:0 18px 90px}
 
 /* ===== SIGNATURE: GLOWING GRADIENT RING ===== */
@@ -114,6 +126,16 @@ html[data-theme="light"][data-accent="ivory"] .bg-layer{background:
   background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
   box-shadow:0 0 26px -10px rgba(var(--gA),.55), 0 0 26px -14px rgba(var(--gB),.45)}
 html[data-theme="light"] .gb{box-shadow:0 0 26px -10px rgba(var(--gA),.35), 0 6px 20px -10px rgba(20,25,50,.15)}
+/* ivory: white cards lift off white paper with a whisper of gold */
+html[data-theme="light"][data-accent="ivory"] .gb{
+  box-shadow:0 0 22px -10px rgba(184,134,11,.45), 0 8px 24px -14px rgba(18,20,26,.18)}
+html[data-theme="light"][data-accent="ivory"] .task,
+html[data-theme="light"][data-accent="ivory"] .hist-row,
+html[data-theme="light"][data-accent="ivory"] .hist-card,
+html[data-theme="light"][data-accent="ivory"] .help-card{
+  box-shadow:0 1px 2px rgba(18,20,26,.04), 0 6px 16px -12px rgba(18,20,26,.22)}
+html[data-theme="light"][data-accent="ivory"] .task:hover{
+  box-shadow:0 1px 2px rgba(18,20,26,.05), 0 10px 22px -14px rgba(184,134,11,.5)}
 
 /* ============ HEADER ============ */
 header{padding:14px 0 0;position:relative}
