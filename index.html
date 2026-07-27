@@ -20,7 +20,7 @@
   --line:rgba(255,255,255,.09); --line-hi:rgba(255,255,255,.2);
   --txt:#F2F4FB; --muted:#9AA3BF; --faint:#5D6580;
   --blue:#3E8BFF; --blue-hi:#6FAEFF; --purple:#8B5CFF; --purple-hi:#AB8CFF;
-  --green:#3BE58B; --red:#FF4D5E;
+  --green:#3BE58B; --red:#FF4D5E; --fu:#4D9BFF; --fu-rgb:77,155,255;
   --ring:linear-gradient(120deg,#FF5CA8,#8B5CFF 45%,#3E8BFF 75%,#45D8D0);
   --grad:linear-gradient(100deg,#3E8BFF,#8B5CFF);
   --pop-bg:#141827;
@@ -74,7 +74,7 @@ html[data-theme="light"]{
   --line:rgba(20,25,50,.1); --line-hi:rgba(20,25,50,.22);
   --txt:#171B2E; --muted:#5C6484; --faint:#9299B4;
   --blue:#2E6FE8; --blue-hi:#1D5FE0; --purple:#7B3BF5; --purple-hi:#6E22F0;
-  --green:#0EA95D; --red:#E02438;
+  --green:#0EA95D; --red:#E02438; --fu:#2563EB; --fu-rgb:37,99,235;
   --pop-bg:#FFFFFF;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -220,7 +220,7 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .task.pinned{box-shadow:0 0 20px -12px rgba(var(--gA),.7)}
 
 /* status rails — weight ladder */
-.task.st-fu{border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0}
+.task.st-fu{border-left:3px solid var(--fu);border-radius:0 var(--r) var(--r) 0}
 .task.st-ip{border-left:3px solid var(--green);border-radius:0 var(--r) var(--r) 0}
 .task.st-ns{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
 .task.st-ns .trow{padding:7px 11px}
@@ -241,7 +241,7 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .pinbtn{background:none;border:none;color:var(--faint);cursor:pointer;font-size:14px;line-height:1;flex:none;padding:0 2px;transition:color .12s,transform .12s}
 .pinbtn:hover{transform:scale(1.2)}
 .pinbtn.on{color:var(--blue-hi);text-shadow:0 0 8px currentColor}
-.person-chip{color:var(--red)!important;border-color:rgba(255,77,94,.45)!important;background:rgba(255,77,94,.08)!important}
+.person-chip{color:var(--fu)!important;border-color:rgba(var(--fu-rgb),.45)!important;background:rgba(var(--fu-rgb),.09)!important}
 
 /* filter bar */
 .filterbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:14px 0 4px;padding:9px 11px;border-radius:12px;
@@ -340,8 +340,8 @@ html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.
 .sub-badge{font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:2px 8px;white-space:nowrap}
 .daytrack{font-size:10px;font-weight:600;border-radius:999px;padding:2px 8px;white-space:nowrap;font-family:'Space Grotesk',sans-serif}
 .track-ip{color:var(--green);background:rgba(59,229,139,.1);border:1px solid rgba(59,229,139,.28)}
-.track-fu{color:var(--amber,#FFB454);background:rgba(255,180,84,.12);border:1px solid rgba(255,180,84,.32)}
-.track-stale{color:var(--red)!important;background:rgba(255,77,94,.1)!important;border-color:rgba(255,77,94,.35)!important}
+.track-fu{color:var(--fu);background:rgba(var(--fu-rgb),.12);border:1px solid rgba(var(--fu-rgb),.32)}
+.track-stale{color:#D98A18!important;background:rgba(217,138,24,.12)!important;border-color:rgba(217,138,24,.38)!important}
 .rowdel{background:none;border:none;color:var(--faint);cursor:pointer;font-size:12px;flex:none;padding:0 3px;opacity:.6;transition:opacity .12s}
 .rowdel:hover{opacity:1;color:var(--red)}
 .rowdel.armed{opacity:1;color:#fff;background:var(--red);border-radius:6px;padding:2px 8px;font-size:10.5px;font-weight:600;font-family:'Space Grotesk',sans-serif}
@@ -396,7 +396,7 @@ html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.
 .sdot{width:7px;height:7px;border-radius:50%;flex:none}
 .s-ns{color:var(--muted)}.s-ns .sdot{background:var(--faint)}
 .s-ip{color:var(--green)!important;border-color:rgba(59,229,139,.5)!important;background:rgba(59,229,139,.08)!important}.s-ip .sdot{background:var(--green);box-shadow:0 0 8px rgba(59,229,139,1)}
-.s-fu{color:var(--red)!important;border-color:rgba(255,77,94,.5)!important;background:rgba(255,77,94,.08)!important}.s-fu .sdot{background:var(--red);box-shadow:0 0 8px rgba(255,77,94,.9)}
+.s-fu{color:var(--fu)!important;border-color:rgba(var(--fu-rgb),.5)!important;background:rgba(var(--fu-rgb),.09)!important}.s-fu .sdot{background:var(--fu);box-shadow:0 0 8px rgba(var(--fu-rgb),.9)}
 
 .tagb{background:rgba(var(--gA),.14);border:1px solid rgba(var(--gA),.4);color:var(--purple-hi);font-size:10.5px;padding:2.5px 8px;border-radius:999px;white-space:nowrap}
 .overdue-tag{background:rgba(255,77,94,.14);border:1px solid rgba(255,77,94,.5);color:var(--red);font-size:10px;padding:2.5px 8px;border-radius:999px;font-weight:600;letter-spacing:.06em}
@@ -592,7 +592,7 @@ const STATUSES = ['Not Started','In Progress','Follow-up'];
 const STATUS_META = {
   'Not Started':{cls:'s-ns', dot:'#4A5578', sub:''},
   'In Progress':{cls:'s-ip', dot:'#20E37B', sub:'on track'},
-  'Follow-up':{cls:'s-fu', dot:'#FF3B4E', sub:'awaiting input'}
+  'Follow-up':{cls:'s-fu', dot:'var(--fu)', sub:'awaiting input'}
 };
 const BUCKETS = ['Today','Week','Later'];
 const BUCKET_LABEL = {Today:'Today', Week:'This Week', Later:'Later'};
