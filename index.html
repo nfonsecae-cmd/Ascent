@@ -200,14 +200,44 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .sec-caret{color:var(--faint);font-size:9px;transition:transform .15s;display:inline-block;margin-right:-2px}
 .sec-caret.open{transform:rotate(90deg)}
 
-/* sub-status group label */
-.substat{display:flex;align-items:center;gap:7px;margin:12px 2px 6px;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+/* sub-status group label — collapsible */
+.substat{display:flex;align-items:center;gap:7px;margin:20px 2px 7px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);user-select:none}
+.substat:hover{color:var(--txt)}
+.substat-caret{font-size:8px;color:var(--faint);display:inline-block;transition:transform .15s;margin-right:-2px}
+.substat.open .substat-caret{transform:rotate(90deg)}
 .substat-dot{width:6px;height:6px;border-radius:50%;flex:none}
 .substat-n{font-size:10px;color:var(--faint);margin-left:2px}
+.substat-line{flex:1;height:1px;background:var(--line);margin-left:4px}
 
-/* pinned */
-.pin-band{margin-bottom:4px}
-.task.pinned{box-shadow:0 0 20px -10px rgba(var(--gA),.7);border-left:2px solid rgba(var(--gA),.7)}
+/* pinned band */
+.pin-band{margin:2px 0 20px;padding:9px 10px 5px;border-left:3px solid rgba(var(--gA),.85);border-radius:0 var(--r) var(--r) 0;background:rgba(var(--gA),.07)}
+.pin-label{display:flex;align-items:center;gap:6px;margin:0 2px 8px;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-hi)}
+.pin-label .pin-n{color:var(--faint)}
+.pin-band .task{background:var(--card);margin-bottom:6px}
+.pin-band .task:last-child{margin-bottom:4px}
+.pin-band .trow{padding:11px 12px}
+.pin-band .ttitle{font-size:14px;font-weight:500}
+.task.pinned{box-shadow:0 0 20px -12px rgba(var(--gA),.7)}
+
+/* status rails — weight ladder */
+.task.st-fu{border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0}
+.task.st-ip{border-left:3px solid var(--green);border-radius:0 var(--r) var(--r) 0}
+.task.st-ns{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+.task.st-ns .trow{padding:7px 11px}
+.task.st-ns .ttitle{font-size:12.5px;color:var(--muted)}
+.task.st-ns:hover .ttitle{color:var(--txt)}
+.task.st-ns.open .ttitle{color:var(--txt)}
+
+/* pinned rows stay full-weight even when Not Started */
+.pin-band .task.st-ns{background:var(--card)}
+.pin-band .task.st-ns .trow{padding:11px 12px}
+.pin-band .task.st-ns .ttitle{font-size:14px;font-weight:500;color:var(--txt)}
+
+/* quiet controls when the group already says it */
+.chip.st-dot{padding:3.5px 7px;gap:3px}
+.chip.bucket-quiet{color:var(--faint);background:transparent;border-color:var(--line);padding:3.5px 8px}
+.chip.bucket-quiet:hover{color:var(--txt);border-color:var(--line-hi)}
+
 .pinbtn{background:none;border:none;color:var(--faint);cursor:pointer;font-size:14px;line-height:1;flex:none;padding:0 2px;transition:color .12s,transform .12s}
 .pinbtn:hover{transform:scale(1.2)}
 .pinbtn.on{color:var(--blue-hi);text-shadow:0 0 8px currentColor}
@@ -579,6 +609,7 @@ let state = {
   catColors:{'BMS Operational':'#C9921E','Client Recurrent':'#8B5CFF'},
   ui:{weekOpen:false, catOpen:{}, noteOpen:false,
       bucketOpen:{Today:true,Week:true,Later:true},
+      subOpen:{},
       theme:'light', accent:'ivory',
       groupByStatus:true}
 };
@@ -618,6 +649,7 @@ async function load(){
         if(!state.catColors) state.catColors={};
         if(!state.people) state.people=['Carolina','Miller Salas','Nicolas Becerra'];
         if(!state.ui.bucketOpen) state.ui.bucketOpen={Today:true,Week:true,Later:true};
+        if(!state.ui.subOpen) state.ui.subOpen={};
         if(state.ui.noteOpen===undefined) state.ui.noteOpen=false;
         if(state.ui.groupByStatus===undefined) state.ui.groupByStatus=true;
         if(!state.ui.theme) state.ui.theme='light';
@@ -1102,8 +1134,9 @@ function openPersonMenu(btn, id){
 function renderQuiet(){ const p=document.querySelector('.pop'); render(); if(p) document.body.appendChild(p); }
 
 /* ================= RENDER: TASK ROW ================= */
-function statusChip(t){
+function statusChip(t, compact){
   const m=STATUS_META[t.status]||STATUS_META['Not Started'];
+  if(compact) return '<button class="chip '+m.cls+' st-dot" data-act="status" title="'+t.status+' — tap to change"><span class="sdot"></span><span class="dd">▾</span></button>';
   return '<button class="chip '+m.cls+'" data-act="status" title="Set status"><span class="sdot"></span>'+t.status+'<span class="dd">▾</span></button>';
 }
 function taskRow(t, opts){
@@ -1112,7 +1145,7 @@ function taskRow(t, opts){
   const open=openTasks.has(t.id);
   let meta='';
   if(od) meta+='<span class="overdue-tag">OVERDUE</span>';
-  meta+=statusChip(t);
+  meta+=statusChip(t, opts.compactStatus);
   // day tracker for in-progress / follow-up
   if((t.status==='In Progress'||t.status==='Follow-up') && t.statusSince){
     const n=daysSince(t.statusSince);
@@ -1131,7 +1164,10 @@ function taskRow(t, opts){
     const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     meta+='<span class="chip sched-chip" title="Scheduled date">📅 '+d.getDate()+' '+mons[d.getMonth()]+' '+d.getFullYear()+'</span>';
   }
-  if(!opts.hideBucket && !opts.scheduled) meta+='<button class="chip bucket-'+t.bucket+'" data-act="bucket" title="Move to...">'+BUCKET_LABEL[t.bucket]+'<span class="dd">▾</span></button>';
+  if(!opts.hideBucket && !opts.scheduled){
+    if(opts.quietBucket) meta+='<button class="chip bucket-quiet" data-act="bucket" title="Move to another bucket">⇄</button>';
+    else meta+='<button class="chip bucket-'+t.bucket+'" data-act="bucket" title="Move to...">'+BUCKET_LABEL[t.bucket]+'<span class="dd">▾</span></button>';
+  }
   meta+=t.tags.map(tag=>'<span class="tagb">'+esc(tag)+'</span>').join('');
   meta+='<button class="tagplus" data-act="tags" title="Tags">+</button>';
   // subtask indicator when collapsed
@@ -1154,7 +1190,8 @@ function taskRow(t, opts){
     ? '<div class="dlabel">Scheduled date</div><input type="date" class="sched-input" data-act="scheddate" value="'+(t.scheduledDate||'')+'">'
     : '';
 
-  return '<div class="task '+(od?'overdue':'')+' '+(open?'open':'')+' '+(t.pinned?'pinned':'')+'" data-task="'+t.id+'">'
+  const stCls = t.status==='Follow-up' ? 'st-fu' : t.status==='In Progress' ? 'st-ip' : 'st-ns';
+  return '<div class="task '+stCls+' '+(od?'overdue':'')+' '+(open?'open':'')+' '+(t.pinned?'pinned':'')+'" data-task="'+t.id+'">'
     +'<div class="trow" data-act="toggle">'
     +'<button class="ck" data-act="complete" title="Complete"></button>'
     +'<span class="ttitle" data-act="titleedit" title="Tap to edit">'+esc(t.title)+'</span>'
@@ -1341,26 +1378,35 @@ function applyFilters(list){
 }
 function filterActive(){ return !!filterStatus; }
 
-// render a bucket's tasks: pinned first, then optionally grouped by status
-function renderBucketBody(tasks){
+// render a bucket's tasks: pinned band first, then collapsible status subgroups
+function renderBucketBody(tasks, bkey){
+  const ro={compactStatus:true, quietBucket:true};
   const pinned = tasks.filter(t=>t.pinned);
   const rest = tasks.filter(t=>!t.pinned);
   let h='';
   if(pinned.length){
-    h+='<div class="pin-band">'+pinned.sort(sortToday).map(t=>taskRow(t)).join('')+'</div>';
+    h+='<div class="pin-band"><div class="pin-label">📌 Pinned<span class="pin-n">'+pinned.length+'</span></div>'
+      + pinned.sort(sortToday).map(t=>taskRow(t,ro)).join('')
+      + '</div>';
   }
   if(state.ui.groupByStatus && !filterActive()){
     STATUS_ORDER.forEach(s=>{
       const g=rest.filter(t=>t.status===s).sort(sortToday);
       if(!g.length) return;
       const m=STATUS_META[s];
-      h+='<div class="substat"><span class="substat-dot" style="background:'+m.dot+';box-shadow:0 0 7px '+m.dot+'"></span>'+s+'<span class="substat-n">'+g.length+'</span></div>';
-      h+=g.map(t=>taskRow(t)).join('');
+      const key=(bkey||'x')+'|'+s;
+      const open = state.ui.subOpen[key]!==false;
+      h+='<div class="substat '+(open?'open':'')+'" data-substat="'+key+'">'
+        +'<span class="substat-caret">▶</span>'
+        +'<span class="substat-dot" style="background:'+m.dot+'"></span>'+s
+        +'<span class="substat-n">'+g.length+'</span>'
+        +'<span class="substat-line"></span></div>';
+      if(open) h+=g.map(t=>taskRow(t,ro)).join('');
     });
     const untagged=rest.filter(t=>!STATUS_ORDER.includes(t.status));
-    untagged.sort(sortToday).forEach(t=>h+=taskRow(t));
+    untagged.sort(sortToday).forEach(t=>h+=taskRow(t,ro));
   } else {
-    h+=rest.sort(sortToday).map(t=>taskRow(t)).join('');
+    h+=rest.sort(sortToday).map(t=>taskRow(t,ro)).join('');
   }
   return h || '<div class="empty">—</div>';
 }
@@ -1418,14 +1464,14 @@ function renderDashboard(){
   h+=filterBar();
   const tOpen=state.ui.bucketOpen.Today;
   h+=secHead('TODAY', today.length, '', BUCKET_COLOR.Today, 'Today', tOpen);
-  if(tOpen) h+= today.length? renderBucketBody(today) : '<div class="empty">The day is clear. Add what must be done.</div>';
+  if(tOpen) h+= today.length? renderBucketBody(today,'Today') : '<div class="empty">The day is clear. Add what must be done.</div>';
   const wOpen=state.ui.bucketOpen.Week;
   const upcoming = filterActive() ? [] : upcomingPipeline(7);
   const weekTotal = week.length + upcoming.length;
   h+=secHead('THIS WEEK', weekTotal, '', BUCKET_COLOR.Week, 'Week', wOpen);
   if(wOpen){
     let wh='';
-    wh += week.length ? renderBucketBody(week) : '';
+    wh += week.length ? renderBucketBody(week,'Week') : '';
     if(upcoming.length){
       const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
       const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -1470,7 +1516,7 @@ function renderList(list){
       const g=applyFilters(base.filter(t=>t.bucket===b));
       const bOpen=state.ui.bucketOpen[b];
       h+=secHead(BUCKET_LABEL[b].toUpperCase(), g.length, '', BUCKET_COLOR[b], b, bOpen);
-      if(bOpen) h+= g.length? renderBucketBody(g) : '<div class="empty">—</div>';
+      if(bOpen) h+= g.length? renderBucketBody(g,'list-'+b) : '<div class="empty">—</div>';
     });
   } else {
     h+='<div style="height:14px"></div>';
@@ -1701,6 +1747,12 @@ function render(){
   // section (bucket) collapse toggles
   document.querySelectorAll('[data-sectoggle]').forEach(el=>el.addEventListener('click',()=>{
     const b=el.dataset.sectoggle; state.ui.bucketOpen[b]=!state.ui.bucketOpen[b]; save(); render();
+  }));
+  // status subgroup collapse toggles
+  document.querySelectorAll('[data-substat]').forEach(el=>el.addEventListener('click',()=>{
+    const k=el.dataset.substat;
+    state.ui.subOpen[k] = (state.ui.subOpen[k]===false);
+    save(); render();
   }));
   // filter bar
   document.querySelectorAll('[data-fstatus]').forEach(b=>b.addEventListener('click',()=>{
