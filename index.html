@@ -498,6 +498,7 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .rule-form input:focus,.rule-form select:focus{border-color:var(--purple)}
 .rule-form .grow{flex:1;min-width:140px}
 .rule-form textarea{width:100%;min-height:48px;resize:vertical}
+.rf-preview{font-size:12px;color:var(--green);background:rgba(59,229,139,.08);border:1px solid rgba(59,229,139,.22);border-radius:9px;padding:8px 11px;margin:2px 0 12px;font-family:'Space Grotesk',sans-serif;letter-spacing:.02em}
 .rule-form .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
 .flabel{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.18em;color:var(--purple-hi);font-weight:600;text-transform:uppercase;margin:4px 0 7px;width:100%}
 .tagpick{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -669,11 +670,20 @@ async function load(){
 }
 
 /* ================= RECURRENCE ENGINE ================= */
+const MONTHS_FULL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// the four months a quarterly rule fires in, derived from its start month
+function quarterMonths(r){
+  const base=((r.qStart||0)%3+3)%3;
+  return [base, base+3, base+6, base+9];
+}
 function ruleFreqText(r){
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dayLbl = d => d>=31 ? 'last day' : 'day '+d;
   if(r.type==='weekly') return 'Weekly · '+days[r.weekday];
-  if(r.type==='monthly') return 'Monthly · day '+r.monthday;
-  if(r.type==='quarterly') return 'Quarterly · day '+r.monthday;
+  if(r.type==='monthly') return 'Monthly · '+dayLbl(r.monthday);
+  if(r.type==='quarterly') return 'Quarterly · '+dayLbl(r.monthday)+' of '+quarterMonths(r).map(m=>MONTHS_SHORT[m]).join('/');
+  if(r.type==='yearly') return 'Yearly · '+(r.monthday>=31?'last day of ':r.monthday+' ')+MONTHS_FULL[r.month||0];
   if(r.type==='interval') return 'Every '+r.intervalDays+' days';
   return '';
 }
@@ -694,13 +704,22 @@ function lastDueOnOrBefore(r, ref){
     return null;
   }
   if(r.type==='quarterly'){
-    const y=refD.getFullYear(); const qm=[0,3,6,9];
+    const y=refD.getFullYear(); const qm=quarterMonths(r);
     for(let yy=y; yy>=y-1; yy--){
       for(let i=qm.length-1;i>=0;i--){
         const dim=new Date(yy,qm[i]+1,0).getDate();
         const cand=new Date(yy,qm[i],Math.min(r.monthday,dim));
         if(cand<=refD) return fmt(cand);
       }
+    }
+    return null;
+  }
+  if(r.type==='yearly'){
+    const m=r.month||0;
+    for(let yy=refD.getFullYear(); yy>=refD.getFullYear()-1; yy--){
+      const dim=new Date(yy,m+1,0).getDate();
+      const cand=new Date(yy,m,Math.min(r.monthday,dim));
+      if(cand<=refD) return fmt(cand);
     }
     return null;
   }
@@ -768,13 +787,22 @@ function nextDueOnOrAfter(r, ref){
     return null;
   }
   if(r.type==='quarterly'){
-    const qm=[0,3,6,9]; let y=refD.getFullYear();
+    const qm=quarterMonths(r); let y=refD.getFullYear();
     for(let yy=y; yy<=y+1; yy++){
       for(let i=0;i<qm.length;i++){
         const dim=new Date(yy,qm[i]+1,0).getDate();
         const cand=new Date(yy,qm[i],Math.min(r.monthday,dim));
         if(cand>=refD) return fmt(cand);
       }
+    }
+    return null;
+  }
+  if(r.type==='yearly'){
+    const m=r.month||0;
+    for(let yy=refD.getFullYear(); yy<=refD.getFullYear()+1; yy++){
+      const dim=new Date(yy,m+1,0).getDate();
+      const cand=new Date(yy,m,Math.min(r.monthday,dim));
+      if(cand>=refD) return fmt(cand);
     }
     return null;
   }
@@ -1552,7 +1580,10 @@ function renderRecurring(){
     +'<p><b>Frequency options:</b></p>'
     +'<p>• <b>Weekly</b> — pick a weekday. Fires every week on that day (e.g. every Monday).</p>'
     +'<p>• <b>Monthly</b> — pick a day number 1–31. Fires that day each month. If a month is shorter, it uses the last valid day.</p>'
-    +'<p>• <b>Quarterly</b> — pick a day number. Fires on that day in Jan, Apr, Jul, Oct — for IVA, retención, quarterly filings.</p>'
+    +'<p>• <b>Quarterly</b> — pick a day <i>and</i> the first month of the cycle. It then fires every 3 months from there: start in January → Jan/Apr/Jul/Oct; start in February → Feb/May/Aug/Nov. Use it for IVA, retención, quarterly filings.</p>'
+    +'<p>• <b>Yearly — fixed date</b> — pick a month and a day, e.g. 20 December or 18 January. Fires once a year, same date every year. Use it for renewals, renta, insurance, birthdays.</p>'
+    +'<p>• <b>Day 31</b> in monthly, quarterly or yearly means <b>last day of the month</b> — it auto-adjusts to 28/29/30 where needed, so you never get a skipped February.</p>'
+    +'<p>The green line inside the rule form shows the <b>next three dates</b> the rule will fire, live as you change the settings. If that line looks wrong, the rule is wrong.</p>'
     +'<p>• <b>Every N days</b> — fires on a fixed interval counting from today (e.g. every 15 days).</p>'
     +'<p><b>Grace window:</b> if you open the app a few days late, a rule still generates its task for up to 7 days after the due date, so nothing silently slips.</p>'
     +'<p><b>Setup order:</b> create a Section (with its color) → tap <b>+ New Rule</b> → give it a title, pick the section, choose frequency, tap tags, save. Done.</p>'
@@ -1586,13 +1617,33 @@ function renderRecurring(){
   });
   return h;
 }
+// next N dates a draft rule would fire — powers the live preview in the form
+function previewDates(r, n){
+  const out=[]; let cur=nextDueOnOrAfter(r, todayStr()); let guard=0;
+  while(cur && out.length<n && guard<40){
+    out.push(cur);
+    const d=new Date(cur+'T00:00:00'); d.setDate(d.getDate()+1);
+    cur=nextDueOnOrAfter(r, d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
+    guard++;
+  }
+  return out;
+}
+function previewText(r){
+  const ds=previewDates(r,3);
+  if(!ds.length) return 'No upcoming dates — check the settings above.';
+  const fmt=s=>{ const d=new Date(s+'T00:00:00'); return d.getDate()+' '+MONTHS_SHORT[d.getMonth()]+' '+d.getFullYear(); };
+  return 'Fires on: '+ds.map(fmt).join('  ·  ');
+}
 function ruleForm(){
-  const r = typeof editingRule==='object' && editingRule ? editingRule : {title:'',type:'weekly',weekday:1,monthday:1,intervalDays:7,category:state.categories[0]||'General',notesTemplate:''};
+  const r = typeof editingRule==='object' && editingRule ? editingRule : {title:'',type:'weekly',weekday:1,month:0,qStart:0,monthday:1,intervalDays:7,category:state.categories[0]||'General',notesTemplate:''};
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const tagChips = state.tags.map(t=>
     '<button class="pick '+(formTags.includes(t)?'sel':'')+'" data-picktag="'+esc(t)+'">'+esc(t)+'</button>'
   ).join('');
   const catOpts = state.categories.map(c=>'<option value="'+esc(c)+'" '+(r.category===c?'selected':'')+'>'+esc(c)+'</option>').join('');
+  const showDay = r.type==='monthly'||r.type==='quarterly'||r.type==='yearly';
+  const monthOpts = MONTHS_FULL.map((m,i)=>'<option value="'+i+'" '+((r.month||0)===i?'selected':'')+'>'+m+'</option>').join('');
+  const qStartOpts = MONTHS_FULL.map((m,i)=>'<option value="'+i+'" '+((r.qStart||0)===i?'selected':'')+'>'+m+'</option>').join('');
   return '<div class="rule-form">'
     +'<div class="frow"><input class="grow" id="rf_title" placeholder="Rule title (e.g. IVA filing — Client X)" value="'+esc(r.title)+'"></div>'
     +'<div class="flabel">Section</div>'
@@ -1602,11 +1653,15 @@ function ruleForm(){
     +'<option value="weekly" '+(r.type==='weekly'?'selected':'')+'>Weekly</option>'
     +'<option value="monthly" '+(r.type==='monthly'?'selected':'')+'>Monthly</option>'
     +'<option value="quarterly" '+(r.type==='quarterly'?'selected':'')+'>Quarterly</option>'
+    +'<option value="yearly" '+(r.type==='yearly'?'selected':'')+'>Yearly — fixed date</option>'
     +'<option value="interval" '+(r.type==='interval'?'selected':'')+'>Every N days</option></select>'
     +'<select id="rf_weekday" style="display:'+(r.type==='weekly'?'block':'none')+'">'+days.map((d,i)=>'<option value="'+i+'" '+(r.weekday===i?'selected':'')+'>'+d+'</option>').join('')+'</select>'
-    +'<input id="rf_monthday" type="number" min="1" max="31" value="'+(r.monthday||1)+'" style="width:90px;display:'+(r.type==='monthly'||r.type==='quarterly'?'block':'none')+'" title="Day of month">'
+    +'<select id="rf_month" style="display:'+(r.type==='yearly'?'block':'none')+'" title="Month">'+monthOpts+'</select>'
+    +'<select id="rf_qstart" style="display:'+(r.type==='quarterly'?'block':'none')+'" title="First month of the cycle">'+qStartOpts+'</select>'
+    +'<input id="rf_monthday" type="number" min="1" max="31" value="'+(r.monthday||1)+'" style="width:90px;display:'+(showDay?'block':'none')+'" title="Day of month">'
     +'<input id="rf_interval" type="number" min="1" value="'+(r.intervalDays||7)+'" style="width:90px;display:'+(r.type==='interval'?'block':'none')+'" title="Interval in days">'
     +'</div>'
+    +'<div class="rf-preview" id="rf_preview"></div>'
     +'<div class="flabel">Tags — tap to select</div>'
     +'<div class="frow tagpick" id="rf_tagpick">'+tagChips
     +'<span class="pick-new"><input id="rf_newtag" placeholder="New tag + Enter"></span></div>'
@@ -1881,13 +1936,31 @@ function render(){
   }));
   const rfType=document.getElementById('rf_type');
   if(rfType){
+    const draftRule=()=>({
+      type:rfType.value,
+      weekday:+document.getElementById('rf_weekday').value,
+      month:+document.getElementById('rf_month').value||0,
+      qStart:+document.getElementById('rf_qstart').value||0,
+      monthday:+document.getElementById('rf_monthday').value||1,
+      intervalDays:+document.getElementById('rf_interval').value||7,
+      anchor:todayStr()
+    });
     const sync=()=>{
       const v=rfType.value;
       document.getElementById('rf_weekday').style.display = v==='weekly'?'block':'none';
-      document.getElementById('rf_monthday').style.display = (v==='monthly'||v==='quarterly')?'block':'none';
+      document.getElementById('rf_month').style.display = v==='yearly'?'block':'none';
+      document.getElementById('rf_qstart').style.display = v==='quarterly'?'block':'none';
+      document.getElementById('rf_monthday').style.display = (v==='monthly'||v==='quarterly'||v==='yearly')?'block':'none';
       document.getElementById('rf_interval').style.display = v==='interval'?'block':'none';
+      const pv=document.getElementById('rf_preview');
+      if(pv) pv.textContent=previewText(draftRule());
     };
     rfType.addEventListener('change',sync);
+    ['rf_weekday','rf_month','rf_qstart','rf_monthday','rf_interval'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){ el.addEventListener('change',sync); el.addEventListener('input',sync); }
+    });
+    sync();
     document.querySelectorAll('[data-picktag]').forEach(b=>b.addEventListener('click',()=>{
       const t=b.dataset.picktag;
       if(formTags.includes(t)) formTags=formTags.filter(x=>x!==t); else formTags.push(t);
@@ -1918,6 +1991,8 @@ function render(){
       const obj={
         title, category:cat, type:rfType.value,
         weekday:+document.getElementById('rf_weekday').value,
+        month:+document.getElementById('rf_month').value||0,
+        qStart:+document.getElementById('rf_qstart').value||0,
         monthday:+document.getElementById('rf_monthday').value||1,
         intervalDays:+document.getElementById('rf_interval').value||7,
         anchor:todayStr(), tags:[...formTags],
