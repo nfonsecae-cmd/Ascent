@@ -544,6 +544,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .auth-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#1F1F1F;border:1px solid rgba(40,30,10,.14);border-radius:10px;padding:11px 20px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:filter .15s}
 .auth-btn:hover{filter:brightness(.97)}
 .auth-note{margin-top:14px;font-size:12px;color:#A69E8E;min-height:16px}
+
+/* ---- sync status indicator ---- */
+.syncdot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;margin-right:8px;
+  transition:background .25s ease, box-shadow .25s ease;}
+.syncdot.ok{background:#20E37B;box-shadow:0 0 0 3px rgba(32,227,123,.15);}
+.syncdot.pending{background:#C9921E;box-shadow:0 0 0 3px rgba(201,146,30,.18);animation:syncpulse 1s ease-in-out infinite;}
+.syncdot.offline{background:#8A8A8A;box-shadow:0 0 0 3px rgba(138,138,138,.18);}
+.syncdot.error{background:#FF4D4D;box-shadow:0 0 0 3px rgba(255,77,77,.2);animation:syncpulse .8s ease-in-out infinite;}
+@keyframes syncpulse{0%,100%{opacity:1}50%{opacity:.35}}
 </style>
 </head>
 <body>
@@ -565,6 +574,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       <div class="brandrow"><img class="brandmark" id="brandmark" alt="Ascent" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMDAwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg=="><span class="brandword">ASCENT</span></div>
       <span class="kpi-pill" id="kpiPill" onclick="setView('history')" title="Completion history"></span>
       <span class="hdate" id="hdate"></span>
+      <span class="syncdot ok" id="syncDot" title="All changes saved"></span>
       <button class="gear" id="gearBtn" title="Settings">⚙</button>
     </div>
     <nav id="nav"></nav>
@@ -630,44 +640,225 @@ function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(
 function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* ================= PERSISTENCE (Firebase) ================= */
-let saveTimer=null;
-function save(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(async ()=>{
-    try{ if(window.cloudSave) await window.cloudSave(state); }catch(e){ console.error('save failed', e); }
-  },400);
+/* ================= PERSISTENCE (local-first, merge-safe cloud sync) =================
+   Design:
+   1. Every save writes SYNCHRONOUSLY to localStorage first  -> survives app kill / iOS suspend.
+   2. Cloud write is debounced 250ms, but force-flushed on hide / pagehide / blur / online.
+   3. Firestore runs with IndexedDB persistence -> writes queue on disk and replay when back online.
+   4. Incoming remote state is MERGED item-by-item using per-item updatedAt + tombstones,
+      instead of overwriting the whole blob. This is what stops "my edit disappeared".
+==================================================================================== */
+const COLL = ['tasks','notes','rules'];
+let saveTimer = null;
+let lastSig = {};
+let pendingRerender = false;
+
+function lsKey(){ return 'ascent.state.' + (window.ascentUid || 'anon'); }
+
+/* signature ignores updatedAt so re-stamping doesn't create false "changes" */
+function sigOf(o){ const c = Object.assign({}, o); delete c.updatedAt; return JSON.stringify(c); }
+
+/* seed the change-detector without touching timestamps (used after load / after merge) */
+function seedSig(){
+  const fallback = state._ts || Date.now();
+  COLL.forEach(k=>{
+    const arr = Array.isArray(state[k]) ? state[k] : (state[k]=[]);
+    const m = {};
+    arr.forEach(it=>{ if(it && it.id){ if(!it.updatedAt) it.updatedAt = fallback; m[it.id] = sigOf(it); } });
+    lastSig[k] = m;
+  });
 }
+
+/* stamp updatedAt only on items that really changed; tombstone anything that vanished */
+function stampChanges(){
+  const now = Date.now();
+  if(!state._tomb) state._tomb = {};
+  COLL.forEach(k=>{
+    const arr = Array.isArray(state[k]) ? state[k] : (state[k]=[]);
+    const prev = lastSig[k] || {};
+    const next = {};
+    arr.forEach(it=>{
+      if(!it || !it.id) return;
+      const s = sigOf(it);
+      next[it.id] = s;
+      if(prev[it.id] !== s || !it.updatedAt) it.updatedAt = now;
+    });
+    Object.keys(prev).forEach(id=>{ if(!(id in next)) state._tomb[id] = now; });
+    lastSig[k] = next;
+  });
+  const cut = now - 60*24*3600*1000;           // prune tombstones after 60 days
+  Object.keys(state._tomb).forEach(id=>{ if(state._tomb[id] < cut) delete state._tomb[id]; });
+  state._ts = now;
+  state._rev = (state._rev || 0) + 1;
+}
+
+function writeLocal(){
+  try{ localStorage.setItem(lsKey(), JSON.stringify(state)); }catch(e){ /* quota / private mode */ }
+}
+
+function save(){
+  stampChanges();
+  writeLocal();                                 // <- durable immediately, no await
+  setSyncStatus('pending');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSave, 250);
+}
+
+async function flushSave(){
+  clearTimeout(saveTimer); saveTimer = null;
+  if(!window.cloudSave) return;
+  try{ await window.cloudSave(state); }
+  catch(e){ console.error('save failed', e); setSyncStatus('error'); }
+}
+window.flushAscentSave = function(){ if(saveTimer) flushSave(); };
+
+/* force the pending write out before the OS can freeze/kill the page */
+document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'hidden') window.flushAscentSave(); });
+window.addEventListener('pagehide', ()=>{ window.flushAscentSave(); });
+window.addEventListener('blur', ()=>{ window.flushAscentSave(); });
+window.addEventListener('online', ()=>{ window.flushAscentSave(); });
+setInterval(()=>{ window.flushAscentSave(); }, 15000);
+
+/* ---------- sync status pill ---------- */
+let syncState = 'saved';
+function setSyncStatus(s){
+  syncState = s;
+  const el = document.getElementById('syncDot');
+  if(!el) return;
+  const map = {
+    saved:   ['ok',      'All changes saved'],
+    pending: ['pending', 'Saving...'],
+    saving:  ['pending', 'Saving...'],
+    offline: ['offline', 'Offline — changes stored on this device and will sync automatically'],
+    error:   ['error',   'Sync problem — changes are safe on this device, retrying']
+  };
+  const m = map[s] || map.saved;
+  el.className = 'syncdot ' + m[0];
+  el.title = m[1];
+}
+window.setSyncStatus = setSyncStatus;
+
+/* ---------- normalisation / migrations (shared by load and merge) ---------- */
+function normalizeState(){
+  state.ui = Object.assign({weekOpen:false, catOpen:{}}, state.ui || {});
+  if(!Array.isArray(state.tasks)) state.tasks = [];
+  if(!Array.isArray(state.rules)) state.rules = [];
+  state.tasks.forEach(t=>{ if(t.status === 'Awaiting Input') t.status = 'Follow-up'; });
+  if(!state.categories || !state.categories.length) state.categories = ['General'];
+  if(!state.catColors) state.catColors = {};
+  if(!state.people) state.people = ['Carolina','Miller Salas','Nicolas Becerra'];
+  if(!state.ui.bucketOpen) state.ui.bucketOpen = {Today:true, Week:true, Later:true};
+  if(!state.ui.subOpen) state.ui.subOpen = {};
+  if(state.ui.noteOpen === undefined) state.ui.noteOpen = false;
+  if(state.ui.groupByStatus === undefined) state.ui.groupByStatus = true;
+  if(!state.ui.theme) state.ui.theme = 'light';
+  if(!state.ui.accent) state.ui.accent = 'ivory';
+  if(!Array.isArray(state.notes)) state.notes = [];
+  if(!state.completions || typeof state.completions !== 'object') state.completions = {};
+  if(typeof state.dailyTarget !== 'number') state.dailyTarget = 5;
+  if(!state._tomb) state._tomb = {};
+  if(state.dailyNote && state.dailyNote.trim()){
+    state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
+    state.dailyNote = '';
+  }
+  state.tasks.forEach(t=>{
+    if(t.pinned === undefined) t.pinned = false;
+    if(t.person === undefined) t.person = null;
+    if(t.scheduledDate === undefined) t.scheduledDate = null;
+    if(t.statusSince === undefined) t.statusSince = ((t.status === 'In Progress' || t.status === 'Follow-up') ? todayStr() : null);
+    if(!Array.isArray(t.noteLog)){
+      t.noteLog = [];
+      if(t.notes && t.notes.trim()) t.noteLog.push({id:uid(), text:t.notes.trim(), ts:t.createdAt || Date.now()});
+      t.notes = '';
+    }
+  });
+}
+
+/* ---------- the merge: this is the anti-data-loss core ---------- */
+function mergeRemote(remote){
+  if(!remote || typeof remote !== 'object') return false;
+  const localTs  = state._ts  || 0;
+  const remoteTs = remote._ts || 0;
+  const tomb = Object.assign({}, remote._tomb || {}, state._tomb || {});
+  let changed = false;
+
+  COLL.forEach(k=>{
+    const L = Array.isArray(state[k])  ? state[k]  : [];
+    const R = Array.isArray(remote[k]) ? remote[k] : [];
+    const before = JSON.stringify(L);
+    const map = new Map();
+    L.forEach(it=>{ if(it && it.id) map.set(it.id, it); });
+    R.forEach(it=>{
+      if(!it || !it.id) return;
+      const cur = map.get(it.id);
+      if(!cur){ map.set(it.id, it); return; }
+      if((it.updatedAt || 0) > (cur.updatedAt || 0)) map.set(it.id, it);   // newest edit wins, per item
+    });
+    const out = [];
+    map.forEach((it, id)=>{
+      const d = tomb[id];
+      if(d && d >= (it.updatedAt || 0)) return;      // deleted after its last edit -> stays deleted
+      out.push(it);
+    });
+    state[k] = out;
+    if(JSON.stringify(out) !== before) changed = true;
+  });
+
+  // settings / scalars: whole-object last-write-wins (low conflict risk)
+  if(remoteTs > localTs){
+    ['dailyTarget','tags','people','categories','catColors','ui'].forEach(k=>{
+      if(remote[k] !== undefined && JSON.stringify(remote[k]) !== JSON.stringify(state[k])){
+        state[k] = remote[k]; changed = true;
+      }
+    });
+  }
+
+  // completions: union of days, newer side wins on days present in both
+  const lc = state.completions || {}, rc = remote.completions || {};
+  const merged = (remoteTs > localTs) ? Object.assign({}, lc, rc) : Object.assign({}, rc, lc);
+  if(JSON.stringify(merged) !== JSON.stringify(lc)){ state.completions = merged; changed = true; }
+
+  state._tomb = tomb;
+  state._ts   = Math.max(localTs, remoteTs);
+  state._rev  = Math.max(state._rev || 0, remote._rev || 0);
+  return changed;
+}
+
+/* ---------- load: local cache first (instant), then reconcile with cloud ---------- */
 async function load(){
+  try{
+    const raw = localStorage.getItem(lsKey());
+    if(raw){ const s = JSON.parse(raw); if(s) state = Object.assign(state, s); }
+  }catch(e){ console.error('local load failed', e); }
+
   try{
     if(window.cloudLoad){
       const s = await window.cloudLoad();
-      if(s){
-        state = Object.assign(state, s);
-        state.ui = Object.assign({weekOpen:false,catOpen:{}}, s.ui||{});
-        state.tasks.forEach(t=>{ if(t.status==='Awaiting Input') t.status='Follow-up'; });
-        if(!state.categories || !state.categories.length) state.categories=['General'];
-        if(!state.catColors) state.catColors={};
-        if(!state.people) state.people=['Carolina','Miller Salas','Nicolas Becerra'];
-        if(!state.ui.bucketOpen) state.ui.bucketOpen={Today:true,Week:true,Later:true};
-        if(!state.ui.subOpen) state.ui.subOpen={};
-        if(state.ui.noteOpen===undefined) state.ui.noteOpen=false;
-        if(state.ui.groupByStatus===undefined) state.ui.groupByStatus=true;
-        if(!state.ui.theme) state.ui.theme='light';
-        if(!state.ui.accent) state.ui.accent='ivory';
-        if(!Array.isArray(state.notes)) state.notes=[];
-        if(!state.completions || typeof state.completions!=='object') state.completions={};
-        if(typeof state.dailyTarget!=='number') state.dailyTarget=5;
-        // migrate legacy single dailyNote string into the notes array
-        if(state.dailyNote && state.dailyNote.trim()){
-          state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
-          state.dailyNote='';
-        }
-        state.tasks.forEach(t=>{ if(t.pinned===undefined) t.pinned=false; if(t.person===undefined) t.person=null; if(t.scheduledDate===undefined) t.scheduledDate=null; if(t.statusSince===undefined) t.statusSince=((t.status==='In Progress'||t.status==='Follow-up')?todayStr():null); if(!Array.isArray(t.noteLog)){ t.noteLog=[]; if(t.notes && t.notes.trim()){ t.noteLog.push({id:uid(), text:t.notes.trim(), ts:t.createdAt||Date.now()}); } t.notes=''; } });
-      }
+      if(s) mergeRemote(s);
     }
-  }catch(e){ console.error('load failed', e); }
+  }catch(e){ console.error('cloud load failed', e); setSyncStatus('offline'); }
+
+  normalizeState();
+  seedSig();
+  writeLocal();
 }
+
+/* ---------- called by the live listener whenever the cloud copy changes ---------- */
+window.applyRemoteState = function(remote){
+  if(!remote) return;
+  const ae = document.activeElement;
+  const typing = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable);
+  const changed = mergeRemote(remote);
+  normalizeState();
+  seedSig();
+  writeLocal();
+  if(!changed) return;
+  if(typing){ pendingRerender = true; return; }   // never yank the field out from under you
+  if(typeof render === 'function') render();
+};
+document.addEventListener('focusout', ()=>{
+  if(pendingRerender){ pendingRerender = false; setTimeout(()=>{ if(typeof render === 'function') render(); }, 60); }
+});
 
 /* ================= RECURRENCE ENGINE ================= */
 const MONTHS_FULL=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -744,8 +935,10 @@ function generateFromRules(){
     const age=(new Date(today+'T00:00:00')-new Date(due+'T00:00:00'))/86400000;
     if(age>7) return;
     if(r.lastGen && r.lastGen>=due) return;
+    const genId = 'rec_'+r.id+'_'+due;
+    if(state.tasks.some(t=>t.id===genId) || (state._tomb && state._tomb[genId])){ r.lastGen=due; changed=true; return; }
     state.tasks.push({
-      id:uid(), title:r.title, status:'Not Started', bucket:'Today',
+      id:genId, title:r.title, status:'Not Started', bucket:'Today',
       tags:[...(r.tags||[])], subtasks:[], notes:r.notesTemplate||'',
       source:'recurring', ruleId:r.id, list:'active', createdAt:Date.now(), pinned:false, person:null,
       todayDate:due, completedAt:null
@@ -2136,6 +2329,7 @@ function setDate(){
 /* ================= BOOT ================= */
 window.startAscentApp = async function(){
   await load();
+  setSyncStatus('saved');
   applyTheme();
   purgeArchive();
   generateFromRules();
@@ -2153,10 +2347,10 @@ window.startAscentApp = async function(){
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc }
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+         doc, getDoc, setDoc, onSnapshot }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ====== PASTE YOUR FIREBASE CONFIG HERE (from Firebase Console > Project Settings) ======
 const firebaseConfig = {
   apiKey: "AIzaSyBE4p1xC9vxEAszuujXdLg1kLIfFVRTNmQ",
   authDomain: "ascent-98320.firebaseapp.com",
@@ -2165,26 +2359,63 @@ const firebaseConfig = {
   messagingSenderId: "197472907512",
   appId: "1:197472907512:web:595bab0f966ad59da00b0d"
 };
-// ==========================================================================================
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+
+/* IndexedDB-backed cache: writes are queued on disk and replayed automatically
+   when the connection comes back, even if the app was closed in between. */
+let db;
+try{
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+}catch(e){
+  console.warn('persistent cache unavailable, falling back to memory cache', e);
+  db = initializeFirestore(app, {});
+}
+
 const provider = new GoogleAuthProvider();
 
 let currentUid = null;
+let unsubscribe = null;
 function docRef(){ return doc(db, 'ascentUsers', currentUid); }
 
 window.cloudSave = async function(state){
   if(!currentUid) return;
-  await setDoc(docRef(), { data: JSON.stringify(state) }, { merge: true });
+  await setDoc(docRef(), {
+    data: JSON.stringify(state),
+    rev:  state._rev || 0,
+    ts:   state._ts  || Date.now()
+  }, { merge: true });
 };
+
 window.cloudLoad = async function(){
   if(!currentUid) return null;
   const snap = await getDoc(docRef());
   if(snap.exists() && snap.data().data) return JSON.parse(snap.data().data);
   return null;
 };
+
+/* Live listener: any change made on another device lands here within ~1s. */
+function startSync(){
+  if(unsubscribe) unsubscribe();
+  unsubscribe = onSnapshot(docRef(), { includeMetadataChanges: true },
+    (snap)=>{
+      const md = snap.metadata;
+      if(md.hasPendingWrites)      window.setSyncStatus && window.setSyncStatus('saving');
+      else if(md.fromCache)        window.setSyncStatus && window.setSyncStatus('offline');
+      else                         window.setSyncStatus && window.setSyncStatus('saved');
+      if(md.hasPendingWrites) return;      // our own write echoing back
+      if(!snap.exists()) return;
+      const d = snap.data();
+      if(!d || !d.data) return;
+      try{ window.applyRemoteState && window.applyRemoteState(JSON.parse(d.data)); }
+      catch(e){ console.error('remote apply failed', e); }
+    },
+    (err)=>{ console.error('sync error', err); window.setSyncStatus && window.setSyncStatus('error'); }
+  );
+}
 
 const gate = document.getElementById('authGate');
 const statusEl = document.getElementById('authStatus');
@@ -2198,10 +2429,14 @@ document.getElementById('googleSignIn').addEventListener('click', async ()=>{
 onAuthStateChanged(auth, async (user)=>{
   if(user){
     currentUid = user.uid;
+    window.ascentUid = user.uid;
     gate.classList.add('hidden');
     await window.startAscentApp();
+    startSync();
   } else {
     currentUid = null;
+    window.ascentUid = null;
+    if(unsubscribe){ unsubscribe(); unsubscribe = null; }
     gate.classList.remove('hidden');
   }
 });
