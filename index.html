@@ -844,14 +844,39 @@ async function load(){
 }
 
 /* ---------- called by the live listener whenever the cloud copy changes ---------- */
+/* order-independent fingerprint of the item-level content, used to decide
+   whether WE hold something the cloud copy is missing */
+function contentSig(s){
+  const parts = COLL.map(k=>{
+    const a = (Array.isArray(s[k]) ? s[k] : []).slice()
+      .sort((x,y)=> (x.id||'') < (y.id||'') ? -1 : 1);
+    return a.map(it=> it.id + ':' + (it.updatedAt || 0)).join('|');
+  });
+  const c = s.completions || {};
+  parts.push(Object.keys(c).sort().map(d=> d + '=' + c[d]).join('|'));
+  return parts.join('#');
+}
+let lastPushedSig = null;
+
 window.applyRemoteState = function(remote){
   if(!remote) return;
   const ae = document.activeElement;
   const typing = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable);
+  const remoteSig = contentSig(remote);
   const changed = mergeRemote(remote);
   normalizeState();
   seedSig();
   writeLocal();
+
+  /* If the merged result is richer than what the cloud sent us, push it back so the
+     other device converges too. When both sides match, the signatures are equal and
+     this stops — no ping-pong. */
+  const mergedSig = contentSig(state);
+  if(mergedSig !== remoteSig && mergedSig !== lastPushedSig){
+    lastPushedSig = mergedSig;
+    save();
+  }
+
   if(!changed) return;
   if(typing){ pendingRerender = true; return; }   // never yank the field out from under you
   if(typeof render === 'function') render();
@@ -2403,8 +2428,8 @@ function startSync(){
   unsubscribe = onSnapshot(docRef(), { includeMetadataChanges: true },
     (snap)=>{
       const md = snap.metadata;
-      if(md.hasPendingWrites)      window.setSyncStatus && window.setSyncStatus('saving');
-      else if(md.fromCache)        window.setSyncStatus && window.setSyncStatus('offline');
+      if(md.fromCache)             window.setSyncStatus && window.setSyncStatus('offline');
+      else if(md.hasPendingWrites) window.setSyncStatus && window.setSyncStatus('saving');
       else                         window.setSyncStatus && window.setSyncStatus('saved');
       if(md.hasPendingWrites) return;      // our own write echoing back
       if(!snap.exists()) return;
