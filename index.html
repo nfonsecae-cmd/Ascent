@@ -459,64 +459,94 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .pop input:focus{border-color:var(--purple)}
 
 /* ============ RECURRING ============ */
-/* ---------- RECURRING: toolbar ---------- */
-.rec-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 16px;
-  padding:10px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:1px solid var(--line);border-radius:var(--r)}
-.rec-toolbar .cat-swatch.big{flex:0 0 auto}
-.rec-toolbar input{flex:1;min-width:150px;background:var(--panel2);border:1px solid var(--line);
-  border-radius:9px;color:var(--txt);padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
-.rec-toolbar input:focus{border-color:var(--purple)}
-.rec-toolbar .tb-ghost{background:none;border:1px solid var(--line-hi);color:var(--dim);font-weight:600;
-  font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
-.rec-toolbar .tb-ghost:hover{border-color:rgba(var(--gA),.55);color:var(--purple-hi)}
-.rec-toolbar .tb-div{width:1px;align-self:stretch;background:var(--line);margin:0 2px}
+/* ================= RECURRING ================= */
+/* toolbar */
+.rec-bar{display:flex;align-items:center;gap:10px;margin:20px 0 0}
+.rec-bar .rec-spacer{flex:1}
+.rec-ghost{background:none;border:none;color:var(--faint);cursor:pointer;padding:4px 2px;
+  font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;transition:color .15s ease}
+.rec-ghost:hover{color:var(--txt)}
+.rec-newsec{display:flex;align-items:center;gap:9px;margin:12px 0 0;padding:9px 11px;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.rec-newsec input[type="text"]{flex:1;min-width:0;background:none;border:none;outline:none;
+  color:var(--txt);font-size:13.5px;font-family:inherit;padding:0}
+.rec-newsec input[type="text"]::placeholder{color:var(--faint)}
+.rec-newsec .ns-add{background:var(--grad);border:none;color:#fff;font-size:11px;font-weight:600;
+  padding:6px 14px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap}
 
-/* ---------- RECURRING: section ---------- */
-.cat{margin-bottom:12px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
-  background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
-.cat-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;
-  border-left:3px solid var(--secol);background:var(--panel2);transition:background .18s ease}
-.cat-head:hover{background:var(--panel)}
-.cat-head .caret{color:var(--faint);font-size:10px;width:10px;flex:0 0 auto;transition:transform .18s ease}
+/* colour swatch — the dot IS the picker */
+.rsw{position:relative;width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+.rsw input[type="color"]{position:absolute;left:-9px;top:-9px;width:27px;height:27px;opacity:0;
+  padding:0;margin:0;border:none;background:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+
+/* ---- cadence strip: the spine of this view ---- */
+.cad-strip{display:flex;gap:6px;margin:16px 0 4px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.cad-strip::-webkit-scrollbar{display:none}
+.cad-cell{flex:1 0 auto;min-width:74px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left;font-family:inherit;
+  display:flex;flex-direction:column;gap:2px;transition:border-color .16s ease,background .16s ease}
+.cad-cell:hover{border-color:var(--line-hi)}
+.cad-cell b{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:var(--txt);
+  line-height:1;font-variant-numeric:tabular-nums}
+.cad-cell span{font-family:'Space Grotesk',sans-serif;font-size:9.5px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.cad-cell.on{border-color:rgba(var(--gA),.55);background:rgba(var(--gA),.09)}
+.cad-cell.on span{color:var(--purple-hi)}
+
+/* section header */
+.cat{margin:26px 0 0}
+.cat-head{display:flex;align-items:center;gap:10px;margin:0 0 10px;cursor:pointer;user-select:none}
+.cat-head .caret{color:var(--faint);font-size:9px;flex:none;display:inline-block;
+  transition:transform .16s ease;margin-right:-3px}
 .cat.open .cat-head .caret{transform:rotate(90deg)}
-.cat-head .name{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--txt)}
-.cat-head .n{font-size:10.5px;color:var(--dim);background:var(--panel);border:1px solid var(--line);
-  padding:2px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.cat-head .catdel,.cat-head .catedit{background:none;border:none;color:var(--faint);cursor:pointer;
-  font-size:12px;font-family:inherit;opacity:.55;transition:opacity .15s ease,color .15s ease}
-.cat-head:hover .catdel,.cat-head:hover .catedit{opacity:1}
-.cat-head .catdel:hover{color:var(--red)}
+.cat-head .name{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;color:var(--txt)}
+.cat-head .sec-line{flex:1;height:1px;background:var(--line)}
+.cat-head .n{font-family:'Space Grotesk',sans-serif;font-size:11.5px;color:var(--faint);
+  font-variant-numeric:tabular-nums;flex:none}
+.cat-head .catedit,.cat-head .catdel{background:none;border:none;color:var(--faint);cursor:pointer;
+  font-size:11px;font-family:inherit;padding:2px 3px;flex:none;opacity:0;transition:opacity .15s ease,color .15s ease}
+.cat-head:hover .catedit,.cat-head:hover .catdel{opacity:1}
 .cat-head .catedit:hover{color:var(--blue-hi)}
-.cat-body{display:none;padding:6px 12px 12px}
+.cat-head .catdel:hover{color:var(--red)}
+.cat-rename{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line-hi);border-radius:7px;
+  padding:5px 9px;font-size:12.5px;font-family:'Space Grotesk',sans-serif;font-weight:600;
+  letter-spacing:.1em;outline:none}
+.cat-body{display:none}
 .cat.open .cat-body{display:block}
+.cat-empty{font-size:12px;color:var(--faint);padding:2px 2px 6px}
 
-/* ---------- RECURRING: rule card ---------- */
-.rule{position:relative;padding:11px 12px 11px 14px;border-radius:11px;background:var(--panel2);
-  border:1px solid var(--line);margin-top:7px;transition:border-color .18s ease,transform .18s ease}
-.rule:hover{border-color:var(--line-hi);transform:translateX(2px)}
-.rule::before{content:'';position:absolute;left:0;top:11px;bottom:11px;width:2px;border-radius:2px;background:var(--secol)}
-.rule .r-top{display:flex;align-items:baseline;gap:10px}
-.rule .rtitle{font-size:14px;line-height:1.35;color:var(--txt);flex:1;min-width:0}
-.rule .r-acts{display:flex;gap:2px;flex:0 0 auto}
-.rule .redit,.rule .rdel{background:none;border:none;color:var(--faint);cursor:pointer;
-  font-size:12px;font-family:inherit;padding:3px 6px;border-radius:7px;line-height:1;
-  opacity:.5;transition:opacity .15s ease,color .15s ease,background .15s ease}
+/* ---- rule row: badge · identity · cadence signature ---- */
+.rule{display:flex;align-items:center;gap:13px;padding:12px 14px;margin-bottom:6px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  transition:border-color .16s ease}
+.rule:hover{border-color:var(--line-hi)}
+.cad-badge{flex:none;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.rule .r-body{flex:1;min-width:0}
+.rule .rtitle{font-size:13.5px;line-height:1.35;color:var(--txt);display:block}
+.rule .r-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px}
+.rule .rfreq{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--faint);white-space:nowrap}
+.rule .r-sig{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.rule .r-sig svg{display:block}
+.rule .rnext{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;
+  font-family:'Space Grotesk',sans-serif;letter-spacing:.06em}
+.rule .r-acts{flex:none;display:flex;gap:1px;align-self:flex-start}
+.rule .redit,.rule .rdel{background:none;border:none;color:var(--faint);cursor:pointer;font-size:11px;
+  font-family:inherit;padding:3px 4px;border-radius:6px;line-height:1;opacity:0;
+  transition:opacity .15s ease,color .15s ease}
 .rule:hover .redit,.rule:hover .rdel{opacity:1}
-.rule .redit:hover{color:var(--blue-hi);background:var(--panel)}
-.rule .rdel:hover{color:var(--red);background:var(--panel)}
-.rule .r-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:6px}
-.rule .rfreq{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);
-  font-family:'Space Grotesk',sans-serif;font-weight:500}
-.rule .rnext{font-size:11px;color:var(--green);font-variant-numeric:tabular-nums;
-  display:inline-flex;align-items:center;gap:5px}
-.rule .rnext::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--green);flex:0 0 auto}
-.rule .r-dot{width:3px;height:3px;border-radius:50%;background:var(--faint);flex:0 0 auto}
-.rule .r-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
-@media(max-width:520px){
-  .rule .redit,.rule .rdel{opacity:1}
-  .cat-head .catdel,.cat-head .catedit{opacity:1}
+.rule .redit:hover{color:var(--blue-hi)}
+.rule .rdel:hover{color:var(--red)}
+@media(max-width:600px){
+  .rule{flex-wrap:wrap;gap:10px}
+  .rule .r-body{flex:1 1 60%}
+  .rule .r-sig{flex:1 1 100%;align-items:flex-start;order:5;
+    padding-left:43px;flex-direction:row;align-items:center;gap:9px}
+  .rule .redit,.rule .rdel,.cat-head .catedit,.cat-head .catdel{opacity:1}
 }
 .rule-form{border:1px solid transparent;border-radius:var(--r);padding:16px;margin:12px 0;
   background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
@@ -663,6 +693,8 @@ let editingNote = null;    // note id being edited inline
 let editingTaskNote = null; // task note-log entry being edited
 let noteLogOpen = new Set(); // task ids whose note log is expanded
 let renamingCat = null;    // section currently being renamed inline
+let addingSection = false; // inline 'new section' row is open
+let recFilter = 'all';     // Recurring view: cadence filter
 
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
@@ -1839,6 +1871,47 @@ function renderScheduled(){
   return h;
 }
 function catColor(c){ return (state.catColors&&state.catColors[c])||'#8B5CFF'; }
+const CAD_TYPES=[['weekly','Weekly'],['monthly','Monthly'],['quarterly','Quarterly'],['yearly','Yearly'],['interval','Interval']];
+function cadBadgeText(r){
+  if(r.type==='weekly') return 'W';
+  if(r.type==='monthly') return 'M';
+  if(r.type==='quarterly') return 'Q';
+  if(r.type==='yearly') return 'Y';
+  if(r.type==='interval') return String(r.intervalDays||0);
+  return '?';
+}
+/* Cadence signature: a small track whose SHAPE tells you the rhythm at a glance.
+   7 wide slots = weekly. 31 thin slots = monthly. 12 slots = quarterly/yearly.
+   A row of evenly spaced dots = fixed interval; denser dots mean it fires more often. */
+function cadenceTrack(r, col){
+  const W=132, H=13, mid=H/2;
+  let slots=0, on=[];
+  if(r.type==='weekly'){ slots=7; on=[((r.weekday||0)%7+7)%7]; }
+  else if(r.type==='monthly'){ slots=31; on=[Math.min(Math.max(r.monthday||1,1),31)-1]; }
+  else if(r.type==='quarterly'){ slots=12; on=quarterMonths(r).map(m=>((m%12)+12)%12); }
+  else if(r.type==='yearly'){ slots=12; on=[((r.month||0)%12+12)%12]; }
+  else if(r.type==='interval'){
+    const n=Math.max(1, r.intervalDays||1);
+    const count=Math.min(16, Math.max(3, Math.round(90/n)));
+    let d='';
+    for(let i=0;i<count;i++){
+      const x = count===1 ? mid : 2.5 + i*((W-5)/(count-1));
+      d+='<circle cx="'+x.toFixed(1)+'" cy="'+mid+'" r="2.5" fill="'+col+'"/>';
+    }
+    return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+d+'</svg>';
+  }
+  else return '';
+  const gap = slots>12 ? 1 : 2;
+  const w = Math.max(1.4, (W - gap*(slots-1))/slots);
+  const set = new Set(on);
+  let d='';
+  for(let i=0;i<slots;i++){
+    const x = i*(w+gap);
+    if(set.has(i)) d+='<rect x="'+x.toFixed(1)+'" y="0" width="'+w.toFixed(1)+'" height="'+H+'" rx="1.5" fill="'+col+'"/>';
+    else d+='<rect x="'+x.toFixed(1)+'" y="'+(mid-1.75)+'" width="'+w.toFixed(1)+'" height="3.5" rx="1.5" fill="var(--line-hi)"/>';
+  }
+  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+d+'</svg>';
+}
 function renderRecurring(){
   let h='<div class="help-card '+(state.ui.helpOpen?'open':'')+'"><div class="help-head" id="helpToggle"><span>How recurring rules work</span><span>'+(state.ui.helpOpen?'▾':'▸')+'</span></div>';
   if(state.ui.helpOpen) h+='<div class="help-body">'
@@ -1855,42 +1928,67 @@ function renderRecurring(){
     +'<p><b>Setup order:</b> create a Section (with its color) → tap <b>+ New Rule</b> → give it a title, pick the section, choose frequency, tap tags, save. Done.</p>'
     +'</div>';
   h+='</div>';
-  h+='<div class="rec-toolbar">'
-    +'<input type="color" class="cat-swatch big" id="newSectionColor" value="#C9921E" title="Section color">'
-    +'<input id="newSectionIn" placeholder="New section name">'
-    +'<button class="tb-ghost" id="newSectionBtn">+ Section</button>'
-    +'<span class="tb-div"></span>'
+  h+='<div class="rec-bar">'
+    +'<button class="rec-ghost" id="newSectionToggle">'+(addingSection?'✕ Cancel':'+ Section')+'</button>'
+    +'<span class="rec-spacer"></span>'
     +'<button class="btn-grad" id="newRuleBtn">+ New Rule</button>'
     +'</div>';
+  if(addingSection){
+    h+='<div class="rec-newsec">'
+      +'<span class="rsw" style="background:#C9921E;box-shadow:0 0 0 3px #C9921E33" id="nsDot">'
+      +'<input type="color" id="newSectionColor" value="#C9921E" title="Section colour"></span>'
+      +'<input type="text" id="newSectionIn" placeholder="Section name" autocomplete="off">'
+      +'<button class="ns-add" id="newSectionBtn">Add</button>'
+      +'</div>';
+  }
   if(editingRule!==null) h+=ruleForm();
+
+  // cadence strip — read the whole schedule's shape, and filter by rhythm
+  const counts={}; CAD_TYPES.forEach(([k])=>counts[k]=0);
+  state.rules.forEach(r=>{ if(counts[r.type]!==undefined) counts[r.type]++; });
+  h+='<div class="cad-strip">'
+    +'<button class="cad-cell '+(recFilter==='all'?'on':'')+'" data-cad="all"><b>'+state.rules.length+'</b><span>All rules</span></button>'
+    +CAD_TYPES.filter(([k])=>counts[k]>0).map(([k,label])=>
+        '<button class="cad-cell '+(recFilter===k?'on':'')+'" data-cad="'+k+'"><b>'+counts[k]+'</b><span>'+label+'</span></button>'
+      ).join('')
+    +'</div>';
+
+  const filtering = recFilter!=='all';
   state.categories.forEach(c=>{
-    const rules=state.rules.filter(r=>(r.category||'General')===c);
-    const open=!!state.ui.catOpen[c];
-    const canDel = rules.length===0;
+    const all=state.rules.filter(r=>(r.category||'General')===c);
+    const rules=filtering? all.filter(r=>r.type===recFilter) : all;
+    if(filtering && !rules.length) return;          // hide sections with no match
+    const open=filtering ? true : !!state.ui.catOpen[c];
+    const canDel = all.length===0;
     const col=catColor(c);
     const editing = renamingCat===c;
     h+='<div class="cat '+(open?'open':'')+'" style="--secol:'+col+'"><div class="cat-head" data-cat="'+esc(c)+'">'
-      +'<span class="caret">▶</span>'
-      +'<input type="color" class="cat-swatch" data-catcolor="'+esc(c)+'" value="'+col+'" title="Change section color">'
+      +'<span class="caret">\u25B6</span>'
+      +'<span class="rsw" style="background:'+col+';box-shadow:0 0 0 3px '+col+'33"><input type="color" data-catcolor="'+esc(c)+'" value="'+col+'" title="Section colour"></span>'
       +(editing
         ? '<input class="cat-rename" id="catRenameIn" value="'+esc(c)+'" style="color:'+col+'"><button class="catsave" data-catsave="'+esc(c)+'">Save</button>'
-        : '<span class="name" style="color:'+col+'">'+esc(c)+'</span><button class="catedit" data-catedit="'+esc(c)+'" title="Rename section">✎</button>')
-      +'<span class="sec-line"></span><span class="n">'+rules.length+'</span>'
-      +(canDel?'<button class="catdel" data-catdel="'+esc(c)+'" title="Delete empty section">✕</button>':'')
+        : '<span class="name">'+esc(c)+'</span><button class="catedit" data-catedit="'+esc(c)+'" title="Rename section">\u270E</button>')
+      +'<span class="sec-line"></span>'
+      +'<span class="n">'+rules.length+'</span>'
+      +(canDel?'<button class="catdel" data-catdel="'+esc(c)+'" title="Delete empty section">\u2715</button>':'')
       +'</div><div class="cat-body">';
     h+= rules.length? rules.map(r=>{
       const nx = previewDates(r,1)[0];
       const tags = (r.tags||[]).map(t=>'<span class="tagb">'+esc(t)+'</span>').join('');
       return '<div class="rule">'
-        +'<div class="r-top"><span class="rtitle">'+esc(r.title)+'</span>'
-        +'<span class="r-acts"><button class="redit" data-rule="'+r.id+'" title="Edit rule">✎</button>'
-        +'<button class="rdel" data-rule="'+r.id+'" title="Delete rule">✕</button></span></div>'
-        +'<div class="r-meta"><span class="rfreq">'+ruleFreqText(r)+'</span>'
-        +(nx?'<span class="r-dot"></span><span class="rnext">Next '+fmtShort(nx)+'</span>':'')
+        +'<span class="cad-badge" style="background:'+col+'1F;border:1px solid '+col+'4D;color:'+col+'" title="'+esc(ruleFreqText(r))+'">'+cadBadgeText(r)+'</span>'
+        +'<div class="r-body">'
+        +'<span class="rtitle">'+esc(r.title)+'</span>'
+        +'<div class="r-meta"><span class="rfreq">'+ruleFreqText(r)+'</span>'+tags+'</div>'
         +'</div>'
-        +(tags?'<div class="r-tags">'+tags+'</div>':'')
-        +'</div>';
-    }).join('') : '<div class="empty" style="padding:14px 2px">No rules in this section yet.</div>';
+        +'<div class="r-sig">'+cadenceTrack(r,col)
+        +(nx?'<span class="rnext">NEXT '+fmtShort(nx).toUpperCase()+'</span>':'')
+        +'</div>'
+        +'<div class="r-acts">'
+        +'<button class="redit" data-rule="'+r.id+'" title="Edit rule">\u270E</button>'
+        +'<button class="rdel" data-rule="'+r.id+'" title="Delete rule">\u2715</button>'
+        +'</div></div>';
+    }).join('') : '<div class="cat-empty">No rules here yet.</div>';
     h+='</div></div>';
   });
   return h;
@@ -2151,19 +2249,33 @@ function render(){
   const ht=document.getElementById('helpToggle');
   if(ht) ht.addEventListener('click',()=>{ state.ui.helpOpen=!state.ui.helpOpen; save(); render(); });
   // recurring — section management
+  const nsToggle=document.getElementById('newSectionToggle');
+  if(nsToggle) nsToggle.addEventListener('click',()=>{
+    addingSection=!addingSection; render();
+    const i=document.getElementById('newSectionIn'); if(i) i.focus();
+  });
   const nsBtn=document.getElementById('newSectionBtn');
   if(nsBtn){
     const nsIn=document.getElementById('newSectionIn');
     const nsCol=document.getElementById('newSectionColor');
+    const nsDot=document.getElementById('nsDot');
+    nsCol.addEventListener('input',()=>{
+      nsDot.style.background=nsCol.value;
+      nsDot.style.boxShadow='0 0 0 3px '+nsCol.value+'33';
+    });
     const addSec=()=>{
       const v=nsIn.value.trim(); if(!v) return;
       if(!state.categories.includes(v)) state.categories.push(v);
       state.catColors[v]=nsCol.value;
       state.ui.catOpen[v]=true;
+      addingSection=false;
       save(); render();
     };
     nsBtn.addEventListener('click',addSec);
-    nsIn.addEventListener('keydown',e=>{ if(e.key==='Enter') addSec(); });
+    nsIn.addEventListener('keydown',e=>{
+      if(e.key==='Enter') addSec();
+      if(e.key==='Escape'){ addingSection=false; render(); }
+    });
   }
   document.querySelectorAll('[data-catedit]').forEach(b=>b.addEventListener('click',e=>{
     e.stopPropagation();
@@ -2191,7 +2303,13 @@ function render(){
   }
   document.querySelectorAll('[data-catcolor]').forEach(sw=>{
     sw.addEventListener('click',e=>e.stopPropagation());
-    sw.addEventListener('input',()=>{ state.catColors[sw.dataset.catcolor]=sw.value; save(); });
+    sw.addEventListener('input',()=>{
+      state.catColors[sw.dataset.catcolor]=sw.value;
+      const dot=sw.parentElement;
+      dot.style.background=sw.value; dot.style.boxShadow='0 0 0 3px '+sw.value+'33';
+      const cat=sw.closest('.cat'); if(cat) cat.style.setProperty('--secol', sw.value);
+      save();
+    });
     sw.addEventListener('change',()=>{ state.catColors[sw.dataset.catcolor]=sw.value; save(); render(); });
   });
   document.querySelectorAll('[data-catdel]').forEach(b=>b.addEventListener('click',e=>{
@@ -2201,13 +2319,17 @@ function render(){
     delete state.ui.catOpen[c];
     save(); render();
   }));
+  document.querySelectorAll('[data-cad]').forEach(b=>b.addEventListener('click',()=>{
+    recFilter = (recFilter===b.dataset.cad) ? 'all' : b.dataset.cad;
+    render();
+  }));
   const nrb=document.getElementById('newRuleBtn');
   if(nrb) nrb.addEventListener('click',()=>{
     if(!state.categories.length){ state.categories=['General']; }
     editingRule=true; formTags=[]; render();
   });
   document.querySelectorAll('.cat-head').forEach(ch=>ch.addEventListener('click',e=>{
-    if(e.target.closest('[data-catdel]')||e.target.closest('[data-catedit]')||e.target.closest('[data-catcolor]')||e.target.closest('[data-catsave]')||e.target.closest('.cat-rename')) return;
+    if(e.target.closest('[data-catdel]')||e.target.closest('[data-catedit]')||e.target.closest('[data-catcolor]')||e.target.closest('[data-catsave]')||e.target.closest('.cat-rename')||e.target.closest('.rsw')) return;
     const c=ch.dataset.cat; state.ui.catOpen[c]=!state.ui.catOpen[c]; save(); render();
   }));
   document.querySelectorAll('.redit').forEach(b=>b.addEventListener('click',()=>{
