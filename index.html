@@ -459,37 +459,65 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .pop input:focus{border-color:var(--purple)}
 
 /* ============ RECURRING ============ */
-.section-bar{display:flex;gap:8px;margin:14px 0 8px}
-.rule-cta{display:flex;justify-content:flex-end;margin:0 0 14px}
-.section-add{display:flex;gap:8px;flex:1;align-items:center}
-.section-add input[type="text"],.section-add input:not([type]){flex:1;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
-.section-add input:focus{border-color:var(--purple)}
-.section-add button{background:none;border:1px solid rgba(var(--gA),.55);color:var(--purple-hi);font-weight:600;font-size:12.5px;padding:8px 15px;border-radius:10px;cursor:pointer;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
-.section-add button:hover{background:var(--purple);color:#fff;box-shadow:0 0 16px -4px rgba(var(--gA),.9)}
-.cat{margin-bottom:10px}
-.cat-head{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--panel2);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
-.cat-head:hover{border-color:var(--line-hi)}
-.cat-head .name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--txt)}
-.cat-head .n{font-size:11px;color:var(--faint)}
-.cat-head .catdel{background:none;border:none;color:var(--faint);cursor:pointer;font-size:13px;font-family:inherit}
+/* ---------- RECURRING: toolbar ---------- */
+.rec-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 16px;
+  padding:10px;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--line);border-radius:var(--r)}
+.rec-toolbar .cat-swatch.big{flex:0 0 auto}
+.rec-toolbar input{flex:1;min-width:150px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:9px;color:var(--txt);padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
+.rec-toolbar input:focus{border-color:var(--purple)}
+.rec-toolbar .tb-ghost{background:none;border:1px solid var(--line-hi);color:var(--dim);font-weight:600;
+  font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;font-family:'Space Grotesk',sans-serif;white-space:nowrap}
+.rec-toolbar .tb-ghost:hover{border-color:rgba(var(--gA),.55);color:var(--purple-hi)}
+.rec-toolbar .tb-div{width:1px;align-self:stretch;background:var(--line);margin:0 2px}
+
+/* ---------- RECURRING: section ---------- */
+.cat{margin-bottom:12px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur)}
+.cat-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;
+  border-left:3px solid var(--secol);background:var(--panel2);transition:background .18s ease}
+.cat-head:hover{background:var(--panel)}
+.cat-head .caret{color:var(--faint);font-size:10px;width:10px;flex:0 0 auto;transition:transform .18s ease}
+.cat.open .cat-head .caret{transform:rotate(90deg)}
+.cat-head .name{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--txt)}
+.cat-head .n{font-size:10.5px;color:var(--dim);background:var(--panel);border:1px solid var(--line);
+  padding:2px 8px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cat-head .catdel,.cat-head .catedit{background:none;border:none;color:var(--faint);cursor:pointer;
+  font-size:12px;font-family:inherit;opacity:.55;transition:opacity .15s ease,color .15s ease}
+.cat-head:hover .catdel,.cat-head:hover .catedit{opacity:1}
 .cat-head .catdel:hover{color:var(--red)}
-.cat-swatch{-webkit-appearance:none;appearance:none;width:13px;height:13px;flex:none;border:none;border-radius:50%;padding:0;background:none;cursor:pointer;overflow:hidden;opacity:.95}
-.cat-swatch:hover{transform:scale(1.25)}
-.cat-swatch::-webkit-color-swatch-wrapper{padding:0}
-.cat-swatch::-webkit-color-swatch{border:none;border-radius:50%}
-.cat-swatch::-moz-color-swatch{border:none;border-radius:50%}
-.cat-swatch.big{width:38px;height:38px;min-width:38px;flex:none;border-radius:10px;border:1px solid var(--line-hi);align-self:center;padding:0;cursor:pointer}
-.cat-swatch.big:hover{transform:none}
-.cat-swatch.big::-webkit-color-swatch{border-radius:8px}
-.cat-swatch.big::-moz-color-swatch{border-radius:8px}
-.cat-body{padding:8px 0 0 10px;display:none}
+.cat-head .catedit:hover{color:var(--blue-hi)}
+.cat-body{display:none;padding:6px 12px 12px}
 .cat.open .cat-body{display:block}
-.rule{background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;margin-bottom:7px}
-.rule .r1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.rule .rtitle{font-size:14px;flex:1;min-width:120px;color:var(--txt)}
-.rule .rfreq{font-size:11.5px;color:var(--green);opacity:.9}
-.rule .redit,.rule .rdel{background:none;border:none;color:var(--faint);cursor:pointer;font-size:12px;font-family:inherit}
-.rule .redit:hover{color:var(--blue-hi)}.rule .rdel:hover{color:var(--red)}
+
+/* ---------- RECURRING: rule card ---------- */
+.rule{position:relative;padding:11px 12px 11px 14px;border-radius:11px;background:var(--panel2);
+  border:1px solid var(--line);margin-top:7px;transition:border-color .18s ease,transform .18s ease}
+.rule:hover{border-color:var(--line-hi);transform:translateX(2px)}
+.rule::before{content:'';position:absolute;left:0;top:11px;bottom:11px;width:2px;border-radius:2px;background:var(--secol)}
+.rule .r-top{display:flex;align-items:baseline;gap:10px}
+.rule .rtitle{font-size:14px;line-height:1.35;color:var(--txt);flex:1;min-width:0}
+.rule .r-acts{display:flex;gap:2px;flex:0 0 auto}
+.rule .redit,.rule .rdel{background:none;border:none;color:var(--faint);cursor:pointer;
+  font-size:12px;font-family:inherit;padding:3px 6px;border-radius:7px;line-height:1;
+  opacity:.5;transition:opacity .15s ease,color .15s ease,background .15s ease}
+.rule:hover .redit,.rule:hover .rdel{opacity:1}
+.rule .redit:hover{color:var(--blue-hi);background:var(--panel)}
+.rule .rdel:hover{color:var(--red);background:var(--panel)}
+.rule .r-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:6px}
+.rule .rfreq{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);
+  font-family:'Space Grotesk',sans-serif;font-weight:500}
+.rule .rnext{font-size:11px;color:var(--green);font-variant-numeric:tabular-nums;
+  display:inline-flex;align-items:center;gap:5px}
+.rule .rnext::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--green);flex:0 0 auto}
+.rule .r-dot{width:3px;height:3px;border-radius:50%;background:var(--faint);flex:0 0 auto}
+.rule .r-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+@media(max-width:520px){
+  .rule .redit,.rule .rdel{opacity:1}
+  .cat-head .catdel,.cat-head .catedit{opacity:1}
+}
 .rule-form{border:1px solid transparent;border-radius:var(--r);padding:16px;margin:12px 0;
   background:linear-gradient(var(--card),var(--card)) padding-box, var(--ring) border-box;
   box-shadow:0 0 32px -12px rgba(var(--gA),.6)}
@@ -757,6 +785,23 @@ function normalizeState(){
   if(!state.completions || typeof state.completions !== 'object') state.completions = {};
   if(typeof state.dailyTarget !== 'number') state.dailyTarget = 5;
   if(!state._tomb) state._tomb = {};
+
+  /* SELF-HEAL: rebuild any section / tag / person that is still referenced by a rule
+     or a task but has fallen out of the lists. A rule whose section does not exist
+     renders nowhere, which looks exactly like data loss. This makes that impossible. */
+  const cats = new Set(state.categories);
+  state.rules.forEach(r=>{
+    const c = r.category || 'General';
+    if(!cats.has(c)){ state.categories.push(c); cats.add(c); }
+    if(!state.catColors[c]) state.catColors[c] = '#C9921E';
+  });
+  const tagSet = new Set(state.tags);
+  [].concat(state.rules, state.tasks).forEach(o=>{
+    (o && o.tags || []).forEach(t=>{ if(t && !tagSet.has(t)){ state.tags.push(t); tagSet.add(t); } });
+  });
+  const peopleSet = new Set(state.people);
+  state.tasks.forEach(t=>{ if(t.person && !peopleSet.has(t.person)){ state.people.push(t.person); peopleSet.add(t.person); } });
+
   if(state.dailyNote && state.dailyNote.trim()){
     state.notes.unshift({id:uid(), text:state.dailyNote.trim(), pinned:false, createdAt:Date.now()});
     state.dailyNote = '';
@@ -805,7 +850,10 @@ function mergeRemote(remote){
   });
 
   // settings / scalars: whole-object last-write-wins (low conflict risk)
-  if(remoteTs > localTs){
+  // !localTs = this device has never saved with the new engine, so the cloud copy
+  // is the only real source of truth for settings. Without this, legacy blobs (which
+  // carry no _ts) lost their sections and rules became invisible.
+  if(remoteTs > localTs || !localTs){
     ['dailyTarget','tags','people','categories','catColors','ui'].forEach(k=>{
       if(remote[k] !== undefined && JSON.stringify(remote[k]) !== JSON.stringify(state[k])){
         state[k] = remote[k]; changed = true;
@@ -1807,10 +1855,13 @@ function renderRecurring(){
     +'<p><b>Setup order:</b> create a Section (with its color) → tap <b>+ New Rule</b> → give it a title, pick the section, choose frequency, tap tags, save. Done.</p>'
     +'</div>';
   h+='</div>';
-  h+='<div class="section-bar">'
-    +'<div class="section-add"><input type="color" class="cat-swatch big" id="newSectionColor" value="#C9921E" title="Section color"><input id="newSectionIn" placeholder="New section (e.g. BMS Operational)"><button id="newSectionBtn">+ Section</button></div>'
-    +'</div>'
-    +'<div class="rule-cta"><button class="btn-grad" id="newRuleBtn">+ New Rule</button></div>';
+  h+='<div class="rec-toolbar">'
+    +'<input type="color" class="cat-swatch big" id="newSectionColor" value="#C9921E" title="Section color">'
+    +'<input id="newSectionIn" placeholder="New section name">'
+    +'<button class="tb-ghost" id="newSectionBtn">+ Section</button>'
+    +'<span class="tb-div"></span>'
+    +'<button class="btn-grad" id="newRuleBtn">+ New Rule</button>'
+    +'</div>';
   if(editingRule!==null) h+=ruleForm();
   state.categories.forEach(c=>{
     const rules=state.rules.filter(r=>(r.category||'General')===c);
@@ -1818,22 +1869,38 @@ function renderRecurring(){
     const canDel = rules.length===0;
     const col=catColor(c);
     const editing = renamingCat===c;
-    h+='<div class="cat '+(open?'open':'')+'"><div class="cat-head" data-cat="'+esc(c)+'" style="background:linear-gradient(90deg,'+col+'1F,transparent 45%),var(--panel2);box-shadow:inset 3px 0 0 '+col+'55, 0 0 20px -10px '+col+'">'
-      +'<input type="color" class="cat-swatch" data-catcolor="'+esc(c)+'" value="'+col+'" title="Change section color" style="box-shadow:0 0 9px '+col+'AA">'
+    h+='<div class="cat '+(open?'open':'')+'" style="--secol:'+col+'"><div class="cat-head" data-cat="'+esc(c)+'">'
+      +'<span class="caret">▶</span>'
+      +'<input type="color" class="cat-swatch" data-catcolor="'+esc(c)+'" value="'+col+'" title="Change section color">'
       +(editing
         ? '<input class="cat-rename" id="catRenameIn" value="'+esc(c)+'" style="color:'+col+'"><button class="catsave" data-catsave="'+esc(c)+'">Save</button>'
         : '<span class="name" style="color:'+col+'">'+esc(c)+'</span><button class="catedit" data-catedit="'+esc(c)+'" title="Rename section">✎</button>')
-      +'<span class="sec-line"></span><span class="n">'+rules.length+' rule'+(rules.length!==1?'s':'')+'</span>'
+      +'<span class="sec-line"></span><span class="n">'+rules.length+'</span>'
       +(canDel?'<button class="catdel" data-catdel="'+esc(c)+'" title="Delete empty section">✕</button>':'')
       +'</div><div class="cat-body">';
-    h+= rules.length? rules.map(r=>
-      '<div class="rule" style="border-left:2px solid '+col+'55;box-shadow:0 0 16px -11px '+col+'"><div class="r1"><span class="rtitle">'+esc(r.title)+'</span><span class="rfreq">'+ruleFreqText(r)+'</span>'
-      +(r.tags||[]).map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
-      +'<button class="redit" data-rule="'+r.id+'">Edit</button><button class="rdel" data-rule="'+r.id+'">Delete</button></div></div>'
-    ).join('') : '<div class="empty" style="padding:12px 0">Empty section — allocate rules here from the rule form.</div>';
+    h+= rules.length? rules.map(r=>{
+      const nx = previewDates(r,1)[0];
+      const tags = (r.tags||[]).map(t=>'<span class="tagb">'+esc(t)+'</span>').join('');
+      return '<div class="rule">'
+        +'<div class="r-top"><span class="rtitle">'+esc(r.title)+'</span>'
+        +'<span class="r-acts"><button class="redit" data-rule="'+r.id+'" title="Edit rule">✎</button>'
+        +'<button class="rdel" data-rule="'+r.id+'" title="Delete rule">✕</button></span></div>'
+        +'<div class="r-meta"><span class="rfreq">'+ruleFreqText(r)+'</span>'
+        +(nx?'<span class="r-dot"></span><span class="rnext">Next '+fmtShort(nx)+'</span>':'')
+        +'</div>'
+        +(tags?'<div class="r-tags">'+tags+'</div>':'')
+        +'</div>';
+    }).join('') : '<div class="empty" style="padding:14px 2px">No rules in this section yet.</div>';
     h+='</div></div>';
   });
   return h;
+}
+// '2026-08-11' -> '11 Aug' (adds the year only when it is not the current one)
+function fmtShort(ds){
+  if(!ds) return '';
+  const p = ds.split('-'); if(p.length !== 3) return ds;
+  const y = +p[0], m = +p[1]-1, d = +p[2];
+  return d + ' ' + MONTHS_SHORT[m] + (y !== new Date().getFullYear() ? " '" + String(y).slice(2) : '');
 }
 // next N dates a draft rule would fire — powers the live preview in the form
 function previewDates(r, n){
