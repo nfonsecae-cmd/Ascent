@@ -517,35 +517,46 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .cat.open .cat-body{display:block}
 .cat-empty{font-size:12px;color:var(--faint);padding:2px 2px 6px}
 
-/* ---- rule row: badge · identity · cadence signature ---- */
-.rule{display:flex;align-items:center;gap:13px;padding:12px 14px;margin-bottom:6px;
+/* ---- rule row: identity · dates · cadence strip ---- */
+.rule{display:flex;align-items:flex-start;gap:16px;padding:12px 14px;margin-bottom:6px;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  transition:border-color .16s ease}
+  box-shadow:inset 3px 0 0 var(--secol);transition:border-color .16s ease}
 .rule:hover{border-color:var(--line-hi)}
-.cad-badge{flex:none;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;
-  justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.02em;font-variant-numeric:tabular-nums}
 .rule .r-body{flex:1;min-width:0}
 .rule .rtitle{font-size:13.5px;line-height:1.35;color:var(--txt);display:block}
 .rule .r-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px}
 .rule .rfreq{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:.11em;
   text-transform:uppercase;color:var(--faint);white-space:nowrap}
-.rule .r-sig{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.rule .r-sig svg{display:block}
-.rule .rnext{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;
-  font-family:'Space Grotesk',sans-serif;letter-spacing:.06em}
-.rule .r-acts{flex:none;display:flex;gap:1px;align-self:flex-start}
+
+/* the next three firing dates */
+.r-dates{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.dchip{font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums;white-space:nowrap;padding:3px 8px;border-radius:999px;
+  color:var(--faint);border:1px solid var(--line)}
+.dchip.next{color:var(--secol);border-color:var(--secol);background:var(--panel2)}
+
+/* labelled cadence strip */
+.rule .r-sig{flex:none;padding-top:1px}
+.cadstrip{display:flex;gap:3px}
+.cs{display:flex;flex-direction:column;align-items:center;gap:4px;width:12px}
+.cs i{display:block;width:100%;height:3px;border-radius:2px;background:var(--line-hi)}
+.cs b{font-family:'Space Grotesk',sans-serif;font-size:8.5px;font-weight:600;color:var(--faint);
+  line-height:1;letter-spacing:0}
+.cs.on i{height:11px;margin-top:-8px;background:var(--secol)}
+.cs.on b{color:var(--txt)}
+
+.rule .r-acts{flex:none;display:flex;gap:1px}
 .rule .redit,.rule .rdel{background:none;border:none;color:var(--faint);cursor:pointer;font-size:11px;
   font-family:inherit;padding:3px 4px;border-radius:6px;line-height:1;opacity:0;
   transition:opacity .15s ease,color .15s ease}
 .rule:hover .redit,.rule:hover .rdel{opacity:1}
 .rule .redit:hover{color:var(--blue-hi)}
 .rule .rdel:hover{color:var(--red)}
-@media(max-width:600px){
+@media(max-width:620px){
   .rule{flex-wrap:wrap;gap:10px}
-  .rule .r-body{flex:1 1 60%}
-  .rule .r-sig{flex:1 1 100%;align-items:flex-start;order:5;
-    padding-left:43px;flex-direction:row;align-items:center;gap:9px}
+  .rule .r-body{flex:1 1 70%}
+  .rule .r-sig{flex:1 1 100%;order:5;padding-top:2px}
+  .cs{width:auto;flex:1}
   .rule .redit,.rule .rdel,.cat-head .catedit,.cat-head .catdel{opacity:1}
 }
 .rule-form{border:1px solid transparent;border-radius:var(--r);padding:16px;margin:12px 0;
@@ -1872,45 +1883,47 @@ function renderScheduled(){
 }
 function catColor(c){ return (state.catColors&&state.catColors[c])||'#8B5CFF'; }
 const CAD_TYPES=[['weekly','Weekly'],['monthly','Monthly'],['quarterly','Quarterly'],['yearly','Yearly'],['interval','Interval']];
-function cadBadgeText(r){
-  if(r.type==='weekly') return 'W';
-  if(r.type==='monthly') return 'M';
-  if(r.type==='quarterly') return 'Q';
-  if(r.type==='yearly') return 'Y';
-  if(r.type==='interval') return String(r.intervalDays||0);
-  return '?';
+const WD_LETTER=['S','M','T','W','T','F','S'];
+const MO_LETTER=['J','F','M','A','M','J','J','A','S','O','N','D'];
+function isoOf(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+/* Which of the next 12 months does this rule actually fire in?
+   Walked from the real recurrence engine, so the strip can never disagree with reality. */
+function firingMonths(r){
+  const set=new Set();
+  const limit=new Date(); limit.setFullYear(limit.getFullYear()+1);
+  let cur=nextDueOnOrAfter(r, todayStr()), guard=0;
+  while(cur && guard<70){
+    const d=new Date(cur+'T00:00:00');
+    if(d>limit) break;
+    set.add(d.getMonth());
+    const nx=new Date(d); nx.setDate(nx.getDate()+1);
+    cur=nextDueOnOrAfter(r, isoOf(nx));
+    guard++;
+  }
+  return set;
 }
-/* Cadence signature: a small track whose SHAPE tells you the rhythm at a glance.
-   7 wide slots = weekly. 31 thin slots = monthly. 12 slots = quarterly/yearly.
-   A row of evenly spaced dots = fixed interval; denser dots mean it fires more often. */
-function cadenceTrack(r, col){
-  const W=132, H=13, mid=H/2;
-  let slots=0, on=[];
-  if(r.type==='weekly'){ slots=7; on=[((r.weekday||0)%7+7)%7]; }
-  else if(r.type==='monthly'){ slots=31; on=[Math.min(Math.max(r.monthday||1,1),31)-1]; }
-  else if(r.type==='quarterly'){ slots=12; on=quarterMonths(r).map(m=>((m%12)+12)%12); }
-  else if(r.type==='yearly'){ slots=12; on=[((r.month||0)%12+12)%12]; }
-  else if(r.type==='interval'){
-    const n=Math.max(1, r.intervalDays||1);
-    const count=Math.min(16, Math.max(3, Math.round(90/n)));
-    let d='';
-    for(let i=0;i<count;i++){
-      const x = count===1 ? mid : 2.5 + i*((W-5)/(count-1));
-      d+='<circle cx="'+x.toFixed(1)+'" cy="'+mid+'" r="2.5" fill="'+col+'"/>';
+
+/* Cadence strip — a labelled calendar, not an abstract icon.
+   Weekly rules get the 7 weekdays. Everything else gets the next 12 months,
+   starting at the current one, with the months it fires in lit up. */
+function cadenceStrip(r){
+  let cells='';
+  if(r.type==='weekly'){
+    const wd=((r.weekday||0)%7+7)%7;
+    for(let i=0;i<7;i++){
+      const day=(i+1)%7;                       // strip starts on Monday
+      cells+='<span class="cs'+(day===wd?' on':'')+'"><i></i><b>'+WD_LETTER[day]+'</b></span>';
     }
-    return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+d+'</svg>';
+    return '<div class="cadstrip">'+cells+'</div>';
   }
-  else return '';
-  const gap = slots>12 ? 1 : 2;
-  const w = Math.max(1.4, (W - gap*(slots-1))/slots);
-  const set = new Set(on);
-  let d='';
-  for(let i=0;i<slots;i++){
-    const x = i*(w+gap);
-    if(set.has(i)) d+='<rect x="'+x.toFixed(1)+'" y="0" width="'+w.toFixed(1)+'" height="'+H+'" rx="1.5" fill="'+col+'"/>';
-    else d+='<rect x="'+x.toFixed(1)+'" y="'+(mid-1.75)+'" width="'+w.toFixed(1)+'" height="3.5" rx="1.5" fill="var(--line-hi)"/>';
+  const months=firingMonths(r);
+  const start=new Date().getMonth();
+  for(let i=0;i<12;i++){
+    const m=(start+i)%12;
+    cells+='<span class="cs'+(months.has(m)?' on':'')+'"><i></i><b>'+MO_LETTER[m]+'</b></span>';
   }
-  return '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+d+'</svg>';
+  return '<div class="cadstrip">'+cells+'</div>';
 }
 function renderRecurring(){
   let h='<div class="help-card '+(state.ui.helpOpen?'open':'')+'"><div class="help-head" id="helpToggle"><span>How recurring rules work</span><span>'+(state.ui.helpOpen?'▾':'▸')+'</span></div>';
@@ -1973,17 +1986,16 @@ function renderRecurring(){
       +(canDel?'<button class="catdel" data-catdel="'+esc(c)+'" title="Delete empty section">\u2715</button>':'')
       +'</div><div class="cat-body">';
     h+= rules.length? rules.map(r=>{
-      const nx = previewDates(r,1)[0];
       const tags = (r.tags||[]).map(t=>'<span class="tagb">'+esc(t)+'</span>').join('');
+      const dates = previewDates(r,3).map((d,i)=>
+        '<span class="dchip'+(i===0?' next':'')+'">'+fmtShort(d)+'</span>').join('');
       return '<div class="rule">'
-        +'<span class="cad-badge" style="background:'+col+'1F;border:1px solid '+col+'4D;color:'+col+'" title="'+esc(ruleFreqText(r))+'">'+cadBadgeText(r)+'</span>'
         +'<div class="r-body">'
         +'<span class="rtitle">'+esc(r.title)+'</span>'
         +'<div class="r-meta"><span class="rfreq">'+ruleFreqText(r)+'</span>'+tags+'</div>'
+        +(dates?'<div class="r-dates">'+dates+'</div>':'')
         +'</div>'
-        +'<div class="r-sig">'+cadenceTrack(r,col)
-        +(nx?'<span class="rnext">NEXT '+fmtShort(nx).toUpperCase()+'</span>':'')
-        +'</div>'
+        +'<div class="r-sig">'+cadenceStrip(r)+'</div>'
         +'<div class="r-acts">'
         +'<button class="redit" data-rule="'+r.id+'" title="Edit rule">\u270E</button>'
         +'<button class="rdel" data-rule="'+r.id+'" title="Delete rule">\u2715</button>'
