@@ -164,6 +164,42 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .tab .cnt{font-size:10px;color:var(--faint);margin-left:4px}
 .tab.on .cnt{color:var(--purple-hi)}
 
+/* ============ DESKTOP DASHBOARD LAYOUT ============ */
+@media (min-width:900px){
+  .wrap{
+    max-width:1120px;
+    display:grid;
+    grid-template-columns:196px 1fr;
+    grid-template-areas:"topbar topbar" "nav main";
+    column-gap:36px;
+    row-gap:0;
+    align-items:start;
+    padding:26px 32px 90px;
+  }
+  header{display:contents}
+  header::before{display:none}
+  .topbar{grid-area:topbar}
+  nav{
+    grid-area:nav;
+    flex-direction:column;
+    align-items:stretch;
+    flex-wrap:nowrap;
+    overflow:visible;
+    gap:2px;
+    margin:22px 0 0;
+    position:sticky;
+    top:26px;
+  }
+  .tab{text-align:left;padding:9px 12px}
+  main{grid-area:main;min-width:0}
+}
+@media (min-width:1220px){
+  .wrap{max-width:1320px}
+  main:has(.notes-block){display:flex;align-items:flex-start;gap:32px}
+  main:has(.notes-block) .dash-main{order:1;flex:1;min-width:0}
+  main:has(.notes-block) .notes-block{order:2;flex:0 0 300px;margin-top:0;position:sticky;top:90px}
+}
+
 /* settings sheet */
 .settings-sheet{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.35);display:flex;align-items:flex-start;justify-content:flex-end;padding:58px 16px 0}
 .settings-sheet.hidden{display:none}
@@ -1797,6 +1833,7 @@ function renderDashboard(){
     h+='</div>';
   }
   h+='</div>';
+  h+='<div class="dash-main">';
   h+='<div class="addbar"><input id="dashAdd" placeholder="Add a task for today..."><button id="dashAddBtn">Add</button></div>';
   h+=filterBar();
   const tOpen=state.ui.bucketOpen.Today;
@@ -1842,6 +1879,7 @@ function renderDashboard(){
     if(!wh) wh='<div class="empty">Nothing planned and nothing scheduled in the next 7 days.</div>';
     h+='<div class="week-preview">'+wh+'</div>';
   }
+  h+='</div>';
   return h;
 }
 function renderList(list){
