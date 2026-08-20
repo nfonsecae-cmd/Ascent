@@ -293,7 +293,7 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 @media (min-width:1220px){
   .wrap{max-width:1320px}
   main:has(.side-rail){display:flex;align-items:flex-start;gap:32px}
-  main:has(.side-rail) .side-rail{order:1;flex:0 0 320px;position:sticky;top:26px}
+  main:has(.side-rail) .side-rail{order:1;flex:0 0 340px;position:sticky;top:26px}
   main:has(.side-rail) .dash-main{order:2;flex:1;min-width:0}
   main:has(.side-rail) .side-rail .notes-block{margin-top:0}
 }
@@ -310,7 +310,12 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .follow-list{padding:0 10px 11px;display:flex;flex-direction:column;gap:0}
 .follow-list .task{margin-bottom:5px}
 .follow-list .statcol{display:none}
-.follow-list .ttitle{font-size:12px}
+/* el carril es angosto: el título va en su propia línea y los chips debajo */
+.follow-list .trow{flex-wrap:wrap;align-items:flex-start;row-gap:7px;padding:9px 10px}
+.follow-list .ttitle{flex:1 1 auto;min-width:0;font-size:12px;overflow-wrap:anywhere}
+.follow-list .caret{order:3}
+.follow-list .tmeta{flex:1 1 100%;justify-content:flex-start;margin-left:25px;gap:5px}
+.follow-list .tmeta .chip,.follow-list .tmeta .tagb,.follow-list .tmeta .daytrack{font-size:9.5px;padding:2px 7px}
 .follow-list .empty{padding:12px 0;font-size:12.5px}
 
 /* settings sheet */
@@ -549,10 +554,10 @@ html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.
 .task:hover{border-color:var(--line-hi);box-shadow:0 0 22px -12px rgba(var(--gA),.6)}
 .task.overdue{border-left:3px solid var(--red);box-shadow:0 0 24px -9px rgba(255,77,94,.7)}
 .task.leaving{opacity:0;transform:translateX(24px)}
-.trow{display:flex;align-items:center;gap:8px;padding:9px 11px;cursor:pointer;position:relative}
+.trow{display:flex;align-items:center;gap:8px;padding:9px 11px;cursor:pointer;position:relative;flex-wrap:wrap;row-gap:6px}
 .ck{flex:none;width:16px;height:16px;border:1.5px solid var(--faint);border-radius:4px;background:none;cursor:pointer;transition:all .15s}
 .ck:hover{border-color:var(--green);background:rgba(59,229,139,.16);box-shadow:0 0 12px -2px rgba(59,229,139,.8)}
-.ttitle{flex:1;min-width:0;font-size:13px;line-height:1.35;color:var(--txt);overflow-wrap:break-word}
+.ttitle{flex:1 1 190px;min-width:0;font-size:13px;line-height:1.35;color:var(--txt);overflow-wrap:break-word}
 .tmeta{display:flex;align-items:center;gap:6px;flex:none;flex-wrap:wrap;justify-content:flex-end}
 
 .chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:10px;font-weight:500;padding:3.5px 9px;border-radius:6px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s}
