@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-accent="e5" style="background:#FFFFFF">
+<html lang="en" data-theme="light" data-accent="e4" style="background:#FFFFFF">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -292,10 +292,26 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 }
 @media (min-width:1220px){
   .wrap{max-width:1320px}
-  main:has(.notes-block){display:flex;align-items:flex-start;gap:32px}
-  main:has(.notes-block) .dash-main{order:1;flex:1;min-width:0}
-  main:has(.notes-block) .notes-block{order:2;flex:0 0 300px;margin-top:0;position:sticky;top:90px}
+  main:has(.side-rail){display:flex;align-items:flex-start;gap:32px}
+  main:has(.side-rail) .side-rail{order:1;flex:0 0 320px;position:sticky;top:26px}
+  main:has(.side-rail) .dash-main{order:2;flex:1;min-width:0}
+  main:has(.side-rail) .side-rail .notes-block{margin-top:0}
 }
+
+/* ===== FOLLOW-UP RAIL ===== */
+.follow-block{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);margin-bottom:14px;overflow:hidden}
+.follow-block.open{border-color:rgba(var(--fu-rgb),.4)}
+.fb-head{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer}
+.fb-head label{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;
+  color:var(--fu);font-weight:600;text-transform:uppercase;cursor:pointer}
+.fb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
+.fb-caret{margin-left:auto;color:var(--faint);font-size:10px}
+.follow-list{padding:0 10px 11px;display:flex;flex-direction:column;gap:0}
+.follow-list .task{margin-bottom:5px}
+.follow-list .statcol{display:none}
+.follow-list .ttitle{font-size:12px}
+.follow-list .empty{padding:12px 0;font-size:12.5px}
 
 /* settings sheet */
 .settings-sheet{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.35);display:flex;align-items:flex-start;justify-content:flex-end;padding:58px 16px 0}
@@ -873,7 +889,7 @@ let state = {
   ui:{weekOpen:false, catOpen:{}, noteOpen:false,
       bucketOpen:{Today:true,Week:true,Later:true},
       subOpen:{},
-      theme:'light', accent:'e5',
+      theme:'light', accent:'e4',
       groupByStatus:true}
 };
 let view='dashboard';
@@ -1006,7 +1022,7 @@ function normalizeState(){
   if(state.ui.noteOpen === undefined) state.ui.noteOpen = false;
   if(state.ui.groupByStatus === undefined) state.ui.groupByStatus = true;
   if(!state.ui.theme) state.ui.theme = 'light';
-  if(!state.ui.accent) state.ui.accent = 'e5';
+  if(!state.ui.accent) state.ui.accent = 'e4';
   if(!Array.isArray(state.notes)) state.notes = [];
   if(!state.completions || typeof state.completions !== 'object') state.completions = {};
   if(typeof state.dailyTarget !== 'number') state.dailyTarget = 5;
@@ -1972,7 +1988,17 @@ function renderDashboard(){
   let today=activeTasks().filter(t=>t.bucket==='Today');
   let week=activeTasks().filter(t=>t.bucket==='Week');
   today=applyFilters(today); week=applyFilters(week);
+  // follow-ups get their own rail — they're waiting on someone else, not today's work
+  const railOn = !filterActive();
+  let follows = [];
+  if(railOn){
+    follows = activeTasks().filter(t=>t.status==='Follow-up')
+      .sort((a,b)=>(daysSince(b.statusSince)||0)-(daysSince(a.statusSince)||0));
+    today = today.filter(t=>t.status!=='Follow-up');
+    week  = week.filter(t=>t.status!=='Follow-up');
+  }
   let h='';
+  h+='<div class="side-rail">';
   // ===== NOTES (post-its) =====
   const notes=sortedNotes();
   const first=notes[0];
@@ -1994,6 +2020,23 @@ function renderDashboard(){
           +'<button class="postit-del" data-notedel="'+n.id+'" title="Delete">✕</button>'
           +'</div>'
     ).join('') : '<div class="empty">No notes yet.</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  // ===== FOLLOW-UP RAIL =====
+  if(railOn){
+    const fOpen = state.ui.followOpen!==false;
+    h+='<div class="follow-block '+(fOpen?'open':'')+'">';
+    h+='<div class="fb-head" id="followToggle"><label>Follow-up</label>'
+      +'<span class="fb-count">'+(follows.length||'')+'</span>'
+      +'<span class="fb-caret">'+(fOpen?'▾':'▸')+'</span></div>';
+    if(fOpen){
+      h+='<div class="follow-list">';
+      h+= follows.length
+        ? follows.map(t=>taskRow(t,{compactStatus:false, quietBucket:true})).join('')
+        : '<div class="empty">Nothing waiting on anyone.</div>';
+      h+='</div>';
+    }
     h+='</div>';
   }
   h+='</div>';
@@ -2405,6 +2448,8 @@ function render(){
   // notes collapse
   const nt2=document.getElementById('noteToggle');
   if(nt2) nt2.addEventListener('click',()=>{ state.ui.noteOpen=!state.ui.noteOpen; save(); render(); });
+  const ft=document.getElementById('followToggle');
+  if(ft) ft.addEventListener('click',()=>{ state.ui.followOpen = (state.ui.followOpen===false); save(); render(); });
   // section (bucket) collapse toggles
   document.querySelectorAll('[data-sectoggle]').forEach(el=>el.addEventListener('click',()=>{
     const b=el.dataset.sectoggle; state.ui.bucketOpen[b]=!state.ui.bucketOpen[b]; save(); render();
@@ -2752,7 +2797,7 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
 });
 document.getElementById('accentToggle').addEventListener('click',()=>{
   const order=['e1','e4','e5','ember','ivory','aurora'];
-  const i=order.indexOf(state.ui.accent||'e5');
+  const i=order.indexOf(state.ui.accent||'e4');
   state.ui.accent = order[(i+1)%order.length];
   if(['e1','e4','e5','ivory'].includes(state.ui.accent)) state.ui.theme='light';
   applyTheme(); save();
