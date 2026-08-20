@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-accent="ivory" style="background:#FFFFFF">
+<html lang="en" data-theme="light" data-accent="e5" style="background:#FFFFFF">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +29,55 @@
   --blur:blur(16px) saturate(1.3);
   --r:6px;
 }
+/* ===== DARK · E1 — oro estructura, azul acción ===== */
+html[data-theme="dark"][data-accent="e1"]{
+  --bg:#08090F; --card:#12141C; --pop-bg:#12141C;
+  --panel:rgba(255,255,255,.04); --panel2:rgba(255,255,255,.07);
+  --line:rgba(255,255,255,.09); --line-hi:rgba(255,255,255,.2);
+  --txt:#F2F4FB; --muted:#98A0B4; --faint:#5D6580;
+  --blue:#D9A93B; --blue-hi:#EBC468; --purple:#D9A93B; --purple-hi:#EBC468;
+  --green:#5B8CFF; --red:#FF5A6E;
+  --fu:#D9A93B; --fu-rgb:217,169,59;
+  --ip:#5B8CFF; --ns:#3A4152; --od:#FF5A6E;
+  --ring:linear-gradient(120deg,#EBC468,#D9A93B 50%,#8A6408);
+  --grad:#D9A93B;
+  --bkt-today:#D9A93B; --bkt-week:#98A0B4; --bkt-later:#5D6580;
+  --gA:190,150,60; --gB:170,130,50; --gC:200,160,70; --gD:160,135,70;
+}
+/* ===== DARK · E4 — filas hairline ===== */
+html[data-theme="dark"][data-accent="e4"]{
+  --bg:#07090E; --card:#101319; --pop-bg:#101319;
+  --panel:rgba(255,255,255,.035); --panel2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.08); --line-hi:rgba(217,169,59,.4);
+  --txt:#EEF1F7; --muted:#949CAE; --faint:#5A6376;
+  --blue:#D9A93B; --blue-hi:#EBC468; --purple:#D9A93B; --purple-hi:#EBC468;
+  --green:#5B8CFF; --red:#FF5A6E;
+  --fu:#D9A93B; --fu-rgb:217,169,59;
+  --ip:#5B8CFF; --ns:#39404F; --od:#FF5A6E;
+  --ring:linear-gradient(120deg,#EBC468,#D9A93B 50%,#8A6408);
+  --grad:#5B8CFF;
+  --bkt-today:#D9A93B; --bkt-week:#949CAE; --bkt-later:#5A6376;
+  --gA:190,150,60; --gB:170,130,50; --gC:200,160,70; --gD:160,135,70;
+}
+/* ===== DARK · E5 — azul y grises; el oro solo en el logo ===== */
+html[data-theme="dark"][data-accent="e5"]{
+  --bg:#0A0D14; --card:#141821; --pop-bg:#141821;
+  --panel:rgba(255,255,255,.04); --panel2:rgba(255,255,255,.07);
+  --line:rgba(255,255,255,.09); --line-hi:rgba(255,255,255,.2);
+  --txt:#EDF0F7; --muted:#8B94A6; --faint:#5A6377;
+  --blue:#8B94A6; --blue-hi:#A8B0C0; --purple:#8B94A6; --purple-hi:#A8B0C0;
+  --green:#5B8CFF; --red:#FF5A6E;
+  --fu:#8B94A6; --fu-rgb:139,148,166;
+  --ip:#5B8CFF; --ns:#39404F; --od:#FF5A6E;
+  --ring:linear-gradient(120deg,#A8B0C0,#8B94A6 50%,#5A6377);
+  --grad:#5B8CFF;
+  --bkt-today:#8B94A6; --bkt-week:#8B94A6; --bkt-later:#5A6377;
+  --gA:90,100,120; --gB:80,90,110; --gC:95,105,125; --gD:85,95,115;
+}
+html[data-theme="dark"][data-accent="e4"] .task{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  border-top:none;border-right:none;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
+html[data-theme="dark"][data-accent="e4"] .task:hover{box-shadow:none;background:rgba(255,255,255,.025)}
+
 /* ===== EMBER ACCENT — gold / orange / warm brown ===== */
 html[data-accent="ember"]{
   --bg:#0B0805;
@@ -66,6 +115,54 @@ html[data-theme="light"][data-accent="ivory"]{
   --grad:#171717;
   --gA:200,150,40; --gB:190,120,30; --gC:210,165,60; --gD:180,150,90;
 }
+/* ===== E1 · ORIGINAL — oro estructura, azul acción ===== */
+html[data-theme="light"][data-accent="e1"]{
+  --bg:#FFFFFF;
+  --panel:#FFFFFF; --panel2:#FAFAFA; --card:#FAFAFA; --pop-bg:#FFFFFF;
+  --line:rgba(20,20,20,.09); --line-hi:rgba(20,20,20,.18);
+  --txt:#141414; --muted:#666D79; --faint:#A5AAB4;
+  --blue:#B8860B; --blue-hi:#8A6408; --purple:#B8860B; --purple-hi:#8A6408;
+  --green:#1B4DFF; --red:#141414;
+  --fu:#B8860B; --fu-rgb:184,134,11;
+  --ip:#1B4DFF; --ns:#C9CDD4; --od:#141414;
+  --ring:linear-gradient(120deg,#E8C56A,#D4A62E 45%,#C08A1E 75%,#A0742A);
+  --grad:#141414;
+  --bkt-today:#B8860B; --bkt-week:#8A6408; --bkt-later:#A5AAB4;
+  --gA:200,150,40; --gB:190,120,30; --gC:210,165,60; --gD:180,150,90;
+}
+/* ===== E4 · FILO DE ORO — filas hairline, oro solo en líneas ===== */
+html[data-theme="light"][data-accent="e4"]{
+  --bg:#FFFFFF;
+  --panel:#FFFFFF; --panel2:#FCFCFD; --card:#FCFCFD; --pop-bg:#FFFFFF;
+  --line:rgba(17,24,39,.08); --line-hi:rgba(184,134,11,.4);
+  --txt:#111827; --muted:#5F6B7E; --faint:#A3ACBC;
+  --blue:#8A6408; --blue-hi:#6E5006; --purple:#8A6408; --purple-hi:#6E5006;
+  --green:#1B4DFF; --red:#111827;
+  --fu:#8A6408; --fu-rgb:138,100,8;
+  --ip:#1B4DFF; --ns:#C9CDD4; --od:#111827;
+  --ring:linear-gradient(120deg,#E8C56A,#D4A62E 45%,#C08A1E 75%,#A0742A);
+  --grad:#1B4DFF;
+  --bkt-today:#8A6408; --bkt-week:#6E5006; --bkt-later:#A3ACBC;
+  --gA:200,150,40; --gB:190,120,30; --gC:210,165,60; --gD:180,150,90;
+}
+/* ===== E5 · ACERO — azul y grises; el oro vive solo en el logo ===== */
+html[data-theme="light"][data-accent="e5"]{
+  --bg:#FFFFFF;
+  --panel:#FFFFFF; --panel2:#F6F7F9; --card:#F6F7F9; --pop-bg:#FFFFFF;
+  --line:rgba(21,24,29,.1); --line-hi:rgba(21,24,29,.2);
+  --txt:#15181D; --muted:#5E6772; --faint:#9BA3AE;
+  --blue:#4A5560; --blue-hi:#39424C; --purple:#4A5560; --purple-hi:#39424C;
+  --green:#1B4DFF; --red:#15181D;
+  --fu:#4A5560; --fu-rgb:74,85,96;
+  --ip:#1B4DFF; --ns:#C9CDD4; --od:#15181D;
+  --ring:linear-gradient(120deg,#7B8794,#4A5560 50%,#39424C);
+  --grad:#15181D;
+  --bkt-today:#4A5560; --bkt-week:#5E6772; --bkt-later:#9BA3AE;
+  --gA:90,100,115; --gB:80,90,105; --gC:100,110,125; --gD:85,95,110;
+}
+/* el logo se mantiene dorado en E5 aunque nada más lo sea */
+html[data-accent="e5"] header::before{background:radial-gradient(closest-side,rgba(184,134,11,.16),transparent 70%)}
+
 html[data-theme="light"]{
   --bg:#F4F2F3;
   --bkt-today:#E0338A; --bkt-week:#2E6FE8; --bkt-later:#0E9C94;
@@ -209,6 +306,10 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .ss-btn{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);font-size:13px;padding:9px 11px;border-radius:9px;cursor:pointer;font-family:inherit;text-align:left}
 .ss-btn:hover{border-color:var(--purple);color:var(--txt)}
 .ss-swatch{width:14px;height:14px;border-radius:50%;background:var(--ring);flex:none}
+.pal-sw{display:flex;gap:3px;flex:none}
+.pal-sw i{width:11px;height:11px;border-radius:3px;display:block;font-style:normal;border:1px solid rgba(0,0,0,.08)}
+.pal-btn.on{border-color:var(--blue);background:var(--panel);font-weight:600}
+.pal-btn.on::after{content:'✓';margin-left:auto;color:var(--blue);font-size:12px}
 
 .mng-add{display:flex;gap:8px;margin:0 0 12px}
 .mng-add input{flex:1;background:var(--panel);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
@@ -256,8 +357,26 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .task.pinned{box-shadow:0 0 20px -12px rgba(var(--gA),.7)}
 
 /* status rails — weight ladder */
-.task.st-fu{border-left:3px solid var(--fu);border-radius:0 var(--r) var(--r) 0}
-.task.st-ip{border-left:3px solid var(--green);border-radius:0 var(--r) var(--r) 0}
+/* ===== S1 · riel de estado ===== */
+.task.st-fu{border-left:3px dashed var(--fu);border-radius:0 var(--r) var(--r) 0}
+.task.st-ip{border-left:3px solid var(--ip,var(--green));border-radius:0 var(--r) var(--r) 0}
+.task.st-ns{border-left:3px solid var(--ns,var(--faint));border-radius:0 var(--r) var(--r) 0}
+.task.overdue.st-ns,.task.overdue.st-ip,.task.overdue.st-fu{border-left:3px solid var(--od,var(--red))}
+
+/* ===== S1 · columna de estado alineada ===== */
+.statcol{flex:none;width:104px;display:flex;justify-content:flex-end;align-items:center;gap:6px;cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.statcol .scd{width:6px;height:6px;border-radius:50%;flex:none}
+.st-ns .statcol{color:var(--faint)}        .st-ns .statcol .scd{background:var(--ns,var(--faint))}
+.st-ip .statcol{color:var(--ip,var(--green))} .st-ip .statcol .scd{background:var(--ip,var(--green))}
+.st-fu .statcol{color:var(--fu)}           .st-fu .statcol .scd{background:var(--fu)}
+.overdue .statcol{color:var(--od,var(--red))} .overdue .statcol .scd{background:var(--od,var(--red))}
+@media(max-width:700px){.statcol{width:auto}.statcol .scl{display:none}}
+
+/* ===== E4 · filas hairline en vez de tarjetas ===== */
+html[data-accent="e4"] .task{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  border-top:none;border-right:none;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
+html[data-accent="e4"] .task:hover{box-shadow:none;background:rgba(17,24,39,.02)}
 .task.st-ns{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
 .task.st-ns .trow{padding:7px 11px}
 .task.st-ns .ttitle{font-size:12.5px;color:var(--muted)}
@@ -617,6 +736,23 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .btn-ghost{background:none;border:1px solid var(--line);color:var(--muted);font-size:13px;padding:9px 17px;border-radius:10px;cursor:pointer;font-family:inherit}
 .btn-ghost:hover{color:var(--txt);border-color:var(--line-hi)}
 
+/* ============ SEARCH ============ */
+.searchbox{display:flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:6px;padding:5px 9px;min-width:150px;max-width:230px;flex:0 1 200px;transition:border-color .15s}
+.searchbox:focus-within{border-color:var(--blue)}
+.searchbox .s-ic{color:var(--faint);font-size:13px;line-height:1;flex:none}
+.searchbox input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--txt);
+  font-family:inherit;font-size:12.5px;padding:0}
+.searchbox input::placeholder{color:var(--faint)}
+.s-clear{background:none;border:none;color:var(--faint);cursor:pointer;font-size:11px;padding:0 2px;line-height:1;flex:none}
+.s-clear:hover{color:var(--txt)}
+.searchinfo{display:flex;align-items:center;gap:9px;margin:0 0 12px;font-size:12px;color:var(--muted)}
+.searchinfo b{color:var(--txt);font-weight:600}
+.searchinfo button{background:none;border:1px solid var(--line);color:var(--muted);font-size:11px;
+  padding:3px 10px;border-radius:5px;cursor:pointer;font-family:inherit}
+.searchinfo button:hover{border-color:var(--line-hi);color:var(--txt)}
+@media(max-width:700px){.searchbox{order:9;flex:1 1 100%;max-width:none;margin-top:8px}}
+
 /* ============ MISC ============ */
 .empty{color:var(--faint);font-size:13.5px;text-align:center;padding:26px 0}
 .week-preview .task{opacity:.72}
@@ -679,6 +815,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       <div class="brandrow"><img class="brandmark" id="brandmark" alt="Ascent" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMDAwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg=="><span class="brandword">Ascent</span></div>
       <span class="kpi-pill" id="kpiPill" onclick="setView('history')" title="Completion history"></span>
       <span class="hdate" id="hdate"></span>
+      <div class="searchbox">
+        <span class="s-ic">⌕</span>
+        <input id="searchInput" placeholder="Buscar…  /" autocomplete="off">
+        <button class="s-clear hidden" id="searchClear" title="Limpiar">✕</button>
+      </div>
       <span class="syncdot ok" id="syncDot" title="All changes saved"></span>
       <button class="gear" id="gearBtn" title="Settings">⚙</button>
     </div>
@@ -692,6 +833,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
     <div class="ss-opts">
       <button class="ss-btn" id="themeToggle">☾ Light / Dark</button>
       <button class="ss-btn" id="accentToggle"><span class="ss-swatch"></span> Palette</button>
+    </div>
+    <div class="ss-row"><span>Palette</span></div>
+    <div class="ss-opts" id="paletteOpts">
+      <button class="ss-btn pal-btn" data-pal="e1"><span class="pal-sw"><i style="background:#B8860B"></i><i style="background:#1B4DFF"></i></span> E1 · Original</button>
+      <button class="ss-btn pal-btn" data-pal="e4"><span class="pal-sw"><i style="background:#fff;box-shadow:inset 0 0 0 1px #B8860B"></i><i style="background:#1B4DFF"></i></span> E4 · Filo de oro</button>
+      <button class="ss-btn pal-btn" data-pal="e5"><span class="pal-sw"><i style="background:#1B4DFF"></i><i style="background:#4A5560"></i></span> E5 · Acero</button>
     </div>
     <div class="ss-row"><span>Views</span></div>
     <div class="ss-opts">
@@ -726,7 +873,7 @@ let state = {
   ui:{weekOpen:false, catOpen:{}, noteOpen:false,
       bucketOpen:{Today:true,Week:true,Later:true},
       subOpen:{},
-      theme:'light', accent:'ivory',
+      theme:'light', accent:'e5',
       groupByStatus:true}
 };
 let view='dashboard';
@@ -859,7 +1006,7 @@ function normalizeState(){
   if(state.ui.noteOpen === undefined) state.ui.noteOpen = false;
   if(state.ui.groupByStatus === undefined) state.ui.groupByStatus = true;
   if(!state.ui.theme) state.ui.theme = 'light';
-  if(!state.ui.accent) state.ui.accent = 'ivory';
+  if(!state.ui.accent) state.ui.accent = 'e5';
   if(!Array.isArray(state.notes)) state.notes = [];
   if(!state.completions || typeof state.completions !== 'object') state.completions = {};
   if(typeof state.dailyTarget !== 'number') state.dailyTarget = 5;
@@ -1569,6 +1716,9 @@ function taskRow(t, opts){
     +'<button class="ck" data-act="complete" title="Complete"></button>'
     +'<span class="ttitle" data-act="titleedit" title="Tap to edit">'+esc(t.title)+'</span>'
     +'<span class="tmeta">'+meta+'</span>'
+    +'<span class="statcol" data-act="status" title="Tap to change status"><span class="scd"></span><span class="scl">'
+      +(od ? 'Overdue' : t.status==='In Progress' ? 'In progress' : t.status==='Follow-up' ? 'Follow-up' : 'Not started')
+    +'</span></span>'
     +'</div>'
     +'<div class="tdetail">'
     +schedRow
@@ -1725,10 +1875,24 @@ function bindTaskEvents(container){
 }
 
 /* ================= VIEWS ================= */
-function activeTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='active'); }
-function backlogTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='backlog'); }
-function scheduledTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='scheduled'); }
-function archivedTasks(){ return state.tasks.filter(t=>t.status==='Done'); }
+let searchQuery = '';
+function matchesSearch(t){
+  const q = searchQuery.trim().toLowerCase();
+  if(!q) return true;
+  const hay = [
+    t.title || '',
+    (t.tags||[]).join(' '),
+    t.person || '',
+    t.category || '',
+    (t.subtasks||[]).map(s=>s.text).join(' '),
+    (t.noteLog||[]).map(n=>n.text).join(' ')
+  ].join(' ').toLowerCase();
+  return q.split(/\s+/).every(w=>hay.includes(w));
+}
+function activeTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='active' && matchesSearch(t)); }
+function backlogTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='backlog' && matchesSearch(t)); }
+function scheduledTasks(){ return state.tasks.filter(t=>t.status!=='Done' && t.list==='scheduled' && matchesSearch(t)); }
+function archivedTasks(){ return state.tasks.filter(t=>t.status==='Done' && matchesSearch(t)); }
 function sortToday(a,b){ return (isOverdue(b)-isOverdue(a)) || (a.createdAt-b.createdAt); }
 
 function secHead(title,count,extra,color,toggleId,openState){
@@ -2206,14 +2370,23 @@ function render(){
   document.querySelectorAll('#nav .tab').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.v)));
 
   const main=document.getElementById('main');
-  if(view==='dashboard') main.innerHTML=renderDashboard();
-  else if(view==='active') main.innerHTML=renderList('active');
+  if(view==='dashboard') main.innerHTML=renderDashboard();  else if(view==='active') main.innerHTML=renderList('active');
   else if(view==='scheduled') main.innerHTML=renderScheduled();
   else if(view==='backlog') main.innerHTML=renderList('backlog');
   else if(view==='recurring') main.innerHTML=renderRecurring();
   else if(view==='manage') main.innerHTML=renderManage();
   else if(view==='history') main.innerHTML=renderHistory();
   else if(view==='archive') main.innerHTML=secHead('ARCHIVE','')+renderArchive();
+
+  // search results banner
+  if(searchQuery.trim()){
+    const n = activeTasks().length + backlogTasks().length + scheduledTasks().length;
+    const banner = '<div class="searchinfo"><span><b>'+n+'</b> resultado'+(n===1?'':'s')
+      +' para "<b>'+esc(searchQuery.trim())+'</b>"</span><button id="searchReset">Limpiar</button></div>';
+    main.insertAdjacentHTML('afterbegin', banner);
+    const rb=document.getElementById('searchReset');
+    if(rb) rb.addEventListener('click',()=>setSearch(''));
+  }
 
   bindTaskEvents(main);
 
@@ -2546,7 +2719,9 @@ function render(){
 /* ================= THEME ================= */
 const BOOT_BG = {
   'dark-aurora':'#070810', 'dark-ember':'#0B0805', 'dark-ivory':'#0B0805',
-  'light-aurora':'#F4F2F3', 'light-ember':'#F6F1E7', 'light-ivory':'#FFFFFF'
+  'light-aurora':'#F4F2F3', 'light-ember':'#F6F1E7', 'light-ivory':'#FFFFFF',
+  'light-e1':'#FFFFFF', 'light-e4':'#FFFFFF', 'light-e5':'#FFFFFF',
+  'dark-e1':'#08090F', 'dark-e4':'#07090E', 'dark-e5':'#0A0D14'
 };
 function applyTheme(){
   const t = state.ui.theme || 'light';
@@ -2559,6 +2734,7 @@ function applyTheme(){
   if(mt) mt.setAttribute('content', bg);
   const btn=document.getElementById('themeToggle');
   if(btn) btn.textContent = t==='light' ? '☀' : '☾';
+  markPalette();
   const bm=document.getElementById('brandmark');
   if(bm) bm.src = t==='light' ? 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMDAwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg==' : 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg==';
 }
@@ -2575,12 +2751,52 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
   applyTheme(); save();
 });
 document.getElementById('accentToggle').addEventListener('click',()=>{
-  const order=['ember','ivory','aurora'];
-  const i=order.indexOf(state.ui.accent||'ember');
+  const order=['e1','e4','e5','ember','ivory','aurora'];
+  const i=order.indexOf(state.ui.accent||'e5');
   state.ui.accent = order[(i+1)%order.length];
-  if(state.ui.accent==='ivory') state.ui.theme='light';
+  if(['e1','e4','e5','ivory'].includes(state.ui.accent)) state.ui.theme='light';
   applyTheme(); save();
 });
+document.querySelectorAll('.pal-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    state.ui.accent = b.dataset.pal;
+    state.ui.theme = 'light';
+    applyTheme(); save();
+  });
+});
+function markPalette(){
+  const a = state.ui.accent;
+  document.querySelectorAll('.pal-btn').forEach(b=>b.classList.toggle('on', b.dataset.pal===a));
+}
+
+/* ================= SEARCH ================= */
+function setSearch(v){
+  searchQuery = v || '';
+  const inp=document.getElementById('searchInput');
+  if(inp && inp.value!==searchQuery) inp.value=searchQuery;
+  const cl=document.getElementById('searchClear');
+  if(cl) cl.classList.toggle('hidden', !searchQuery.trim());
+  render();
+}
+(function initSearch(){
+  const inp=document.getElementById('searchInput');
+  const cl=document.getElementById('searchClear');
+  if(inp){
+    inp.addEventListener('input',()=>setSearch(inp.value));
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){ setSearch(''); inp.blur(); }
+    });
+  }
+  if(cl) cl.addEventListener('click',()=>{ setSearch(''); if(inp) inp.focus(); });
+  // "/" enfoca la búsqueda desde cualquier parte
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='/' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const a=document.activeElement;
+    if(a && (a.tagName==='INPUT' || a.tagName==='TEXTAREA' || a.isContentEditable)) return;
+    e.preventDefault();
+    if(inp) inp.focus();
+  });
+})();
 
 /* ================= HEADER DATE ================= */
 function setDate(){
