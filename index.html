@@ -774,6 +774,82 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .searchinfo button:hover{border-color:var(--line-hi);color:var(--txt)}
 @media(max-width:700px){.searchbox{order:9;flex:1 1 100%;max-width:none;margin-top:8px}}
 
+/* ===== AGENDA · 7 días rodantes ===== */
+.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:7px}
+.wd{border:1px solid var(--line);border-radius:5px;padding:7px 6px;min-height:92px;background:var(--panel)}
+.wd-h{font-family:'Space Grotesk',sans-serif;font-size:8.5px;letter-spacing:.12em;color:var(--faint);
+  font-weight:700;text-transform:uppercase;margin-bottom:2px}
+.wd-n{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;line-height:1;margin-bottom:7px;color:var(--txt)}
+.wi{font-size:9.5px;line-height:1.35;padding:3px 5px;border-radius:3px;margin-bottom:3px;cursor:pointer;
+  border-left:2px solid var(--ns,var(--faint));background:rgba(127,127,127,.07);color:var(--txt);
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.wi:hover{background:rgba(127,127,127,.14)}
+.wi.rec{border-left-color:var(--fu);color:var(--muted)}
+.wi.sch{border-left-color:var(--ip,var(--blue))}
+.wd-empty{font-size:9px;color:var(--faint)}
+.wk-legend{display:flex;align-items:center;gap:14px;font-size:10px;color:var(--faint);margin-bottom:4px;flex-wrap:wrap}
+.wk-legend .lg{padding-left:5px}
+.wk-legend .lg.sch{border-left:2px solid var(--ip,var(--blue))}
+.wk-legend .lg.rec{border-left:2px solid var(--fu)}
+.wk-legend .lg-hint{margin-left:auto;font-style:italic}
+@media(max-width:900px){
+  .weekgrid{grid-template-columns:repeat(4,1fr)}
+  .wd{min-height:76px}
+}
+@media(max-width:520px){ .weekgrid{grid-template-columns:repeat(2,1fr)} }
+
+/* ===== PRIORIDADES DE LA SEMANA ===== */
+.prio-wrap{display:flex;align-items:flex-start;gap:10px}
+.prio-wrap .task{flex:1;min-width:0}
+.prio-n{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--fu);
+  width:18px;flex:none;text-align:center;padding-top:11px}
+
+/* ===== PROYECTOS · panel del carril ===== */
+.proj-block{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);margin-bottom:14px;overflow:hidden}
+.proj-block.open{border-color:rgba(27,77,255,.35)}
+.pb-head{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer}
+.pb-head label{font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;
+  color:var(--ip,var(--blue));font-weight:600;text-transform:uppercase;cursor:pointer}
+.pb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
+.pb-caret{margin-left:auto;color:var(--faint);font-size:10px}
+.proj-list{padding:0 12px 11px}
+.projcard{border-bottom:1px solid var(--line);padding:10px 0}
+.projcard:last-child{border-bottom:none}
+.pc-t{font-size:12px;font-weight:600;margin-bottom:7px;cursor:pointer;color:var(--txt)}
+.pc-t:hover{color:var(--ip,var(--blue))}
+.pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.pc-bar i{display:block;height:100%;background:var(--ip,var(--blue));border-radius:2px;transition:width .3s}
+.pc-m{display:flex;align-items:center;gap:6px;font-size:9.5px;color:var(--muted);
+  font-family:'Space Grotesk',sans-serif;letter-spacing:.04em}
+.pc-pause{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);
+  font-size:9.5px;padding:2px 8px;border-radius:4px;cursor:pointer;font-family:inherit}
+.pc-pause:hover{border-color:var(--line-hi);color:var(--txt)}
+.pc-next{font-size:10.5px;color:var(--muted);margin-top:7px;padding-left:8px;border-left:2px solid var(--ip,var(--blue))}
+
+/* ===== PROYECTOS · tarjetas en Projects / Ideas ===== */
+.pcard{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);margin-bottom:8px;overflow:hidden}
+.pcard.live{border-color:rgba(27,77,255,.35)}
+.pcard-h{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer}
+.pcard-t{flex:1 1 190px;min-width:0;font-size:13px;font-weight:600}
+.pcard-n{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--faint)}
+.pcard-btn{background:none;border:1px solid var(--line);color:var(--muted);font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:600;padding:4px 11px;border-radius:5px;cursor:pointer;flex:none}
+.pcard-btn.go{background:var(--ip,var(--blue));border-color:var(--ip,var(--blue));color:#fff}
+.pcard-bar{height:3px;background:rgba(127,127,127,.14)}
+.pcard-bar i{display:block;height:100%;background:var(--ip,var(--blue))}
+.pcard-body{padding:6px 12px 10px}
+
+/* ===== control de proyecto en el detalle ===== */
+.projctl{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.projsel{background:var(--panel2);border:1px solid var(--line);color:var(--txt);font-family:inherit;
+  font-size:12px;padding:6px 9px;border-radius:5px;cursor:pointer;max-width:220px}
+.pbtn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);font-family:inherit;
+  font-size:11.5px;padding:6px 11px;border-radius:5px;cursor:pointer}
+.pbtn:hover{border-color:var(--line-hi);color:var(--txt)}
+.pbtn.on{border-color:var(--ip,var(--blue));color:var(--ip,var(--blue))}
+.pctl-n{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
+
 /* ============ MISC ============ */
 .empty{color:var(--faint);font-size:13.5px;text-align:center;padding:26px 0}
 .week-preview .task{opacity:.72}
@@ -892,7 +968,7 @@ let state = {
   categories:['BMS Operational','Client Recurrent'],
   catColors:{'BMS Operational':'#C9921E','Client Recurrent':'#8B5CFF'},
   ui:{weekOpen:false, catOpen:{}, noteOpen:false,
-      bucketOpen:{Today:true,Week:true,Later:true},
+      bucketOpen:{Today:true,Week:true,Later:true,Prio:true},
       subOpen:{},
       theme:'light', accent:'e4',
       groupByStatus:true}
@@ -1022,7 +1098,8 @@ function normalizeState(){
   if(!state.categories || !state.categories.length) state.categories = ['General'];
   if(!state.catColors) state.catColors = {};
   if(!state.people) state.people = ['Carolina','Miller Salas','Nicolas Becerra'];
-  if(!state.ui.bucketOpen) state.ui.bucketOpen = {Today:true, Week:true, Later:true};
+  if(!state.ui.bucketOpen) state.ui.bucketOpen = {Today:true, Week:true, Later:true, Prio:true};
+  if(state.ui.bucketOpen.Prio===undefined) state.ui.bucketOpen.Prio = true;
   if(!state.ui.subOpen) state.ui.subOpen = {};
   if(state.ui.noteOpen === undefined) state.ui.noteOpen = false;
   if(state.ui.groupByStatus === undefined) state.ui.groupByStatus = true;
@@ -1367,6 +1444,18 @@ function upcomingPipeline(days){
     .map(t=>({kind:'sched', taskId:t.id, title:t.title, date:t.scheduledDate, tags:[...(t.tags||[])]}));
   return [...rules, ...sched].sort((a,b)=>a.date.localeCompare(b.date));
 }
+// agenda rodante: los 7 días a partir de MAÑANA (hoy nunca aparece aquí)
+function agendaDays(){
+  const out=[];
+  const base=new Date(todayStr()+'T00:00:00');
+  const items=upcomingPipeline(8); // 8 para cubrir 7 días completos desde mañana
+  for(let i=1;i<=7;i++){
+    const d=new Date(base); d.setDate(d.getDate()+i);
+    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    out.push({ date:iso, d, items: items.filter(x=>x.date===iso) });
+  }
+  return out;
+}
 // pull a future recurring occurrence into Today as a real task
 function materializeRuleNow(ruleId, date){
   const r=state.rules.find(x=>x.id===ruleId); if(!r) return;
@@ -1378,6 +1467,55 @@ function materializeRuleNow(ruleId, date){
   });
   // mark that cycle handled so it won't regenerate on its real day
   if(!r.lastGen || r.lastGen < date) r.lastGen = date;
+  save(); render();
+}
+
+/* ================= PROJECTS ================= */
+function isProject(t){ return !!t.isProject; }
+function allProjects(){ return state.tasks.filter(t=>t.isProject && t.status!=='Done'); }
+function activeProjects(){ return allProjects().filter(p=>p.projActive); }
+function pausedProjects(){ return allProjects().filter(p=>!p.projActive); }
+function projectTasks(pid){ return state.tasks.filter(t=>t.projectId===pid && !t.isProject); }
+function projectProgress(pid){
+  const all=projectTasks(pid);
+  const done=all.filter(t=>t.status==='Done').length;
+  return {done, total:all.length, pct: all.length? Math.round(done/all.length*100) : 0};
+}
+function projectNext(pid){
+  return projectTasks(pid).find(t=>t.status==='Not Started') || projectTasks(pid).find(t=>t.status!=='Done') || null;
+}
+function projectOf(t){ return t.projectId ? state.tasks.find(x=>x.id===t.projectId && x.isProject) : null; }
+// una tarea de proyecto pausado no aparece en el dashboard
+function inPausedProject(t){
+  const p=projectOf(t);
+  return !!(p && !p.projActive);
+}
+function toggleProjectFlag(id){
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  t.isProject = !t.isProject;
+  if(t.isProject && t.projActive===undefined) t.projActive = true;
+  if(!t.isProject){ delete t.projActive; }
+  save(); render();
+}
+function setProjectActive(id, on){
+  const p=state.tasks.find(x=>x.id===id); if(!p) return;
+  p.projActive = !!on;
+  save(); render();
+}
+function assignProject(taskId, projId){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  t.projectId = projId || null;
+  save(); render();
+}
+function deleteProject(id){
+  const p=state.tasks.find(x=>x.id===id); if(!p) return;
+  const kids=projectTasks(id);
+  const msg = kids.length
+    ? 'Delete "'+p.title+'" and its '+kids.length+' task'+(kids.length===1?'':'s')+'? This cannot be undone.'
+    : 'Delete "'+p.title+'"?';
+  if(!confirm(msg)) return;
+  const ids=new Set([id, ...kids.map(k=>k.id)]);
+  state.tasks=state.tasks.filter(t=>!ids.has(t.id));
   save(); render();
 }
 
@@ -1731,6 +1869,22 @@ function taskRow(t, opts){
     ? '<div class="dlabel">Scheduled date</div><input type="date" class="sched-input" data-act="scheddate" value="'+(t.scheduledDate||'')+'">'
     : '';
 
+  const projs = allProjects().filter(p=>p.id!==t.id);
+  const projRow = t.isProject
+    ? '<div class="dlabel">Project</div>'
+      +'<div class="projctl">'
+        +'<button class="pbtn '+(t.projActive?'on':'')+'" data-act="projactive">'+(t.projActive?'● Active':'○ Paused')+'</button>'
+        +'<button class="pbtn" data-act="projoff">Convert back to task</button>'
+        +'<span class="pctl-n">'+projectProgress(t.id).done+' / '+projectProgress(t.id).total+' tasks</span>'
+      +'</div>'
+    : '<div class="dlabel">Project</div>'
+      +'<div class="projctl">'
+        +'<select class="projsel" data-act="projassign"><option value="">— No project —</option>'
+        + projs.map(p=>'<option value="'+p.id+'"'+(t.projectId===p.id?' selected':'')+'>'+esc(p.title)+'</option>').join('')
+        +'</select>'
+        +'<button class="pbtn" data-act="projon" title="Turn this into a project">Make it a project</button>'
+      +'</div>';
+
   const stCls = t.status==='Follow-up' ? 'st-fu' : t.status==='In Progress' ? 'st-ip' : 'st-ns';
   return '<div class="task '+stCls+' '+(od?'overdue':'')+' '+(open?'open':'')+' '+(t.pinned?'pinned':'')+'" data-task="'+t.id+'">'
     +'<div class="trow" data-act="toggle">'
@@ -1743,11 +1897,12 @@ function taskRow(t, opts){
     +'</div>'
     +'<div class="tdetail">'
     +schedRow
+    +projRow
     +'<div class="dlabel">Subtasks</div>'+subs
     +'<div class="sub-add"><input placeholder="Add subtask + Enter" data-act="subadd"></div>'
     +'<div class="dlabel">Notes</div>'
     +noteLogHtml(t)
-    +'<button class="tdel" data-act="del">Delete task</button>'
+    +'<button class="tdel" data-act="'+(t.isProject?'delproj':'del')+'">'+(t.isProject?'Delete project + its tasks':'Delete task')+'</button>'
     +'</div></div>';
 }
 function noteLogHtml(t){
@@ -1823,6 +1978,10 @@ function bindTaskEvents(container){
       else if(act==='promote'){ e.stopPropagation(); promoteTask(id); }
       else if(act==='pullsched'){ e.stopPropagation(); pullScheduledToToday(id); }
       else if(act==='del'){ e.stopPropagation(); deleteTask(id); }
+      else if(act==='delproj'){ e.stopPropagation(); deleteProject(id); }
+      else if(act==='projon'){ e.stopPropagation(); toggleProjectFlag(id); }
+      else if(act==='projoff'){ e.stopPropagation(); toggleProjectFlag(id); }
+      else if(act==='projactive'){ e.stopPropagation(); setProjectActive(id, !t.projActive); }
       else if(act==='subck'){
         e.stopPropagation();
         const sid=e.target.closest('[data-sub]').dataset.sub;
@@ -1892,6 +2051,29 @@ function bindTaskEvents(container){
     });}
     const sched=el.querySelector('[data-act="scheddate"]');
     if(sched){ sched.addEventListener('click',e=>e.stopPropagation()); sched.addEventListener('change',()=>{ setScheduledDate(id, sched.value); }); }
+    const psel=el.querySelector('[data-act="projassign"]');
+    if(psel){ psel.addEventListener('click',e=>e.stopPropagation()); psel.addEventListener('change',()=>{ assignProject(id, psel.value); }); }
+  });
+  // project cards in the Projects / Ideas view
+  root.querySelectorAll('[data-projcard]').forEach(el=>{
+    const pid=el.dataset.projcard;
+    el.querySelectorAll('[data-pcact]').forEach(b=>{
+      b.addEventListener('click',e=>{
+        e.stopPropagation();
+        const a=b.dataset.pcact;
+        if(a==='toggle'){ openTasks.has(pid)? openTasks.delete(pid) : openTasks.add(pid); render(); }
+        else if(a==='pause'){ setProjectActive(pid,false); }
+        else if(a==='activate'){ setProjectActive(pid,true); }
+      });
+    });
+  });
+  // rail project cards
+  root.querySelectorAll('[data-proj]').forEach(el=>{
+    const pid=el.dataset.proj;
+    const pauseBtn=el.querySelector('[data-pact="pause"]');
+    if(pauseBtn) pauseBtn.addEventListener('click',e=>{ e.stopPropagation(); setProjectActive(pid,false); });
+    const openT=el.querySelector('[data-pact="open"]');
+    if(openT) openT.addEventListener('click',e=>{ e.stopPropagation(); setView('backlog'); openTasks.add(pid); render(); });
   });
 }
 
@@ -1990,14 +2172,15 @@ function filterBar(){
 }
 
 function renderDashboard(){
-  let today=activeTasks().filter(t=>t.bucket==='Today');
-  let week=activeTasks().filter(t=>t.bucket==='Week');
+  const visible = t => !isProject(t) && !inPausedProject(t);
+  let today=activeTasks().filter(t=>t.bucket==='Today' && visible(t));
+  let week=activeTasks().filter(t=>t.bucket==='Week' && visible(t));
   today=applyFilters(today); week=applyFilters(week);
   // follow-ups get their own rail — they're waiting on someone else, not today's work
   const railOn = !filterActive();
   let follows = [];
   if(railOn){
-    follows = activeTasks().filter(t=>t.status==='Follow-up')
+    follows = activeTasks().filter(t=>t.status==='Follow-up' && visible(t))
       .sort((a,b)=>(daysSince(b.statusSince)||0)-(daysSince(a.statusSince)||0));
     today = today.filter(t=>t.status!=='Follow-up');
     week  = week.filter(t=>t.status!=='Follow-up');
@@ -2044,6 +2227,33 @@ function renderDashboard(){
     }
     h+='</div>';
   }
+  // ===== ACTIVE PROJECTS RAIL =====
+  if(railOn){
+    const projs = activeProjects();
+    if(projs.length){
+      const pOpen = state.ui.projOpen!==false;
+      h+='<div class="proj-block '+(pOpen?'open':'')+'">';
+      h+='<div class="pb-head" id="projToggle"><label>Active projects</label>'
+        +'<span class="pb-count">'+projs.length+'</span>'
+        +'<span class="pb-caret">'+(pOpen?'▾':'▸')+'</span></div>';
+      if(pOpen){
+        h+='<div class="proj-list">';
+        projs.forEach(p=>{
+          const pr=projectProgress(p.id), nx=projectNext(p.id);
+          h+='<div class="projcard" data-proj="'+p.id+'">'
+            +'<div class="pc-t" data-pact="open">'+esc(p.title)+'</div>'
+            +'<div class="pc-bar"><i style="width:'+pr.pct+'%"></i></div>'
+            +'<div class="pc-m"><span>'+pr.done+' / '+pr.total+'</span>'
+              +(pr.total?'<span>·</span><span>'+pr.pct+'%</span>':'<span>·</span><span>no tasks yet</span>')
+              +'<button class="pc-pause" data-pact="pause" title="Move to Projects / Ideas">Pause</button></div>'
+            +(nx?'<div class="pc-next">Next: '+esc(nx.title)+'</div>':'')
+            +'</div>';
+        });
+        h+='</div>';
+      }
+      h+='</div>';
+    }
+  }
   h+='</div>';
   h+='<div class="dash-main">';
   h+='<div class="addbar"><input id="dashAdd" placeholder="Add a task for today..."><button id="dashAddBtn">Add</button></div>';
@@ -2052,44 +2262,50 @@ function renderDashboard(){
   h+=secHead('TODAY', today.length, '', BUCKET_COLOR.Today, 'Today', tOpen);
   if(tOpen) h+= today.length? renderBucketBody(today,'Today') : '<div class="empty">The day is clear. Add what must be done.</div>';
   const wOpen=state.ui.bucketOpen.Week;
-  const upcoming = filterActive() ? [] : upcomingPipeline(7);
-  const weekTotal = week.length + upcoming.length;
-  h+=secHead('THIS WEEK', weekTotal, '', BUCKET_COLOR.Week, 'Week', wOpen);
-  if(wOpen){
-    let wh='';
-    wh += week.length ? renderBucketBody(week,'Week') : '';
-    if(upcoming.length){
-      const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      let lastDate=null;
-      const todayS=todayStr();
-      upcoming.forEach(u=>{
-        if(u.date!==lastDate){
-          const d=new Date(u.date+'T00:00:00');
-          const isToday=u.date===todayS;
-          const label = isToday ? 'TODAY' : days[d.getDay()].toUpperCase()+' · '+d.getDate()+' '+mons[d.getMonth()];
-          wh+='<div class="pipe-day">'+label+'</div>';
-          lastDate=u.date;
-        }
-        if(u.kind==='rule'){
-          wh+='<div class="ghost">'
-            +'<span class="ghost-ic">↻</span>'
-            +'<span class="ghost-title">'+esc(u.title)+'</span>'
-            + u.tags.map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
-            +'<button class="ghost-pull" data-pull="'+u.ruleId+'|'+u.date+'" title="Complete early — pull into Today">Pull to today</button>'
-            +'</div>';
+  // ===== AGENDA · próximos 7 días desde MAÑANA =====
+  if(!filterActive()){
+    const days=agendaDays();
+    const dn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const total=days.reduce((n,d)=>n+d.items.length,0);
+    h+=secHead('AGENDA · NEXT 7 DAYS', total, '', BUCKET_COLOR.Week, 'Week', wOpen);
+    if(wOpen){
+      h+='<div class="weekgrid">';
+      days.forEach(day=>{
+        h+='<div class="wd">'
+          +'<div class="wd-h">'+dn[day.d.getDay()]+'</div>'
+          +'<div class="wd-n">'+day.d.getDate()+'</div>';
+        if(day.items.length){
+          day.items.forEach(u=>{
+            if(u.kind==='rule'){
+              h+='<div class="wi rec" data-pull="'+u.ruleId+'|'+u.date+'" title="'+esc(u.title)+' — tap to pull into Today">'+esc(u.title)+'</div>';
+            } else {
+              h+='<div class="wi sch" data-pullsched="'+u.taskId+'" title="'+esc(u.title)+' — tap to pull into Today">'+esc(u.title)+'</div>';
+            }
+          });
         } else {
-          wh+='<div class="ghost sched">'
-            +'<span class="ghost-ic">📅</span>'
-            +'<span class="ghost-title">'+esc(u.title)+'</span>'
-            + u.tags.map(t=>'<span class="tagb">'+esc(t)+'</span>').join('')
-            +'<button class="ghost-pull" data-pullsched="'+u.taskId+'" title="Move into Today now">Pull to today</button>'
-            +'</div>';
+          h+='<div class="wd-empty">—</div>';
         }
+        h+='</div>';
       });
+      h+='</div>';
+      h+='<div class="wk-legend">'
+        +'<span class="lg sch">Scheduled</span><span class="lg rec">Recurring</span>'
+        +'<span class="lg-hint">Tap an item to pull it into today</span></div>';
     }
-    if(!wh) wh='<div class="empty">Nothing planned and nothing scheduled in the next 7 days.</div>';
-    h+='<div class="week-preview">'+wh+'</div>';
+  }
+  // ===== PRIORIDADES DE LA SEMANA =====
+  const prios = week.slice().sort((a,b)=>{
+    const rank=s=>s==='In Progress'?0:1;
+    return rank(a.status)-rank(b.status) || (a.createdAt-b.createdAt);
+  });
+  const prOpen = state.ui.bucketOpen.Prio!==false;
+  h+=secHead('WEEK PRIORITIES', prios.length, '', BUCKET_COLOR.Week, 'Prio', prOpen);
+  if(prOpen){
+    h+= prios.length
+      ? '<div class="prio-list">'+prios.map((t,i)=>
+          '<div class="prio-wrap"><span class="prio-n">'+(i+1)+'</span>'+taskRow(t,{quietBucket:true})+'</div>'
+        ).join('')+'</div>'
+      : '<div class="empty">No priorities set for this week.</div>';
   }
   h+='</div>';
   return h;
@@ -2107,9 +2323,43 @@ function renderList(list){
     });
   } else {
     h+='<div style="height:14px"></div>';
-    const tasks=base;
-    h+= tasks.length? tasks.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('') : '<div class="empty">The backlog is empty. Ideas land here until their time comes.</div>';
+    const act = activeProjects();
+    const paused = pausedProjects();
+    const ideas = base.filter(t=>!isProject(t) && !t.projectId);
+    if(act.length){
+      h+=secHead('ACTIVE PROJECTS', act.length, '', BUCKET_COLOR.Today, 'ProjA', true);
+      h+= act.map(p=>projectCard(p,true)).join('');
+    }
+    if(paused.length){
+      h+=secHead('PAUSED PROJECTS', paused.length, '', BUCKET_COLOR.Later, 'ProjP', true);
+      h+= paused.map(p=>projectCard(p,false)).join('');
+    }
+    h+=secHead('IDEAS', ideas.length, '', BUCKET_COLOR.Later, 'Ideas', true);
+    h+= ideas.length? ideas.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('')
+                    : '<div class="empty">The backlog is empty. Ideas land here until their time comes.</div>';
   }
+  return h;
+}
+// tarjeta de proyecto con progreso y sus tareas dentro
+function projectCard(p, isActive){
+  const pr=projectProgress(p.id);
+  const kids=projectTasks(p.id).filter(t=>t.status!=='Done');
+  const open=openTasks.has(p.id);
+  let h='<div class="pcard '+(isActive?'live':'')+' '+(open?'open':'')+'" data-projcard="'+p.id+'">';
+  h+='<div class="pcard-h" data-pcact="toggle">'
+    +'<span class="pcard-t">'+esc(p.title)+'</span>'
+    +'<span class="pcard-n">'+pr.done+' / '+pr.total+'</span>'
+    +'<button class="pcard-btn '+(isActive?'':'go')+'" data-pcact="'+(isActive?'pause':'activate')+'">'
+      +(isActive?'Pause':'Activate')+'</button>'
+    +'</div>';
+  h+='<div class="pcard-bar"><i style="width:'+pr.pct+'%"></i></div>';
+  if(open){
+    h+='<div class="pcard-body">';
+    h+= kids.length? kids.map(t=>taskRow(t,{quietBucket:true})).join('')
+                   : '<div class="empty">No tasks linked yet. Open any task and assign it to this project.</div>';
+    h+='</div>';
+  }
+  h+='</div>';
   return h;
 }
 function renderScheduled(){
@@ -2455,6 +2705,8 @@ function render(){
   if(nt2) nt2.addEventListener('click',()=>{ state.ui.noteOpen=!state.ui.noteOpen; save(); render(); });
   const ft=document.getElementById('followToggle');
   if(ft) ft.addEventListener('click',()=>{ state.ui.followOpen = (state.ui.followOpen===false); save(); render(); });
+  const pt=document.getElementById('projToggle');
+  if(pt) pt.addEventListener('click',()=>{ state.ui.projOpen = (state.ui.projOpen===false); save(); render(); });
   // section (bucket) collapse toggles
   document.querySelectorAll('[data-sectoggle]').forEach(el=>el.addEventListener('click',()=>{
     const b=el.dataset.sectoggle; state.ui.bucketOpen[b]=!state.ui.bucketOpen[b]; save(); render();
