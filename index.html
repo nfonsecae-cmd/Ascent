@@ -814,31 +814,44 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .pb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
 .pb-caret{margin-left:auto;color:var(--faint);font-size:10px}
 .proj-list{padding:0 12px 11px}
-.projcard{border-bottom:1px solid var(--line);padding:10px 0}
+.projcard{border-bottom:1px solid var(--line);padding:9px 0}
 .projcard:last-child{border-bottom:none}
-.pc-t{font-size:12px;font-weight:600;margin-bottom:7px;cursor:pointer;color:var(--txt)}
-.pc-t:hover{color:var(--ip,var(--blue))}
-.pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.projcard .task{background:none;border:none;box-shadow:none;margin:0;border-radius:0}
+.projcard .trow{padding:4px 0}
+.pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:2px}
 .pc-bar i{display:block;height:100%;background:var(--ip,var(--blue));border-radius:2px;transition:width .3s}
-.pc-m{display:flex;align-items:center;gap:6px;font-size:9.5px;color:var(--muted);
-  font-family:'Space Grotesk',sans-serif;letter-spacing:.04em}
+.pc-m{display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--muted);
+  font-family:'Space Grotesk',sans-serif;letter-spacing:.04em;margin-bottom:5px}
+.pc-age{color:var(--ip,var(--blue));font-weight:700}
+.pc-sub{color:var(--faint)}
 .pc-pause{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);
   font-size:9.5px;padding:2px 8px;border-radius:4px;cursor:pointer;font-family:inherit}
 .pc-pause:hover{border-color:var(--line-hi);color:var(--txt)}
-.pc-next{font-size:10.5px;color:var(--muted);margin-top:7px;padding-left:8px;border-left:2px solid var(--ip,var(--blue))}
 
 /* ===== PROYECTOS · tarjetas en Projects / Ideas ===== */
-.pcard{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);margin-bottom:8px;overflow:hidden}
+.pcard{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);margin-bottom:9px;
+  overflow:hidden;padding:10px 12px}
 .pcard.live{border-color:rgba(27,77,255,.35)}
-.pcard-h{display:flex;align-items:center;gap:10px;padding:11px 13px;cursor:pointer}
-.pcard-t{flex:1 1 190px;min-width:0;font-size:13px;font-weight:600}
-.pcard-n{font-family:'Space Grotesk',sans-serif;font-size:10px;color:var(--faint)}
-.pcard-btn{background:none;border:1px solid var(--line);color:var(--muted);font-family:'Space Grotesk',sans-serif;
-  font-size:10px;font-weight:600;padding:4px 11px;border-radius:5px;cursor:pointer;flex:none}
+.pcard .task{background:none;border:none;box-shadow:none;margin:0;border-radius:0}
+.pcard .trow{padding:4px 0}
+.pcard-m{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',sans-serif;
+  font-size:9.5px;letter-spacing:.05em;color:var(--muted);margin-bottom:6px}
+.pcard-age{color:var(--ip,var(--blue));font-weight:700}
+.pcard-n{color:var(--faint)}
+.pcard-btn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);
+  font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;padding:4px 11px;
+  border-radius:5px;cursor:pointer;flex:none}
 .pcard-btn.go{background:var(--ip,var(--blue));border-color:var(--ip,var(--blue));color:#fff}
-.pcard-bar{height:3px;background:rgba(127,127,127,.14)}
-.pcard-bar i{display:block;height:100%;background:var(--ip,var(--blue))}
-.pcard-body{padding:6px 12px 10px}
+.pcard-bar{height:3px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.pcard-bar i{display:block;height:100%;background:var(--ip,var(--blue));border-radius:2px}
+.pcard-kids{background:none;border:none;color:var(--faint);font-family:'Space Grotesk',sans-serif;
+  font-size:10px;letter-spacing:.06em;cursor:pointer;padding:5px 0 2px;text-align:left}
+.pcard-kids:hover{color:var(--txt)}
+.pcard-body{padding:2px 0 2px 12px;border-left:2px solid var(--line);margin-top:4px}
+
+/* distintivos de proyecto en la fila */
+.chip.proj-badge{border-color:var(--ip,var(--blue));color:var(--ip,var(--blue));font-weight:600}
+.chip.proj-ref{border-color:var(--line-hi);color:var(--muted)}
 
 /* ===== control de proyecto en el detalle ===== */
 .projctl{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -975,6 +988,7 @@ let state = {
 };
 let view='dashboard';
 let openTasks = new Set();
+let projOpenCards = new Set();
 let editingRule = null;
 let formTags = [];
 let purgeArmed = false;
@@ -1493,15 +1507,23 @@ function inPausedProject(t){
 function toggleProjectFlag(id){
   const t=state.tasks.find(x=>x.id===id); if(!t) return;
   t.isProject = !t.isProject;
-  if(t.isProject && t.projActive===undefined) t.projActive = true;
-  if(!t.isProject){ delete t.projActive; }
+  // convertir NO altera nada más: título, estado, etiquetas, subtareas, notas y persona se quedan
+  if(t.isProject){
+    if(t.projActive===undefined) t.projActive = true;
+    if(t.projActive && !t.activatedAt) t.activatedAt = todayStr();
+  } else {
+    delete t.projActive; delete t.activatedAt;
+  }
   save(); render();
 }
 function setProjectActive(id, on){
   const p=state.tasks.find(x=>x.id===id); if(!p) return;
   p.projActive = !!on;
+  if(on){ if(!p.activatedAt) p.activatedAt = todayStr(); }
+  else { p.activatedAt = null; }
   save(); render();
 }
+function projectAge(p){ return p.activatedAt ? daysSince(p.activatedAt) : null; }
 function assignProject(taskId, projId){
   const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
   t.projectId = projId || null;
@@ -1823,6 +1845,8 @@ function taskRow(t, opts){
   const od=isOverdue(t);
   const open=openTasks.has(t.id);
   let meta='';
+  if(t.isProject) meta+='<span class="chip proj-badge" title="Project">◆ Project</span>';
+  else { const par=projectOf(t); if(par) meta+='<span class="chip proj-ref" title="Part of project">◆ '+esc(par.title)+'</span>'; }
   if(od) meta+='<span class="overdue-tag">OVERDUE</span>';
   meta+=statusChip(t, opts.compactStatus);
   // day tracker for in-progress / follow-up
@@ -1870,12 +1894,14 @@ function taskRow(t, opts){
     : '';
 
   const projs = allProjects().filter(p=>p.id!==t.id);
+  const pAge = t.isProject ? projectAge(t) : null;
   const projRow = t.isProject
     ? '<div class="dlabel">Project</div>'
       +'<div class="projctl">'
-        +'<button class="pbtn '+(t.projActive?'on':'')+'" data-act="projactive">'+(t.projActive?'● Active':'○ Paused')+'</button>'
-        +'<button class="pbtn" data-act="projoff">Convert back to task</button>'
+        +'<button class="pbtn '+(t.projActive?'on':'')+'" data-act="projactive">'+(t.projActive?'● Active':'○ Idea')+'</button>'
+        +(pAge!==null?'<span class="pctl-n">'+pAge+' days active</span>':'')
         +'<span class="pctl-n">'+projectProgress(t.id).done+' / '+projectProgress(t.id).total+' tasks</span>'
+        +'<button class="pbtn" data-act="projoff">Back to task</button>'
       +'</div>'
     : '<div class="dlabel">Project</div>'
       +'<div class="projctl">'
@@ -2061,7 +2087,7 @@ function bindTaskEvents(container){
       b.addEventListener('click',e=>{
         e.stopPropagation();
         const a=b.dataset.pcact;
-        if(a==='toggle'){ openTasks.has(pid)? openTasks.delete(pid) : openTasks.add(pid); render(); }
+        if(a==='toggle'){ projOpenCards.has(pid)? projOpenCards.delete(pid) : projOpenCards.add(pid); render(); }
         else if(a==='pause'){ setProjectActive(pid,false); }
         else if(a==='activate'){ setProjectActive(pid,true); }
       });
@@ -2072,8 +2098,6 @@ function bindTaskEvents(container){
     const pid=el.dataset.proj;
     const pauseBtn=el.querySelector('[data-pact="pause"]');
     if(pauseBtn) pauseBtn.addEventListener('click',e=>{ e.stopPropagation(); setProjectActive(pid,false); });
-    const openT=el.querySelector('[data-pact="open"]');
-    if(openT) openT.addEventListener('click',e=>{ e.stopPropagation(); setView('backlog'); openTasks.add(pid); render(); });
   });
 }
 
@@ -2239,14 +2263,15 @@ function renderDashboard(){
       if(pOpen){
         h+='<div class="proj-list">';
         projs.forEach(p=>{
-          const pr=projectProgress(p.id), nx=projectNext(p.id);
+          const pr=projectProgress(p.id), age=projectAge(p);
           h+='<div class="projcard" data-proj="'+p.id+'">'
-            +'<div class="pc-t" data-pact="open">'+esc(p.title)+'</div>'
-            +'<div class="pc-bar"><i style="width:'+pr.pct+'%"></i></div>'
-            +'<div class="pc-m"><span>'+pr.done+' / '+pr.total+'</span>'
-              +(pr.total?'<span>·</span><span>'+pr.pct+'%</span>':'<span>·</span><span>no tasks yet</span>')
-              +'<button class="pc-pause" data-pact="pause" title="Move to Projects / Ideas">Pause</button></div>'
-            +(nx?'<div class="pc-next">Next: '+esc(nx.title)+'</div>':'')
+            +'<div class="pc-m">'
+              +(age!==null?'<span class="pc-age" title="Days since activation">'+age+'d active</span>':'')
+              +(pr.total?'<span class="pc-sub">'+pr.done+'/'+pr.total+' tasks</span>':'<span class="pc-sub">no linked tasks</span>')
+              +'<button class="pc-pause" data-pact="pause" title="Move to Ideas">Pause</button>'
+            +'</div>'
+            + (pr.total?'<div class="pc-bar"><i style="width:'+pr.pct+'%"></i></div>':'')
+            + taskRow(p,{quietBucket:true})
             +'</div>';
         });
         h+='</div>';
@@ -2325,34 +2350,38 @@ function renderList(list){
     h+='<div style="height:14px"></div>';
     const act = activeProjects();
     const paused = pausedProjects();
-    const ideas = base.filter(t=>!isProject(t) && !t.projectId);
-    if(act.length){
-      h+=secHead('ACTIVE PROJECTS', act.length, '', BUCKET_COLOR.Today, 'ProjA', true);
-      h+= act.map(p=>projectCard(p,true)).join('');
-    }
-    if(paused.length){
-      h+=secHead('PAUSED PROJECTS', paused.length, '', BUCKET_COLOR.Later, 'ProjP', true);
+    const loose = base.filter(t=>!isProject(t) && !t.projectId);
+    h+=secHead('ACTIVE PROJECTS', act.length, '', BUCKET_COLOR.Today, 'ProjA', true);
+    h+= act.length? act.map(p=>projectCard(p,true)).join('')
+                  : '<div class="empty">No active projects. Activate one from Ideas below.</div>';
+    const ideaCount = paused.length + loose.length;
+    h+=secHead('IDEAS', ideaCount, '', BUCKET_COLOR.Later, 'Ideas', true);
+    if(ideaCount){
       h+= paused.map(p=>projectCard(p,false)).join('');
+      h+= loose.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('');
+    } else {
+      h+='<div class="empty">No ideas yet. Anything captured here waits until you activate it.</div>';
     }
-    h+=secHead('IDEAS', ideas.length, '', BUCKET_COLOR.Later, 'Ideas', true);
-    h+= ideas.length? ideas.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('')
-                    : '<div class="empty">The backlog is empty. Ideas land here until their time comes.</div>';
   }
   return h;
 }
-// tarjeta de proyecto con progreso y sus tareas dentro
+// tarjeta de proyecto: fila de tarea COMPLETA + meta de proyecto + sus tareas
 function projectCard(p, isActive){
   const pr=projectProgress(p.id);
+  const age=projectAge(p);
   const kids=projectTasks(p.id).filter(t=>t.status!=='Done');
-  const open=openTasks.has(p.id);
-  let h='<div class="pcard '+(isActive?'live':'')+' '+(open?'open':'')+'" data-projcard="'+p.id+'">';
-  h+='<div class="pcard-h" data-pcact="toggle">'
-    +'<span class="pcard-t">'+esc(p.title)+'</span>'
-    +'<span class="pcard-n">'+pr.done+' / '+pr.total+'</span>'
+  const open=projOpenCards.has(p.id);
+  let h='<div class="pcard '+(isActive?'live':'')+'" data-projcard="'+p.id+'">';
+  h+='<div class="pcard-m">'
+    +(isActive && age!==null ? '<span class="pcard-age" title="Days since activation">'+age+'d active</span>' : '')
+    +'<span class="pcard-n">'+(pr.total? pr.done+'/'+pr.total+' tasks' : 'no linked tasks')+'</span>'
     +'<button class="pcard-btn '+(isActive?'':'go')+'" data-pcact="'+(isActive?'pause':'activate')+'">'
       +(isActive?'Pause':'Activate')+'</button>'
     +'</div>';
-  h+='<div class="pcard-bar"><i style="width:'+pr.pct+'%"></i></div>';
+  if(pr.total) h+='<div class="pcard-bar"><i style="width:'+pr.pct+'%"></i></div>';
+  h+= taskRow(p,{quietBucket:true});
+  h+='<button class="pcard-kids" data-pcact="toggle">'
+    +(open?'▾':'▸')+' '+kids.length+' linked task'+(kids.length===1?'':'s')+'</button>';
   if(open){
     h+='<div class="pcard-body">';
     h+= kids.length? kids.map(t=>taskRow(t,{quietBucket:true})).join('')
