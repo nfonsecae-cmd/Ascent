@@ -878,14 +878,20 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .projcard{border-bottom:1px solid var(--line);padding:11px 0 14px}
 .projcard:last-child{border-bottom:none;padding-bottom:4px}
 .projcard .task{background:none;border:none;box-shadow:none;margin:0;border-radius:0}
+/* el riel de estado sí se conserva: es la señal que tiene el resto de la app.
+   Especificidad alta a propósito para ganarle a la regla del tema E4. */
+.side-rail .projcard .task.st-ip{border-left:3px solid var(--ip,var(--blue));padding-left:10px}
+.side-rail .projcard .task.st-fu{border-left:3px dashed var(--fu);padding-left:10px}
+.side-rail .projcard .task.st-ns{border-left:3px solid var(--ns,var(--faint));padding-left:10px}
+.side-rail .projcard .task.overdue{border-left:3px solid var(--od,var(--red));padding-left:10px}
 .projcard .trow{padding:4px 0 0;flex-wrap:wrap;row-gap:7px}
 .projcard .ttitle{flex:1 1 100%}
 .projcard .tmeta{flex:1 1 100%;justify-content:flex-start;flex-wrap:wrap;gap:6px;row-gap:7px;margin-left:25px;padding-bottom:0}
 .projcard .statcol{display:none}
-.pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:2px}
+.pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin:0 0 2px 13px}
 .pc-bar i{display:block;height:100%;background:var(--ip,var(--blue));border-radius:2px;transition:width .3s}
 .pc-m{display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--muted);
-  font-family:'Space Grotesk',sans-serif;letter-spacing:.04em;margin-bottom:5px}
+  font-family:'Space Grotesk',sans-serif;letter-spacing:.04em;margin:0 0 5px 13px}
 .pc-age{color:var(--ip,var(--blue));font-weight:700}
 .pc-sub{color:var(--faint)}
 .pc-pause{margin-left:auto;background:none;border:1px solid var(--line);color:var(--muted);
