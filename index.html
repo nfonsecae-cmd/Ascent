@@ -2159,7 +2159,7 @@ function bindTaskEvents(container){
     if(psel){ psel.addEventListener('click',e=>e.stopPropagation()); psel.addEventListener('change',()=>{ assignProject(id, psel.value); }); }
   });
   // agenda items expand on click; the → button pulls into today
-  root.querySelectorAll('[data-agenda]').forEach(el=>{
+  container.querySelectorAll('[data-agenda]').forEach(el=>{
     el.addEventListener('click',e=>{
       if(e.target.closest('.wi-pull')) return;
       const k=el.dataset.agenda;
@@ -2168,7 +2168,7 @@ function bindTaskEvents(container){
     });
   });
   // project cards in the Projects / Ideas view
-  root.querySelectorAll('[data-projcard]').forEach(el=>{
+  container.querySelectorAll('[data-projcard]').forEach(el=>{
     const pid=el.dataset.projcard;
     el.querySelectorAll('[data-pcact]').forEach(b=>{
       b.addEventListener('click',e=>{
@@ -2181,7 +2181,7 @@ function bindTaskEvents(container){
     });
   });
   // rail project cards
-  root.querySelectorAll('[data-proj]').forEach(el=>{
+  container.querySelectorAll('[data-proj]').forEach(el=>{
     const pid=el.dataset.proj;
     const pauseBtn=el.querySelector('[data-pact="pause"]');
     if(pauseBtn) pauseBtn.addEventListener('click',e=>{ e.stopPropagation(); setProjectActive(pid,false); });
@@ -2454,16 +2454,22 @@ function renderList(list){
     const act = activeProjects();
     const paused = pausedProjects();
     const loose = base.filter(t=>!isProject(t) && !t.projectId);
-    h+=secHead('ACTIVE PROJECTS', act.length, '', BUCKET_COLOR.Today, 'ProjA', true);
-    h+= act.length? act.map(p=>projectCard(p,true)).join('')
-                  : '<div class="empty">No active projects. Activate one from Ideas below.</div>';
+    const aOpen = state.ui.bucketOpen.ProjA!==false;
+    h+=secHead('ACTIVE PROJECTS', act.length, '', BUCKET_COLOR.Today, 'ProjA', aOpen);
+    if(aOpen){
+      h+= act.length? act.map(p=>projectCard(p,true)).join('')
+                    : '<div class="empty">No active projects. Activate one from Ideas below.</div>';
+    }
     const ideaCount = paused.length + loose.length;
-    h+=secHead('IDEAS', ideaCount, '', BUCKET_COLOR.Later, 'Ideas', true);
-    if(ideaCount){
-      h+= paused.map(p=>projectCard(p,false)).join('');
-      h+= loose.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('');
-    } else {
-      h+='<div class="empty">No ideas yet. Anything captured here waits until you activate it.</div>';
+    const iOpen = state.ui.bucketOpen.Ideas!==false;
+    h+=secHead('IDEAS', ideaCount, '', BUCKET_COLOR.Later, 'Ideas', iOpen);
+    if(iOpen){
+      if(ideaCount){
+        h+= paused.map(p=>projectCard(p,false)).join('');
+        h+= loose.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('');
+      } else {
+        h+='<div class="empty">No ideas yet. Anything captured here waits until you activate it.</div>';
+      }
     }
   }
   return h;
@@ -2773,7 +2779,13 @@ function renderArchive(){
 
 /* ================= NAV + MAIN RENDER ================= */
 const VIEWS=[['dashboard','Dashboard'],['active','Later / Unscheduled'],['scheduled','Scheduled'],['backlog','Projects / Ideas'],['recurring','Recurring']];
-function setView(v){ view=v; purgeArmed=false; closePop(); render(); }
+function setView(v){
+  view=v; purgeArmed=false; closePop(); render();
+  // las columnas scrollean solas: al cambiar de vista hay que volver arriba
+  const main=document.getElementById('main');
+  if(main) main.scrollTop=0;
+  document.querySelectorAll('.dash-main, .side-rail').forEach(el=>el.scrollTop=0);
+}
 function render(){
   const counts={
     active: activeTasks().filter(t=>t.bucket==='Later' && !isProject(t) && !inPausedProject(t)).length,
