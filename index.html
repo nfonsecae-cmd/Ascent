@@ -824,12 +824,12 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .pb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
 .pb-caret{margin-left:auto;color:var(--faint);font-size:10px}
 .proj-list{padding:0 12px 11px}
-.projcard{border-bottom:1px solid var(--line);padding:11px 0 15px}
-.projcard:last-child{border-bottom:none;padding-bottom:6px}
+.projcard{border-bottom:1px solid var(--line);padding:11px 0 14px}
+.projcard:last-child{border-bottom:none;padding-bottom:4px}
 .projcard .task{background:none;border:none;box-shadow:none;margin:0;border-radius:0}
 .projcard .trow{padding:4px 0 0;flex-wrap:wrap;row-gap:7px}
 .projcard .ttitle{flex:1 1 100%}
-.projcard .tmeta{flex:1 1 100%;justify-content:flex-start;flex-wrap:wrap;gap:6px;row-gap:7px;margin-left:25px;padding-bottom:2px}
+.projcard .tmeta{flex:1 1 100%;justify-content:flex-start;flex-wrap:wrap;gap:6px;row-gap:7px;margin-left:25px;padding-bottom:0}
 .projcard .statcol{display:none}
 .pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:2px}
 .pc-bar i{display:block;height:100%;background:var(--ip,var(--blue));border-radius:2px;transition:width .3s}
@@ -882,6 +882,14 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .repo-note b{color:var(--txt)}
 .repo-c{font-family:'Space Grotesk',sans-serif;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--faint);border:1px solid var(--line);padding:2px 8px;border-radius:4px;white-space:nowrap}
+
+/* el tema E4 pone border-bottom a toda .task — en las tarjetas de proyecto sobra,
+   porque la tarjeta ya trae su propio separador */
+html[data-accent="e4"] .projcard .task,
+html[data-accent="e4"] .pcard .task{border-bottom:none;padding-bottom:0}
+/* en Seguimientos la línea sí separa filas: se queda, pero con aire */
+html[data-accent="e4"] .follow-list .task{padding-bottom:9px}
+html[data-accent="e4"] .follow-list .task:last-child{border-bottom:none}
 
 /* ============ MISC ============ */
 .empty{color:var(--faint);font-size:13.5px;text-align:center;padding:26px 0}
