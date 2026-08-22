@@ -298,15 +298,44 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
   main{grid-area:main;min-width:0}
 }
 @media (min-width:1220px){
-  .wrap{max-width:1400px}
-  main:has(.side-rail){display:flex;align-items:flex-start;gap:32px}
-  main:has(.side-rail) .side-rail{order:2;flex:0 0 400px;position:sticky;top:26px;
-    max-height:calc(100vh - 52px);overflow-y:auto;overscroll-behavior:contain;
-    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent;padding-right:6px}
-  main:has(.side-rail) .side-rail::-webkit-scrollbar{width:7px}
-  main:has(.side-rail) .side-rail::-webkit-scrollbar-thumb{background:var(--sbar);border-radius:4px}
-  main:has(.side-rail) .side-rail::-webkit-scrollbar-thumb:hover{background:var(--sbar-hi)}
-  main:has(.side-rail) .side-rail::-webkit-scrollbar-track{background:transparent}
+  /* shell de altura completa: el topbar y el nav quedan fijos y CADA columna
+     tiene su propio scroll, sin depender de sticky */
+  html,body{height:100%;overflow:hidden}
+  .wrap{
+    max-width:1400px;
+    height:100vh;
+    overflow:hidden;
+    padding:26px 32px 0;
+    grid-template-rows:auto 1fr;
+    align-items:stretch;
+  }
+  nav{position:static;overflow-y:auto;max-height:100%;padding-bottom:20px}
+  main{height:100%;min-height:0;overflow:hidden}
+  main:has(.side-rail){display:flex;align-items:stretch;gap:32px}
+  main:has(.side-rail) .dash-main{order:1;flex:1;min-width:0;
+    overflow-y:auto;padding-right:8px;padding-bottom:40px;
+    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
+  main:has(.side-rail) .side-rail{order:2;flex:0 0 400px;
+    overflow-y:auto;overscroll-behavior:contain;padding-right:6px;padding-bottom:40px;
+    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
+  /* vistas sin carril (Later, Scheduled, Projects...) también scrollean solas */
+  main:not(:has(.side-rail)){overflow-y:auto;padding-right:8px;padding-bottom:40px;
+    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
+  .dash-main::-webkit-scrollbar,
+  .side-rail::-webkit-scrollbar,
+  main::-webkit-scrollbar,
+  nav::-webkit-scrollbar{width:7px}
+  .dash-main::-webkit-scrollbar-thumb,
+  .side-rail::-webkit-scrollbar-thumb,
+  main::-webkit-scrollbar-thumb,
+  nav::-webkit-scrollbar-thumb{background:var(--sbar);border-radius:4px}
+  .dash-main::-webkit-scrollbar-thumb:hover,
+  .side-rail::-webkit-scrollbar-thumb:hover,
+  main::-webkit-scrollbar-thumb:hover{background:var(--sbar-hi)}
+  .dash-main::-webkit-scrollbar-track,
+  .side-rail::-webkit-scrollbar-track,
+  main::-webkit-scrollbar-track,
+  nav::-webkit-scrollbar-track{background:transparent}
   main:has(.side-rail) .dash-main{order:1;flex:1;min-width:0}
   main:has(.side-rail) .side-rail .notes-block{margin-top:0}
 }
@@ -1727,6 +1756,8 @@ function restoreTask(id){
 
 /* ================= POPOVERS (dropdowns) ================= */
 function closePop(){ const p=document.querySelector('.pop'); if(p) p.remove(); document.removeEventListener('click', outsidePop, true); }
+// las columnas scrollean por separado: un popover abierto quedaría flotando, así que se cierra
+document.addEventListener('scroll', ()=>{ if(document.querySelector('.pop')) closePop(); }, true);
 function outsidePop(e){ if(!e.target.closest('.pop')) closePop(); }
 function placePop(pop, anchor){
   document.body.appendChild(pop);
