@@ -314,37 +314,41 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
   main:has(.side-rail){display:flex;align-items:stretch;gap:32px}
   main:has(.side-rail) .dash-main{order:1;flex:1;min-width:0;
     overflow-y:auto;padding-right:8px;padding-bottom:40px;
-    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
+    scrollbar-width:none;-ms-overflow-style:none}
+  main:has(.side-rail) .dash-main::-webkit-scrollbar{width:0;height:0;display:none}
   main:has(.side-rail) .side-rail{order:2;flex:0 0 400px;
     overflow-y:auto;overscroll-behavior:contain;padding-right:6px;padding-bottom:40px;
     scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
   /* vistas sin carril (Later, Scheduled, Projects...) también scrollean solas */
   main:not(:has(.side-rail)){overflow-y:auto;padding-right:8px;padding-bottom:40px;
-    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
-  .dash-main::-webkit-scrollbar,
+    scrollbar-width:none;-ms-overflow-style:none}
+  main:not(:has(.side-rail))::-webkit-scrollbar{width:0;height:0;display:none}
   .side-rail::-webkit-scrollbar,
-  main::-webkit-scrollbar,
   nav::-webkit-scrollbar{width:7px}
-  .dash-main::-webkit-scrollbar-thumb,
   .side-rail::-webkit-scrollbar-thumb,
-  main::-webkit-scrollbar-thumb,
   nav::-webkit-scrollbar-thumb{background:var(--sbar);border-radius:4px}
-  .dash-main::-webkit-scrollbar-thumb:hover,
-  .side-rail::-webkit-scrollbar-thumb:hover,
-  main::-webkit-scrollbar-thumb:hover{background:var(--sbar-hi)}
-  .dash-main::-webkit-scrollbar-track,
+  .side-rail::-webkit-scrollbar-thumb:hover{background:var(--sbar-hi)}
   .side-rail::-webkit-scrollbar-track,
-  main::-webkit-scrollbar-track,
   nav::-webkit-scrollbar-track{background:transparent}
   main:has(.side-rail) .dash-main{order:1;flex:1;min-width:0}
   main:has(.side-rail) .side-rail .notes-block{margin-top:0}
 }
 
-/* el carril reparte el espacio por gap, no por márgenes sueltos */
-.side-rail{display:flex;flex-direction:column;gap:14px}
+/* el carril fluye como el centro: sin cajas, secciones continuas */
+.side-rail{display:flex;flex-direction:column;gap:0}
 .side-rail .notes-block,
 .side-rail .follow-block,
-.side-rail .proj-block{margin-top:0;margin-bottom:0}
+.side-rail .proj-block{
+  margin:0;padding:0;border:none;background:none;box-shadow:none;border-radius:0;
+  backdrop-filter:none;-webkit-backdrop-filter:none}
+.side-rail .sec-head{margin-top:18px}
+.side-rail > *:first-child .sec-head{margin-top:0}
+.side-rail .nb-add{padding:0;margin-bottom:9px}
+.side-rail .nb-list{padding:0}
+.side-rail .follow-list{padding:0}
+.side-rail .proj-list{padding:0}
+.nb-peek-row{font-size:12px;color:var(--faint);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;padding:2px 0 0}
 
 /* ===== FOLLOW-UP RAIL ===== */
 .follow-block{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
@@ -866,7 +870,7 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
   color:var(--ip,var(--blue));font-weight:600;text-transform:uppercase;cursor:pointer}
 .pb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
 .pb-caret{margin-left:auto;color:var(--faint);font-size:10px}
-.proj-list{padding:0 12px 11px}
+.proj-list{padding:0}
 .projcard{border-bottom:1px solid var(--line);padding:11px 0 14px}
 .projcard:last-child{border-bottom:none;padding-bottom:4px}
 .projcard .task{background:none;border:none;box-shadow:none;margin:0;border-radius:0}
@@ -2298,11 +2302,8 @@ function renderDashboard(){
   const notes=sortedNotes();
   const first=notes[0];
   h+='<div class="notes-block '+(state.ui.noteOpen?'open':'')+'">';
-  h+='<div class="nb-head" id="noteToggle"><label>Notes</label>'
-    +'<span class="nb-count">'+(notes.length||'')+'</span>'
-    +'<span class="nb-caret">'+(state.ui.noteOpen?'▾':'▸')+'</span>'
-    +(state.ui.noteOpen?'':'<span class="nb-peek">'+(first?esc(first.text.split('\n')[0]):'Tap to add a note')+'</span>')
-    +'</div>';
+  h+=secHead('NOTES', notes.length, '', 'var(--fu)', 'NotesSec', state.ui.noteOpen);
+  if(!state.ui.noteOpen && first) h+='<div class="nb-peek-row">'+esc(first.text.split('\n')[0])+'</div>';
   if(state.ui.noteOpen){
     h+='<div class="nb-add"><input id="noteAddIn" placeholder="Write a note..."><button id="noteAddBtn">Add</button></div>';
     h+='<div class="nb-list">';
@@ -2321,10 +2322,8 @@ function renderDashboard(){
   // ===== FOLLOW-UP RAIL =====
   if(railOn){
     const fOpen = state.ui.followOpen!==false;
-    h+='<div class="follow-block '+(fOpen?'open':'')+'">';
-    h+='<div class="fb-head" id="followToggle"><label>Follow-up</label>'
-      +'<span class="fb-count">'+(follows.length||'')+'</span>'
-      +'<span class="fb-caret">'+(fOpen?'▾':'▸')+'</span></div>';
+    h+='<div class="follow-block">';
+    h+=secHead('FOLLOW-UP', follows.length, '', 'var(--fu)', 'FollowSec', fOpen);
     if(fOpen){
       h+='<div class="follow-list">';
       h+= follows.length
@@ -2339,10 +2338,8 @@ function renderDashboard(){
     const projs = activeProjects();
     if(projs.length){
       const pOpen = state.ui.projOpen!==false;
-      h+='<div class="proj-block '+(pOpen?'open':'')+'">';
-      h+='<div class="pb-head" id="projToggle"><label>Active projects</label>'
-        +'<span class="pb-count">'+projs.length+'</span>'
-        +'<span class="pb-caret">'+(pOpen?'▾':'▸')+'</span></div>';
+      h+='<div class="proj-block">';
+      h+=secHead('ACTIVE PROJECTS', projs.length, '', 'var(--ip,var(--blue))', 'ProjSec', pOpen);
       if(pOpen){
         h+='<div class="proj-list">';
         projs.forEach(p=>{
@@ -2840,16 +2837,14 @@ function render(){
     pullScheduledToToday(b.dataset.pullsched);
   }));
 
-  // notes collapse
-  const nt2=document.getElementById('noteToggle');
-  if(nt2) nt2.addEventListener('click',()=>{ state.ui.noteOpen=!state.ui.noteOpen; save(); render(); });
-  const ft=document.getElementById('followToggle');
-  if(ft) ft.addEventListener('click',()=>{ state.ui.followOpen = (state.ui.followOpen===false); save(); render(); });
-  const pt=document.getElementById('projToggle');
-  if(pt) pt.addEventListener('click',()=>{ state.ui.projOpen = (state.ui.projOpen===false); save(); render(); });
-  // section (bucket) collapse toggles
+  // section collapse toggles — incluye Notes / Follow-up / Projects del carril
   document.querySelectorAll('[data-sectoggle]').forEach(el=>el.addEventListener('click',()=>{
-    const b=el.dataset.sectoggle; state.ui.bucketOpen[b]=(state.ui.bucketOpen[b]===false); save(); render();
+    const b=el.dataset.sectoggle;
+    if(b==='NotesSec'){ state.ui.noteOpen=!state.ui.noteOpen; }
+    else if(b==='FollowSec'){ state.ui.followOpen=(state.ui.followOpen===false); }
+    else if(b==='ProjSec'){ state.ui.projOpen=(state.ui.projOpen===false); }
+    else { state.ui.bucketOpen[b]=(state.ui.bucketOpen[b]===false); }
+    save(); render();
   }));
   // status subgroup collapse toggles
   document.querySelectorAll('[data-substat]').forEach(el=>el.addEventListener('click',()=>{
