@@ -309,18 +309,19 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
     grid-template-rows:auto 1fr;
     align-items:stretch;
   }
-  nav{position:static;overflow-y:auto;max-height:100%;padding-bottom:20px}
+  nav{position:static;overflow-y:auto;overflow-x:hidden;max-height:100%;padding-bottom:20px}
   main{height:100%;min-height:0;overflow:hidden}
   main:has(.side-rail){display:flex;align-items:stretch;gap:32px}
   main:has(.side-rail) .dash-main{order:1;flex:1;min-width:0;
-    overflow-y:auto;padding-right:8px;padding-bottom:40px;
+    overflow-y:auto;overflow-x:hidden;padding:2px 8px 40px 3px;
     scrollbar-width:none;-ms-overflow-style:none}
   main:has(.side-rail) .dash-main::-webkit-scrollbar{width:0;height:0;display:none}
   main:has(.side-rail) .side-rail{order:2;flex:0 0 400px;
-    overflow-y:auto;overscroll-behavior:contain;padding-right:6px;padding-bottom:40px;
+    overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+    padding:2px 6px 40px 3px;
     scrollbar-width:thin;scrollbar-color:var(--sbar) transparent}
   /* vistas sin carril (Later, Scheduled, Projects...) también scrollean solas */
-  main:not(:has(.side-rail)){overflow-y:auto;padding-right:8px;padding-bottom:40px;
+  main:not(:has(.side-rail)){overflow-y:auto;overflow-x:hidden;padding:2px 8px 40px 3px;
     scrollbar-width:none;-ms-overflow-style:none}
   main:not(:has(.side-rail))::-webkit-scrollbar{width:0;height:0;display:none}
   .side-rail::-webkit-scrollbar,
@@ -334,15 +335,18 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
   main:has(.side-rail) .side-rail .notes-block{margin-top:0}
 }
 
-/* el carril fluye como el centro: sin cajas, secciones continuas */
-.side-rail{display:flex;flex-direction:column;gap:0}
+/* el carril fluye como el centro: sin cajas, secciones continuas.
+   OJO: display:block a propósito — en flex column los hijos se encogen
+   para caber y el contenido se corta en vez de desbordar y scrollear. */
+.side-rail{display:block}
 .side-rail .notes-block,
 .side-rail .follow-block,
 .side-rail .proj-block{
   margin:0;padding:0;border:none;background:none;box-shadow:none;border-radius:0;
+  overflow:visible;flex:none;
   backdrop-filter:none;-webkit-backdrop-filter:none}
 .side-rail .sec-head{margin-top:18px}
-.side-rail > *:first-child .sec-head{margin-top:0}
+.side-rail > div:first-child .sec-head{margin-top:0}
 .side-rail .nb-add{padding:0;margin-bottom:9px}
 .side-rail .nb-list{padding:0}
 .side-rail .follow-list{padding:0}
@@ -827,8 +831,8 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 @media(max-width:700px){.searchbox{order:9;flex:1 1 100%;max-width:none;margin-top:8px}}
 
 /* ===== AGENDA · 7 días rodantes ===== */
-.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:7px}
-.wd{border:1px solid var(--line);border-radius:5px;padding:7px 6px;min-height:92px;background:var(--panel)}
+.weekgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:7px}
+.wd{border:1px solid var(--line);border-radius:5px;padding:7px 6px;min-height:92px;background:var(--panel);min-width:0;overflow:hidden}
 .wd-h{font-family:'Space Grotesk',sans-serif;font-size:8.5px;letter-spacing:.12em;color:var(--faint);
   font-weight:700;text-transform:uppercase;margin-bottom:2px}
 .wd-n{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;line-height:1;margin-bottom:7px;color:var(--txt)}
@@ -850,10 +854,10 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .wk-legend .lg.rec{border-left:2px solid var(--fu)}
 .wk-legend .lg-hint{margin-left:auto;font-style:italic}
 @media(max-width:900px){
-  .weekgrid{grid-template-columns:repeat(4,1fr)}
+  .weekgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .wd{min-height:76px}
 }
-@media(max-width:520px){ .weekgrid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:520px){ .weekgrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 
 /* ===== PRIORIDADES DE LA SEMANA ===== */
 .prio-wrap{display:flex;align-items:flex-start;gap:10px}
