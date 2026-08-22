@@ -291,9 +291,9 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
   main{grid-area:main;min-width:0}
 }
 @media (min-width:1220px){
-  .wrap{max-width:1320px}
+  .wrap{max-width:1400px}
   main:has(.side-rail){display:flex;align-items:flex-start;gap:32px}
-  main:has(.side-rail) .side-rail{order:2;flex:0 0 340px;position:sticky;top:26px;
+  main:has(.side-rail) .side-rail{order:2;flex:0 0 400px;position:sticky;top:26px;
     max-height:calc(100vh - 52px);overflow-y:auto;overscroll-behavior:contain;
     scrollbar-width:thin;padding-right:4px}
   main:has(.side-rail) .side-rail::-webkit-scrollbar{width:6px}
@@ -316,10 +316,10 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
 .follow-list .task{margin-bottom:5px}
 .follow-list .statcol{display:none}
 /* el carril es angosto: el título va en su propia línea y los chips debajo */
-.follow-list .trow{flex-wrap:wrap;align-items:flex-start;row-gap:7px;padding:9px 10px}
+.follow-list .trow{flex-wrap:wrap;align-items:flex-start;row-gap:7px;padding:9px 10px 4px}
 .follow-list .ttitle{flex:1 1 auto;min-width:0;font-size:12px;overflow-wrap:anywhere}
 .follow-list .caret{order:3}
-.follow-list .tmeta{flex:1 1 100%;justify-content:flex-start;margin-left:25px;gap:5px}
+.follow-list .tmeta{flex:1 1 100%;justify-content:flex-start;margin-left:25px;gap:5px;row-gap:7px;padding-bottom:8px}
 .follow-list .tmeta .chip,.follow-list .tmeta .tagb,.follow-list .tmeta .daytrack{font-size:9.5px;padding:2px 7px}
 .follow-list .empty{padding:12px 0;font-size:12.5px}
 
@@ -824,12 +824,12 @@ html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px 
 .pb-count{font-size:10px;color:var(--faint);font-family:'Space Grotesk',sans-serif}
 .pb-caret{margin-left:auto;color:var(--faint);font-size:10px}
 .proj-list{padding:0 12px 11px}
-.projcard{border-bottom:1px solid var(--line);padding:9px 0}
-.projcard:last-child{border-bottom:none}
+.projcard{border-bottom:1px solid var(--line);padding:11px 0 15px}
+.projcard:last-child{border-bottom:none;padding-bottom:6px}
 .projcard .task{background:none;border:none;box-shadow:none;margin:0;border-radius:0}
-.projcard .trow{padding:4px 0;flex-wrap:wrap;row-gap:6px}
+.projcard .trow{padding:4px 0 0;flex-wrap:wrap;row-gap:7px}
 .projcard .ttitle{flex:1 1 100%}
-.projcard .tmeta{flex:1 1 100%;justify-content:flex-start;flex-wrap:wrap;gap:5px;margin-left:25px}
+.projcard .tmeta{flex:1 1 100%;justify-content:flex-start;flex-wrap:wrap;gap:6px;row-gap:7px;margin-left:25px;padding-bottom:2px}
 .projcard .statcol{display:none}
 .pc-bar{height:4px;background:rgba(127,127,127,.16);border-radius:2px;overflow:hidden;margin-bottom:2px}
 .pc-bar i{display:block;height:100%;background:var(--ip,var(--blue));border-radius:2px;transition:width .3s}
