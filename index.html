@@ -14,6 +14,7 @@
 <style>
 :root{
   color-scheme:dark;
+  --sbar:rgba(255,255,255,.22); --sbar-hi:rgba(255,255,255,.38);
   --bg:#070810;
   --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.07);
   --card:#10131F;
@@ -31,6 +32,7 @@
 }
 /* ===== DARK · E1 — oro estructura, azul acción ===== */
 html[data-theme="dark"][data-accent="e1"]{
+  --sbar:rgba(217,169,59,.4); --sbar-hi:rgba(217,169,59,.65);
   --bg:#08090F; --card:#12141C; --pop-bg:#12141C;
   --panel:rgba(255,255,255,.04); --panel2:rgba(255,255,255,.07);
   --line:rgba(255,255,255,.09); --line-hi:rgba(255,255,255,.2);
@@ -46,6 +48,7 @@ html[data-theme="dark"][data-accent="e1"]{
 }
 /* ===== DARK · E4 — filas hairline ===== */
 html[data-theme="dark"][data-accent="e4"]{
+  --sbar:rgba(217,169,59,.4); --sbar-hi:rgba(217,169,59,.65);
   --bg:#07090E; --card:#101319; --pop-bg:#101319;
   --panel:rgba(255,255,255,.035); --panel2:rgba(255,255,255,.06);
   --line:rgba(255,255,255,.08); --line-hi:rgba(217,169,59,.4);
@@ -61,6 +64,7 @@ html[data-theme="dark"][data-accent="e4"]{
 }
 /* ===== DARK · E5 — azul y grises; el oro solo en el logo ===== */
 html[data-theme="dark"][data-accent="e5"]{
+  --sbar:rgba(139,148,166,.4); --sbar-hi:rgba(139,148,166,.65);
   --bg:#0A0D14; --card:#141821; --pop-bg:#141821;
   --panel:rgba(255,255,255,.04); --panel2:rgba(255,255,255,.07);
   --line:rgba(255,255,255,.09); --line-hi:rgba(255,255,255,.2);
@@ -117,6 +121,7 @@ html[data-theme="light"][data-accent="ivory"]{
 }
 /* ===== E1 · ORIGINAL — oro estructura, azul acción ===== */
 html[data-theme="light"][data-accent="e1"]{
+  --sbar:rgba(184,134,11,.45); --sbar-hi:rgba(184,134,11,.7);
   --bg:#FFFFFF;
   --panel:#FFFFFF; --panel2:#FAFAFA; --card:#FAFAFA; --pop-bg:#FFFFFF;
   --line:rgba(20,20,20,.09); --line-hi:rgba(20,20,20,.18);
@@ -132,6 +137,7 @@ html[data-theme="light"][data-accent="e1"]{
 }
 /* ===== E4 · FILO DE ORO — filas hairline, oro solo en líneas ===== */
 html[data-theme="light"][data-accent="e4"]{
+  --sbar:rgba(184,134,11,.45); --sbar-hi:rgba(184,134,11,.7);
   --bg:#FFFFFF;
   --panel:#FFFFFF; --panel2:#FCFCFD; --card:#FCFCFD; --pop-bg:#FFFFFF;
   --line:rgba(17,24,39,.08); --line-hi:rgba(184,134,11,.4);
@@ -147,6 +153,7 @@ html[data-theme="light"][data-accent="e4"]{
 }
 /* ===== E5 · ACERO — azul y grises; el oro vive solo en el logo ===== */
 html[data-theme="light"][data-accent="e5"]{
+  --sbar:rgba(74,85,96,.35); --sbar-hi:rgba(74,85,96,.6);
   --bg:#FFFFFF;
   --panel:#FFFFFF; --panel2:#F6F7F9; --card:#F6F7F9; --pop-bg:#FFFFFF;
   --line:rgba(21,24,29,.1); --line-hi:rgba(21,24,29,.2);
@@ -295,13 +302,20 @@ nav{display:flex;justify-content:flex-start;gap:4px;margin:14px 0 4px;flex-wrap:
   main:has(.side-rail){display:flex;align-items:flex-start;gap:32px}
   main:has(.side-rail) .side-rail{order:2;flex:0 0 400px;position:sticky;top:26px;
     max-height:calc(100vh - 52px);overflow-y:auto;overscroll-behavior:contain;
-    scrollbar-width:thin;padding-right:4px}
-  main:has(.side-rail) .side-rail::-webkit-scrollbar{width:6px}
-  main:has(.side-rail) .side-rail::-webkit-scrollbar-thumb{background:var(--line-hi);border-radius:3px}
+    scrollbar-width:thin;scrollbar-color:var(--sbar) transparent;padding-right:6px}
+  main:has(.side-rail) .side-rail::-webkit-scrollbar{width:7px}
+  main:has(.side-rail) .side-rail::-webkit-scrollbar-thumb{background:var(--sbar);border-radius:4px}
+  main:has(.side-rail) .side-rail::-webkit-scrollbar-thumb:hover{background:var(--sbar-hi)}
   main:has(.side-rail) .side-rail::-webkit-scrollbar-track{background:transparent}
   main:has(.side-rail) .dash-main{order:1;flex:1;min-width:0}
   main:has(.side-rail) .side-rail .notes-block{margin-top:0}
 }
+
+/* el carril reparte el espacio por gap, no por márgenes sueltos */
+.side-rail{display:flex;flex-direction:column;gap:14px}
+.side-rail .notes-block,
+.side-rail .follow-block,
+.side-rail .proj-block{margin-top:0;margin-bottom:0}
 
 /* ===== FOLLOW-UP RAIL ===== */
 .follow-block{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
@@ -2382,12 +2396,11 @@ function renderList(list){
   let h='<div class="addbar"><input id="listAdd" placeholder="'+(list==='active'?'Park a task for later...':'Capture a project or idea...')+'"><button id="listAddBtn">Add</button></div>';
   if(list==='active'){
     // repositorio: SOLO lo que no está asignado a hoy ni a esta semana
-    const later = applyFilters(base.filter(t=>t.bucket==='Later' && !isProject(t) && !inPausedProject(t)));
+    const later = base.filter(t=>t.bucket==='Later' && !isProject(t) && !inPausedProject(t));
     const inToday = base.filter(t=>t.bucket==='Today').length;
     const inWeek  = base.filter(t=>t.bucket==='Week').length;
     h+='<div class="repo-note">Everything here is <b>unscheduled</b> — not on today, not on this week. '
       +'<span class="repo-c">'+inToday+' on today</span><span class="repo-c">'+inWeek+' this week</span></div>';
-    h+=filterBar();
     if(!later.length){
       h+='<div class="empty">Nothing waiting. Every active task is already allocated.</div>';
     } else {
