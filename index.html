@@ -989,6 +989,51 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .syncdot.offline{background:#8A8A8A;box-shadow:0 0 0 3px rgba(138,138,138,.18);}
 .syncdot.error{background:#FF4D4D;box-shadow:0 0 0 3px rgba(255,77,77,.2);animation:syncpulse .8s ease-in-out infinite;}
 @keyframes syncpulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ============ v2 PATCH: search tab, condensed rail, note ordering ============ */
+/* --- SEARCH TAB --- */
+.searchpage{padding-top:2px}
+.searchbar-tab{display:flex;align-items:center;gap:9px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:var(--r);padding:0 13px;height:46px;margin:14px 0 4px;
+  position:sticky;top:0;z-index:5;box-shadow:0 6px 14px -12px rgba(0,0,0,.5)}
+.searchbar-tab:focus-within{border-color:var(--blue)}
+.searchbar-tab .s-ic{color:var(--faint);font-size:16px;line-height:1;flex:none}
+.searchbar-tab input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--txt);
+  font-family:inherit;font-size:15px}
+.searchbar-tab input::placeholder{color:var(--faint)}
+.searchbar-tab .s-clear{background:none;border:none;color:var(--faint);font-size:14px;cursor:pointer;flex:none;padding:4px}
+.searchbar-tab .s-clear:hover{color:var(--txt)}
+.searchbar-tab .s-clear.hidden{display:none}
+.search-hint{font-size:11.5px;color:var(--faint);margin:0 0 10px 2px}
+.snote{display:flex;gap:9px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);
+  border-left:3px solid var(--fu);border-radius:9px;padding:9px 11px;margin-bottom:6px;font-size:13px;line-height:1.5;color:var(--txt)}
+
+/* --- CONDENSED RAIL: FOLLOW-UP --- */
+.follow-list .task{margin-bottom:4px}
+.follow-list .trow{padding:6px 9px 5px;row-gap:4px;align-items:center}
+.follow-list .ttitle{flex:1 1 120px;font-size:12.5px;line-height:1.3}
+.follow-list .tmeta{flex:1 1 100%;margin-left:24px;gap:4px;row-gap:4px;padding-bottom:2px}
+.follow-list .tmeta .chip,.follow-list .tmeta .tagb,.follow-list .tmeta .daytrack{font-size:9px;padding:1.5px 6px}
+.follow-list .empty{padding:8px 0;font-size:12px}
+
+/* --- CONDENSED RAIL: ACTIVE PROJECTS --- */
+.projcard{padding:6px 0 7px}
+.projcard:last-child{padding-bottom:2px}
+.projcard .trow{padding:2px 0 0;row-gap:4px}
+.projcard .ttitle{flex:1 1 100%;font-size:12.5px;line-height:1.3}
+.projcard .tmeta{gap:4px;row-gap:4px;margin-left:24px}
+.projcard .tmeta .chip,.projcard .tmeta .tagb,.projcard .tmeta .daytrack{font-size:9px;padding:1.5px 6px}
+.pc-m{margin:0 0 3px 13px;font-size:9px;gap:6px}
+.pc-bar{height:3px;margin:0 0 1px 13px}
+.pc-pause{font-size:9px;padding:1.5px 7px}
+
+/* --- NOTE ORDERING --- */
+.postit-ord{display:flex;flex-direction:column;gap:2px;flex:none;margin-left:2px}
+.postit-ord button{background:none;border:1px solid var(--line);color:var(--faint);border-radius:4px;
+  width:20px;height:15px;line-height:1;font-size:8px;cursor:pointer;padding:0;font-family:inherit;
+  display:flex;align-items:center;justify-content:center}
+.postit-ord button:hover:not(:disabled){border-color:var(--line-hi);color:var(--txt)}
+.postit-ord button:disabled{opacity:.25;cursor:default}
 </style>
 </head>
 <body>
@@ -1010,11 +1055,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
       <div class="brandrow"><img class="brandmark" id="brandmark" alt="Ascent" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iQ2FwYV8xIiBkYXRhLW5hbWU9IkNhcGEgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMjAwMCAyMDAwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmNscy0xIHsKICAgICAgICBmaWxsOiAjMDAwOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMzc0LjE2LDM4OC45OGwtMTIyLjguMDMtNS40LTY2Ljc0LTI4Mi42Ni0xNjYuODgtNjY5LjU1LDQwOC42Niw3MDUuNjEsNDE1LjMyLDExMy4zOC02NC45MS0zMDAuMDQtMTg0LjQsMzQ1LjQxLTIxMy4zOGgxNzEuNzNsMjM2LjkzLDEzNy44NSwxMjMuNDktNzAuNzgtMzE2LjEtMTk0Ljc2Wk0xMDU5Ljg5LDQyNS4wOGwtMzcyLjY1LDIzOS4wNC0xNTYuOTYtOTYuNzQsNDQ1Ljk0LTI2My4zNCw3OS43LDU0LjUzLDMuOTcsNjYuNTFaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzkwLjg1LDEwOTAuNzZsLTIuMTQsMzk5LjY4LTExNy4yNi03MS43MS04LjMxLTgxNy4xLDcxOC4yLDQxMC4wNSwyLjI2LDQxOC43NS01OTIuNzYtMzM5LjY3Wk04NjAuMTYsMTIzMy4xNnYtMTc0LjFsLTQ3Ny42LTI3Mi4xNXYxNzQuNWw0NzcuNiwyNzEuNzVaIi8+CiAgPHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTQ0MC40NCwxNDgyLjVsMTcxLjkyLTkwLjg0LDIuMzgtNzE1LjI4LDEyMi4xMS02OS45MXY4MzAuODhzLTcwNy4wOCw0MDcuMjctNzA3LjA4LDQwNy4yN3YtODMzLjM0bDEyMy4wNC03MC40NC0xLjYzLDcwNi43OCwxNjYuNjgtOTQuOTQsMi40My03MDcuNzIsMTIyLjI0LTY5Ljk4LTIuMSw3MDcuNTNaIi8+Cjwvc3ZnPg=="><span class="brandword">Ascent</span></div>
       <span class="kpi-pill" id="kpiPill" onclick="setView('history')" title="Completion history"></span>
       <span class="hdate" id="hdate"></span>
-      <div class="searchbox">
-        <span class="s-ic">⌕</span>
-        <input id="searchInput" placeholder="Buscar…  /" autocomplete="off">
-        <button class="s-clear hidden" id="searchClear" title="Limpiar">✕</button>
-      </div>
       <span class="syncdot ok" id="syncDot" title="All changes saved"></span>
       <button class="gear" id="gearBtn" title="Settings">⚙</button>
     </div>
@@ -1636,6 +1676,16 @@ function purgeArchive(){
 }
 
 /* ================= TASK OPS ================= */
+/* en Projects / Ideas todo lo capturado nace como PROYECTO inactivo:
+   una "idea" es simplemente un proyecto que aun no se ha activado */
+function addProjectIdea(title){
+  if(!title.trim()) return;
+  state.tasks.push({id:uid(), title:title.trim(), status:'Not Started', bucket:'Later',
+    tags:[], subtasks:[], notes:'', source:'manual', list:'backlog', pinned:false, person:null, scheduledDate:null,
+    isProject:true, projActive:false, activatedAt:null,
+    createdAt:Date.now(), todayDate:null, completedAt:null});
+  save(); render();
+}
 function addTask(title, list, bucket){
   if(!title.trim()) return;
   state.tasks.push({id:uid(), title:title.trim(), status:'Not Started', bucket:bucket||'Today',
@@ -1666,7 +1716,31 @@ function pullScheduledToToday(id){
 // ===== NOTES (post-its) =====
 function addNote(text){
   if(!text.trim()) return;
-  state.notes.unshift({id:uid(), text:text.trim(), pinned:false, createdAt:Date.now()});
+  ensureNoteOrder();
+  const minOrd = state.notes.length? Math.min.apply(null, state.notes.map(n=>n.order)) : 0;
+  state.notes.unshift({id:uid(), text:text.trim(), pinned:false, createdAt:Date.now(), order:minOrd-1});
+  save(); render();
+}
+/* orden manual de notas: cada nota lleva un 'order'; se siembra una sola vez
+   con el orden historico (fijadas primero, luego mas reciente) */
+function ensureNoteOrder(){
+  if(!Array.isArray(state.notes)) state.notes=[];
+  if(state.notes.every(n=>typeof n.order==='number')) return;
+  const cur=[...state.notes].sort((a,b)=>((b.pinned?1:0)-(a.pinned?1:0)) || ((b.createdAt||0)-(a.createdAt||0)));
+  cur.forEach((n,i)=>{ if(typeof n.order!=='number') n.order=i; });
+}
+/* mueve una nota una posicion arriba/abajo dentro de su grupo (fijadas / no fijadas) */
+function moveNote(id, dir){
+  ensureNoteOrder();
+  const list=sortedNotes();
+  const i=list.findIndex(n=>n.id===id);
+  if(i<0) return;
+  const j=i+dir;
+  if(j<0 || j>=list.length) return;
+  const a=list[i], b=list[j];
+  if(!!a.pinned !== !!b.pinned) return;   // no se cruza la frontera fijadas/no fijadas
+  const ao=a.order; a.order=b.order; b.order=ao;
+  if(a.order===b.order){ b.order = a.order + dir; }
   save(); render();
 }
 function deleteNote(id){ state.notes=state.notes.filter(n=>n.id!==id); save(); render(); }
@@ -1689,7 +1763,9 @@ function deleteTaskNote(taskId, noteId){
   t.noteLog=(t.noteLog||[]).filter(x=>x.id!==noteId); save(); render();
 }
 function sortedNotes(){
-  return [...state.notes].sort((a,b)=>(b.pinned-a.pinned) || (b.createdAt-a.createdAt));
+  ensureNoteOrder();
+  return [...state.notes].sort((a,b)=>
+    ((b.pinned?1:0)-(a.pinned?1:0)) || (a.order-b.order) || ((b.createdAt||0)-(a.createdAt||0)));
 }
 // ===== COMPLETION STATS =====
 function completedToday(){ return state.completions[todayStr()]||0; }
@@ -2201,6 +2277,8 @@ function bindTaskEvents(container){
 /* ================= VIEWS ================= */
 let searchQuery = '';
 function matchesSearch(t){
+  // la busqueda solo filtra dentro de la pestana Search: las demas vistas quedan intactas
+  if(view!=='search') return true;
   const q = searchQuery.trim().toLowerCase();
   if(!q) return true;
   const hay = [
@@ -2317,15 +2395,22 @@ function renderDashboard(){
   if(state.ui.noteOpen){
     h+='<div class="nb-add"><input id="noteAddIn" placeholder="Write a note..."><button id="noteAddBtn">Add</button></div>';
     h+='<div class="nb-list">';
-    h+= notes.length? notes.map(n=>
-      editingNote===n.id
-        ? '<div class="postit '+(n.pinned?'pinned':'')+'"><textarea class="postit-edit" id="postitEdit">'+esc(n.text)+'</textarea><div class="postit-actions"><button class="postit-save" data-notesave="'+n.id+'">Save</button></div></div>'
-        : '<div class="postit '+(n.pinned?'pinned':'')+'">'
-          +'<button class="postit-pin '+(n.pinned?'on':'')+'" data-notepin="'+n.id+'" title="'+(n.pinned?'Unpin':'Pin')+'">'+(n.pinned?'📌':'📍')+'</button>'
-          +'<div class="postit-text" data-noteedit="'+n.id+'">'+esc(n.text).replace(/\n/g,'<br>')+'</div>'
-          +'<button class="postit-del" data-notedel="'+n.id+'" title="Delete">✕</button>'
-          +'</div>'
-    ).join('') : '<div class="empty">No notes yet.</div>';
+    h+= notes.length? notes.map((n,i)=>{
+      if(editingNote===n.id)
+        return '<div class="postit '+(n.pinned?'pinned':'')+'"><textarea class="postit-edit" id="postitEdit">'+esc(n.text)+'</textarea><div class="postit-actions"><button class="postit-save" data-notesave="'+n.id+'">Save</button></div></div>';
+      const prev=notes[i-1], next=notes[i+1];
+      const canUp   = !!prev && !!prev.pinned===!!n.pinned;
+      const canDown = !!next && !!next.pinned===!!n.pinned;
+      return '<div class="postit '+(n.pinned?'pinned':'')+'">'
+        +'<button class="postit-pin '+(n.pinned?'on':'')+'" data-notepin="'+n.id+'" title="'+(n.pinned?'Unpin':'Pin')+'">'+(n.pinned?'📌':'📍')+'</button>'
+        +'<div class="postit-text" data-noteedit="'+n.id+'">'+esc(n.text).replace(/\n/g,'<br>')+'</div>'
+        +'<div class="postit-ord">'
+          +'<button data-noteup="'+n.id+'" title="Move up"'+(canUp?'':' disabled')+'>▲</button>'
+          +'<button data-notedn="'+n.id+'" title="Move down"'+(canDown?'':' disabled')+'>▼</button>'
+        +'</div>'
+        +'<button class="postit-del" data-notedel="'+n.id+'" title="Delete">✕</button>'
+        +'</div>';
+    }).join('') : '<div class="empty">No notes yet.</div>';
     h+='</div>';
   }
   h+='</div>';
@@ -2431,7 +2516,7 @@ function renderDashboard(){
 }
 function renderList(list){
   const base = list==='active'? activeTasks(): backlogTasks();
-  let h='<div class="addbar"><input id="listAdd" placeholder="'+(list==='active'?'Park a task for later...':'Capture a project or idea...')+'"><button id="listAddBtn">Add</button></div>';
+  let h='<div class="addbar"><input id="listAdd" placeholder="'+(list==='active'?'Park a task for later...':'New project or idea...')+'"><button id="listAddBtn">Add</button></div>';
   if(list==='active'){
     // repositorio: SOLO lo que no está asignado a hoy ni a esta semana
     const later = base.filter(t=>t.bucket==='Later' && !isProject(t) && !inPausedProject(t));
@@ -2478,7 +2563,7 @@ function renderList(list){
         h+= paused.map(p=>projectCard(p,false)).join('');
         h+= loose.map(t=>taskRow(t,{promote:true,hideBucket:true})).join('');
       } else {
-        h+='<div class="empty">No ideas yet. Anything captured here waits until you activate it.</div>';
+        h+='<div class="empty">No ideas yet. Everything captured here is a project waiting to be activated.</div>';
       }
     }
   }
@@ -2787,16 +2872,114 @@ function renderArchive(){
   return h;
 }
 
+/* ================= SEARCH VIEW ================= */
+function matchingNotes(){
+  const q=searchQuery.trim().toLowerCase();
+  if(!q) return [];
+  const ws=q.split(/\s+/);
+  return sortedNotes().filter(n=>{ const h=(n.text||'').toLowerCase(); return ws.every(w=>h.includes(w)); });
+}
+function searchResultsHtml(){
+  if(!searchQuery.trim())
+    return '<div class="empty">Search across every task, project, scheduled item, note and the archive.</div>';
+  const act    = activeTasks().filter(t=>!isProject(t));
+  const today  = act.filter(t=>t.bucket==='Today');
+  const week   = act.filter(t=>t.bucket==='Week');
+  const later  = act.filter(t=>t.bucket==='Later');
+  const sch    = scheduledTasks().slice().sort((a,b)=>(a.scheduledDate||'').localeCompare(b.scheduledDate||''));
+  const projs  = allProjects();
+  const loose  = backlogTasks().filter(t=>!isProject(t) && !t.projectId);
+  const arch   = archivedTasks().sort((x,y)=>(y.completedAt||0)-(x.completedAt||0));
+  const notes  = matchingNotes();
+  const total  = today.length+week.length+later.length+sch.length+projs.length+loose.length+arch.length+notes.length;
+  let h='<div class="searchinfo"><span><b>'+total+'</b> result'+(total===1?'':'s')+' for \u201c<b>'+esc(searchQuery.trim())+'</b>\u201d</span></div>';
+  if(!total) return h+'<div class="empty">No match. Try fewer words.</div>';
+  const rows=list=>list.map(t=>taskRow(t,{})).join('');
+  if(today.length) h+=secHead('TODAY', today.length, '', BUCKET_COLOR.Today)+rows(today);
+  if(week.length)  h+=secHead('THIS WEEK', week.length, '', BUCKET_COLOR.Week)+rows(week);
+  if(later.length) h+=secHead('LATER / UNSCHEDULED', later.length, '', BUCKET_COLOR.Later)+rows(later);
+  if(sch.length)   h+=secHead('SCHEDULED', sch.length, '', BUCKET_COLOR.Week)+rows(sch);
+  if(projs.length) h+=secHead('PROJECTS / IDEAS', projs.length, '', 'var(--ip,var(--blue))')+rows(projs);
+  if(loose.length) h+=secHead('LOOSE BACKLOG ITEMS', loose.length, '', BUCKET_COLOR.Later)+rows(loose);
+  if(notes.length) h+=secHead('NOTES', notes.length, '', 'var(--fu)')
+    +notes.map(n=>'<div class="snote">'+(n.pinned?'\ud83d\udccc ':'')+esc(n.text).replace(/\n/g,'<br>')+'</div>').join('');
+  if(arch.length)  h+=secHead('ARCHIVE', arch.length, '', 'var(--faint)')
+    +arch.map(t=>{
+      const d=t.completedAt? new Date(t.completedAt).toLocaleDateString() : '';
+      return '<div class="arch-row"><span class="t">'+esc(t.title)+'</span><span class="d">'+d+'</span><button data-restore="'+t.id+'">Restore</button></div>';
+    }).join('');
+  return h;
+}
+function renderSearch(){
+  return '<div class="searchpage">'
+    +'<div class="searchbar-tab">'
+      +'<span class="s-ic">\u2315</span>'
+      +'<input id="searchInput" placeholder="Search tasks, projects, notes\u2026" autocomplete="off" value="'+esc(searchQuery)+'">'
+      +'<button class="s-clear '+(searchQuery.trim()?'':'hidden')+'" id="searchClear" title="Clear">\u2715</button>'
+    +'</div>'
+    +'<div class="search-hint">Results update as you type. Press Esc to clear.</div>'
+    +'<div id="searchResults">'+searchResultsHtml()+'</div>'
+    +'</div>';
+}
+/* los resultados se re-pintan solos (sin re-render global) para no perder el foco del input */
+function bindSearchResults(box){
+  if(!box) return;
+  bindTaskEvents(box);
+  box.querySelectorAll('[data-restore]').forEach(b=>b.addEventListener('click',()=>restoreTask(b.dataset.restore)));
+}
+function bindSearchBar(){
+  const inp=document.getElementById('searchInput');
+  const cl=document.getElementById('searchClear');
+  if(inp){
+    inp.addEventListener('input',()=>setSearch(inp.value));
+    inp.addEventListener('keydown',e=>{ if(e.key==='Escape'){ setSearch(''); inp.blur(); } });
+  }
+  if(cl) cl.addEventListener('click',()=>{ setSearch(''); const i=document.getElementById('searchInput'); if(i) i.focus(); });
+  bindSearchResults(document.getElementById('searchResults'));
+}
+
 /* ================= NAV + MAIN RENDER ================= */
-const VIEWS=[['dashboard','Dashboard'],['active','Later / Unscheduled'],['scheduled','Scheduled'],['backlog','Projects / Ideas'],['recurring','Recurring']];
+const VIEWS=[['dashboard','Dashboard'],['active','Later / Unscheduled'],['scheduled','Scheduled'],['backlog','Projects / Ideas'],['recurring','Recurring'],['search','Search']];
 function setView(v){
-  view=v; purgeArmed=false; closePop(); render();
-  // las columnas scrollean solas: al cambiar de vista hay que volver arriba
+  view=v; purgeArmed=false; closePop();
+  _scrollToTopNext=true;                 // cambiar de vista SI vuelve arriba
+  render();
   const main=document.getElementById('main');
   if(main) main.scrollTop=0;
   document.querySelectorAll('.dash-main, .side-rail').forEach(el=>el.scrollTop=0);
+  window.scrollTo(0,0);
+  if(v==='search'){ const i=document.getElementById('searchInput'); if(i) i.focus(); }
+}
+
+/* ---- conservar la posicion de scroll entre renders ----
+   render() reemplaza el innerHTML de main, lo que tira el scroll al tope.
+   Se captura antes y se restaura despues (ventana + columnas propias). */
+let _scrollToTopNext=false;
+function _captureScroll(){
+  const m={win: window.scrollY || document.documentElement.scrollTop || 0, main:0, dash:0, rail:0};
+  const main=document.getElementById('main'); if(main) m.main=main.scrollTop;
+  const d=document.querySelector('.dash-main'); if(d) m.dash=d.scrollTop;
+  const r=document.querySelector('.side-rail'); if(r) m.rail=r.scrollTop;
+  return m;
+}
+function _restoreScroll(m){
+  if(!m) return;
+  const main=document.getElementById('main'); if(main && m.main) main.scrollTop=m.main;
+  const d=document.querySelector('.dash-main'); if(d && m.dash) d.scrollTop=m.dash;
+  const r=document.querySelector('.side-rail'); if(r && m.rail) r.scrollTop=m.rail;
+  if(m.win) window.scrollTo(0, m.win);
 }
 function render(){
+  const memo = _scrollToTopNext ? null : _captureScroll();
+  _scrollToTopNext=false;
+  renderCore();
+  if(memo){
+    _restoreScroll(memo);
+    // segunda pasada tras el layout: el alto real recien existe en el siguiente frame
+    requestAnimationFrame(()=>_restoreScroll(memo));
+  }
+}
+function renderCore(){
   const counts={
     active: activeTasks().filter(t=>t.bucket==='Later' && !isProject(t) && !inPausedProject(t)).length,
     scheduled: scheduledTasks().length,
@@ -2834,16 +3017,9 @@ function render(){
   else if(view==='manage') main.innerHTML=renderManage();
   else if(view==='history') main.innerHTML=renderHistory();
   else if(view==='archive') main.innerHTML=secHead('ARCHIVE','')+renderArchive();
+  else if(view==='search') main.innerHTML=renderSearch();
 
-  // search results banner
-  if(searchQuery.trim()){
-    const n = activeTasks().length + backlogTasks().length + scheduledTasks().length;
-    const banner = '<div class="searchinfo"><span><b>'+n+'</b> resultado'+(n===1?'':'s')
-      +' para "<b>'+esc(searchQuery.trim())+'</b>"</span><button id="searchReset">Limpiar</button></div>';
-    main.insertAdjacentHTML('afterbegin', banner);
-    const rb=document.getElementById('searchReset');
-    if(rb) rb.addEventListener('click',()=>setSearch(''));
-  }
+  if(view==='search') bindSearchBar();
 
   bindTaskEvents(main);
 
@@ -2894,6 +3070,8 @@ function render(){
   }
   document.querySelectorAll('[data-notepin]').forEach(b=>b.addEventListener('click',()=>toggleNotePin(b.dataset.notepin)));
   document.querySelectorAll('[data-notedel]').forEach(b=>b.addEventListener('click',()=>deleteNote(b.dataset.notedel)));
+  document.querySelectorAll('[data-noteup]').forEach(b=>b.addEventListener('click',()=>moveNote(b.dataset.noteup,-1)));
+  document.querySelectorAll('[data-notedn]').forEach(b=>b.addEventListener('click',()=>moveNote(b.dataset.notedn,1)));
   document.querySelectorAll('[data-noteedit]').forEach(b=>b.addEventListener('click',()=>{ editingNote=b.dataset.noteedit; render(); const ta=document.getElementById('postitEdit'); if(ta){ ta.focus(); } }));
   const psave=document.querySelector('[data-notesave]');
   if(psave){
@@ -2922,7 +3100,7 @@ function render(){
   }
   const lAdd=document.getElementById('listAdd');
   if(lAdd){
-    const go=()=>{ addTask(lAdd.value, view==='backlog'?'backlog':'active', 'Later'); };
+    const go=()=>{ if(view==='backlog') addProjectIdea(lAdd.value); else addTask(lAdd.value,'active','Later'); };
     lAdd.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
     document.getElementById('listAddBtn').addEventListener('click',go);
   }
@@ -3235,25 +3413,24 @@ function setSearch(v){
   if(inp && inp.value!==searchQuery) inp.value=searchQuery;
   const cl=document.getElementById('searchClear');
   if(cl) cl.classList.toggle('hidden', !searchQuery.trim());
-  render();
+  const box=document.getElementById('searchResults');
+  if(view==='search' && box){
+    // solo se repinta la lista de resultados: el input conserva el foco
+    box.innerHTML=searchResultsHtml();
+    bindSearchResults(box);
+  } else {
+    render();
+  }
 }
 (function initSearch(){
-  const inp=document.getElementById('searchInput');
-  const cl=document.getElementById('searchClear');
-  if(inp){
-    inp.addEventListener('input',()=>setSearch(inp.value));
-    inp.addEventListener('keydown',e=>{
-      if(e.key==='Escape'){ setSearch(''); inp.blur(); }
-    });
-  }
-  if(cl) cl.addEventListener('click',()=>{ setSearch(''); if(inp) inp.focus(); });
-  // "/" enfoca la búsqueda desde cualquier parte
+  // "/" salta a la pestana Search desde cualquier parte
   document.addEventListener('keydown',e=>{
     if(e.key!=='/' || e.metaKey || e.ctrlKey || e.altKey) return;
     const a=document.activeElement;
     if(a && (a.tagName==='INPUT' || a.tagName==='TEXTAREA' || a.isContentEditable)) return;
     e.preventDefault();
-    if(inp) inp.focus();
+    if(view!=='search') setView('search');
+    const i=document.getElementById('searchInput'); if(i) i.focus();
   });
 })();
 
