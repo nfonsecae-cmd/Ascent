@@ -1443,6 +1443,244 @@ html[data-theme][data-accent] :focus-visible{outline:2px solid rgba(var(--gA),.8
   html[data-theme][data-accent] *{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 2 — estructura del preview
+   nav horizontal · bloque hero · dock dorado · tarjetas del carril
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ---------- el dorado vuelve a ser el color de accion ---------- */
+html[data-theme="light"][data-accent]{
+  --grad:linear-gradient(160deg,#E8C56A,#C9921E);
+  --btn-ink:#241A06;
+}
+html[data-theme="dark"][data-accent]{
+  --grad:linear-gradient(160deg,#F2CE72,#D9A93B);
+  --btn-ink:#0A0803;
+}
+html[data-theme][data-accent] .addbar button,
+html[data-theme][data-accent] .nb-add button,
+html[data-theme][data-accent] .mng-add button,
+html[data-theme][data-accent] .sched-add button,
+html[data-theme][data-accent] .postit-save,
+html[data-theme][data-accent] .nl-send,
+html[data-theme][data-accent] .catsave,
+html[data-theme][data-accent] .mng-save,
+html[data-theme][data-accent] .nl-savebtn,
+html[data-theme][data-accent] .auth-btn{
+  color:var(--btn-ink);
+  text-shadow:none;
+}
+
+/* ══════════ NAV HORIZONTAL (como el preview) ══════════ */
+@media (min-width:900px){
+  html[data-theme][data-accent] .wrap{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"topbar" "nav" "main";
+    grid-template-rows:auto auto minmax(0,1fr);
+    column-gap:0;
+  }
+  html[data-theme][data-accent] nav{
+    grid-area:nav;
+    flex-direction:row;
+    align-items:center;
+    align-self:start;
+    justify-self:start;
+    width:max-content;
+    max-width:100%;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    margin:16px 0 4px;
+    position:static;
+    border-radius:999px;
+    padding:5px;
+  }
+  html[data-theme][data-accent] .tab{
+    text-align:center;
+    padding:8px 16px;
+    border-radius:999px;
+  }
+}
+@media (min-width:1220px){
+  html[data-theme][data-accent] .wrap{
+    grid-template-rows:auto auto minmax(0,1fr);
+  }
+  html[data-theme][data-accent] nav{
+    max-height:none;
+    overflow-x:auto;
+    overflow-y:visible;
+    padding:5px;
+  }
+  html[data-theme][data-accent] main:has(.side-rail){gap:28px}
+  html[data-theme][data-accent] main:has(.side-rail) .dash-main{padding-bottom:120px}
+  html[data-theme][data-accent] main:not(:has(.side-rail)){padding-bottom:120px}
+  html[data-theme][data-accent] main:has(.side-rail) .side-rail{
+    flex:0 0 372px;padding-bottom:120px;
+  }
+}
+
+/* ══════════ BLOQUE HERO ══════════ */
+html[data-theme][data-accent] .hero{
+  position:relative;overflow:hidden;
+  margin:4px 0 8px;padding:26px 26px 22px;
+  border-radius:26px;
+  background:var(--g-thick);
+  backdrop-filter:blur(40px) saturate(200%);
+  -webkit-backdrop-filter:blur(40px) saturate(200%);
+  border:1px solid var(--g-edge);
+  box-shadow:inset 0 1px 0 var(--spec), inset 0 -1px 0 var(--spec-b), var(--drop);
+}
+html[data-theme][data-accent] .hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(105deg,transparent 32%,rgba(255,255,255,.22) 47%,transparent 62%);
+  transform:translateX(-120%);
+  animation:heroSheen 1.5s cubic-bezier(.3,.7,0,1) .3s both;
+}
+@keyframes heroSheen{to{transform:translateX(120%)}}
+html[data-theme][data-accent] .hero-top{display:flex;align-items:center;gap:24px}
+html[data-theme][data-accent] .hero-left{min-width:0;flex:1}
+html[data-theme][data-accent] .hero-num{display:flex;align-items:baseline;gap:12px}
+html[data-theme][data-accent] .hero-num b{
+  font-size:64px;font-weight:600;line-height:.86;letter-spacing:-.045em;
+  background:var(--ring);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+html[data-theme="dark"][data-accent] .hero-num b{
+  filter:drop-shadow(0 0 26px rgba(var(--gA),.45));
+}
+html[data-theme][data-accent] .hero-num span{
+  font-size:15px;color:var(--muted);font-weight:470;max-width:120px;line-height:1.25;
+}
+html[data-theme][data-accent] .hero-kick{
+  font-size:13px;color:var(--faint);margin:14px 0 0;font-weight:450;
+}
+html[data-theme][data-accent] .ring{
+  flex:none;width:92px;height:92px;position:relative;cursor:pointer;
+  transition:transform .22s cubic-bezier(.32,.72,0,1);
+}
+html[data-theme][data-accent] .ring:hover{transform:scale(1.05)}
+html[data-theme][data-accent] .ring svg{transform:rotate(-90deg);display:block}
+html[data-theme][data-accent] .ring .trk{stroke:var(--line)}
+html[data-theme][data-accent] .ring .val{
+  stroke:url(#ringgrad);stroke-linecap:round;
+  filter:drop-shadow(0 0 7px rgba(var(--gA),.85));
+  transition:stroke-dashoffset .7s cubic-bezier(.32,.72,0,1);
+}
+html[data-theme][data-accent] .ring .rg0{stop-color:var(--blue-hi)}
+html[data-theme][data-accent] .ring .rg1{stop-color:var(--blue)}
+html[data-theme][data-accent] .ring b{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:19px;font-weight:620;letter-spacing:-.03em;color:var(--txt);
+}
+@media (max-width:560px){
+  html[data-theme][data-accent] .hero{padding:20px 18px 18px;border-radius:22px}
+  html[data-theme][data-accent] .hero-num b{font-size:52px}
+  html[data-theme][data-accent] .ring{width:76px;height:76px}
+}
+@media (prefers-reduced-motion:reduce){
+  html[data-theme][data-accent] .hero::before{display:none}
+}
+
+/* ══════════ DOCK DORADO (barra de añadir flotante) ══════════ */
+html[data-theme][data-accent] .dash-main > .addbar,
+html[data-theme][data-accent] main > .addbar{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  z-index:80;margin:0;gap:8px;
+  width:min(620px,calc(100vw - 36px));
+  padding:8px 8px 8px 8px;
+  border-radius:999px;
+  background:var(--g-thick);
+  backdrop-filter:blur(40px) saturate(200%);
+  -webkit-backdrop-filter:blur(40px) saturate(200%);
+  border:1px solid var(--g-edge);
+  box-shadow:inset 0 1px 0 var(--spec), inset 0 -1px 0 var(--spec-b), var(--drop);
+}
+html[data-theme][data-accent] .dash-main > .addbar input,
+html[data-theme][data-accent] main > .addbar input{
+  background:transparent;border:none;box-shadow:none;
+  padding:10px 10px 10px 14px;
+}
+html[data-theme][data-accent] .dash-main > .addbar input:focus,
+html[data-theme][data-accent] main > .addbar input:focus{
+  background:transparent;border:none;box-shadow:none;
+}
+html[data-theme][data-accent] .dash-main > .addbar button,
+html[data-theme][data-accent] main > .addbar button{
+  height:40px;padding:0 22px;
+}
+@media (max-width:899px){
+  html[data-theme][data-accent] .wrap{padding-bottom:110px}
+}
+
+/* ══════════ CARRIL: tarjetas separadas ══════════ */
+html[data-theme][data-accent] .side-rail .notes-block,
+html[data-theme][data-accent] .side-rail .follow-block,
+html[data-theme][data-accent] .side-rail .proj-block{
+  background:var(--g-reg);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--g-edge);
+  border-radius:22px;
+  padding:16px 17px;
+  margin:0 0 16px;
+  box-shadow:inset 0 1px 0 var(--spec), inset 0 -1px 0 var(--spec-b), var(--drop-sm);
+}
+html[data-theme][data-accent] .side-rail .sec-head{margin:0 0 12px}
+html[data-theme][data-accent] .side-rail .sec-title{font-size:16px}
+html[data-theme][data-accent] .side-rail .nb-peek-row{
+  font-size:13px;color:var(--faint);padding:0;
+}
+/* filas planas dentro de las tarjetas del carril: separadores hairline */
+html[data-theme][data-accent] .side-rail .task{
+  background:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  border:none;border-radius:0;box-shadow:none;margin:0;
+  border-top:1px solid var(--line);
+}
+html[data-theme][data-accent] .side-rail .follow-list .task:first-child,
+html[data-theme][data-accent] .side-rail .projcard:first-child .task{border-top:none}
+html[data-theme][data-accent] .side-rail .task:hover{
+  background:none;box-shadow:none;border-color:var(--line);
+}
+html[data-theme][data-accent] .side-rail .follow-list .task{
+  border-left:2px solid var(--fu);padding-left:11px;border-radius:0;
+}
+html[data-theme][data-accent] .side-rail .trow{padding:11px 0 6px}
+html[data-theme][data-accent] .side-rail .ttitle{font-size:13.5px;font-weight:490}
+html[data-theme][data-accent] .side-rail .projcard{
+  border-bottom:none;border-top:1px solid var(--line);padding:12px 0 6px;
+}
+html[data-theme][data-accent] .side-rail .projcard:first-child{border-top:none;padding-top:0}
+html[data-theme][data-accent] .side-rail .postit{margin-bottom:0}
+html[data-theme][data-accent] .side-rail .nb-list{gap:8px}
+
+/* ══════════ MENOS RUIDO EN LAS FILAS ══════════ */
+@media (hover:hover){
+  html[data-theme][data-accent] .trow .tagplus,
+  html[data-theme][data-accent] .trow .rowdel,
+  html[data-theme][data-accent] .trow .src-tag,
+  html[data-theme][data-accent] .trow .pinbtn:not(.on){
+    opacity:0;transition:opacity .16s ease;
+  }
+  html[data-theme][data-accent] .task:hover .trow .tagplus,
+  html[data-theme][data-accent] .task:hover .trow .rowdel,
+  html[data-theme][data-accent] .task:hover .trow .src-tag,
+  html[data-theme][data-accent] .task:hover .trow .pinbtn:not(.on),
+  html[data-theme][data-accent] .task.open .trow .tagplus,
+  html[data-theme][data-accent] .task.open .trow .rowdel,
+  html[data-theme][data-accent] .task.open .trow .src-tag,
+  html[data-theme][data-accent] .task.open .trow .pinbtn:not(.on){
+    opacity:1;
+  }
+}
+html[data-theme][data-accent] .caret{opacity:.4;font-size:9px}
+html[data-theme][data-accent] .task:hover .caret,
+html[data-theme][data-accent] .task.open .caret{opacity:.75}
+
+/* ══════════ MAS AIRE ══════════ */
+html[data-theme][data-accent] .sec-head{margin:30px 0 12px}
+html[data-theme][data-accent] .filterbar{margin:14px 0 2px}
+html[data-theme][data-accent] .prio-wrap{gap:10px}
+
 </style>
 </head>
 <body>
@@ -2867,6 +3105,33 @@ function renderDashboard(){
   }
   h+='</div>';
   h+='<div class="dash-main">';
+  // ===== HERO — el pulso del dia =====
+  {
+    const hDone   = completedToday();
+    const hTarget = state.dailyTarget || 5;
+    const hOpen   = today.length + (railOn ? 0 : 0);
+    const hIp     = activeTasks().filter(t=>t.status==='In Progress' && visible(t)).length;
+    const hFu     = activeTasks().filter(t=>t.status==='Follow-up' && visible(t)).length;
+    const hPct    = hTarget>0 ? Math.min(100, Math.round(hDone/hTarget*100)) : 0;
+    const C       = 257.6;
+    const hOff    = (C - C*hPct/100).toFixed(1);
+    h+='<div class="hero">'
+      +'<div class="hero-top">'
+        +'<div class="hero-left">'
+          +'<div class="hero-num"><b>'+hOpen+'</b><span>'+(hOpen===1?'task open today':'tasks open today')+'</span></div>'
+          +'<p class="hero-kick">'+hDone+' closed &middot; '+hIp+' in progress &middot; '+hFu+' waiting on someone</p>'
+        +'</div>'
+        +'<div class="ring" onclick="setView(\'history\')" title="Completion history">'
+          +'<svg width="92" height="92" viewBox="0 0 96 96">'
+            +'<defs><linearGradient id="ringgrad" x1="0" y1="0" x2="1" y2="1">'
+              +'<stop class="rg0" offset="0%" stop-color="#D4A62E"/><stop class="rg1" offset="100%" stop-color="#B8860B"/>'
+            +'</linearGradient></defs>'
+            +'<circle class="trk" cx="48" cy="48" r="41" fill="none" stroke-width="7"/>'
+            +'<circle class="val" cx="48" cy="48" r="41" fill="none" stroke-width="7" stroke-dasharray="'+C+'" stroke-dashoffset="'+hOff+'"/>'
+          +'</svg><b>'+hPct+'%</b></div>'
+      +'</div>'
+    +'</div>';
+  }
   h+='<div class="addbar"><input id="dashAdd" placeholder="Add a task for today..."><button id="dashAddBtn">Add</button></div>';
   h+=filterBar();
   const tOpen=state.ui.bucketOpen.Today;
