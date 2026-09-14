@@ -676,7 +676,7 @@ html[data-theme="light"] .notes-block{box-shadow:0 0 26px -10px rgba(var(--gA),.
 .tdel:hover{color:var(--red)}
 
 /* ============ POPOVER / DROPDOWN ============ */
-.pop{position:absolute;z-index:50;background:var(--pop-bg);border:1px solid transparent;border-radius:14px;padding:6px;min-width:175px;
+.pop{position:absolute;z-index:500;background:var(--pop-bg);border:1px solid transparent;border-radius:14px;padding:6px;min-width:175px;
   background:linear-gradient(var(--pop-bg),var(--pop-bg)) padding-box, var(--ring) border-box;
   box-shadow:0 14px 46px rgba(0,0,0,.6),0 0 30px -8px rgba(var(--gA),.5)}
 html[data-theme="light"] .pop{box-shadow:0 14px 46px rgba(20,25,50,.2),0 0 30px -10px rgba(var(--gA),.3)}
@@ -2398,6 +2398,41 @@ html[data-theme][data-accent] .td-overlay .tdetail{
   html[data-theme][data-accent] .td-overlay .tdetail{border-radius:24px !important}
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 10 — los controles viven en la ventana
+   La fila cerrada queda limpia; al abrirla estan TODOS: estado, con quien,
+   bucket, fijar, tags, fecha, subtareas y notas.
+   ══════════════════════════════════════════════════════════════════════ */
+html[data-theme][data-accent] .td-ctrls{
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;
+}
+html[data-theme][data-accent] .td-ctrls .chip{
+  font-size:13.5px;font-weight:520;padding:7px 14px;
+  background:var(--g-thin);border:1px solid var(--line);
+  cursor:pointer;
+}
+html[data-theme][data-accent] .td-ctrls .chip:hover{
+  border-color:rgba(var(--gA),.55);color:var(--txt);
+}
+html[data-theme][data-accent] .td-ctrls .chip .dd{font-size:10px;margin-left:3px;display:inline}
+html[data-theme][data-accent] .td-ctrls .chip .sdot{width:8px;height:8px}
+html[data-theme][data-accent] .td-ctrls .tagb{
+  font-size:13px;padding:6px 12px;color:var(--muted);
+}
+html[data-theme][data-accent] .td-ctrls .tagplus{
+  width:28px;height:28px;font-size:15px;border-style:dashed;
+}
+html[data-theme][data-accent] .td-ctrls .overdue-tag{font-size:13px;padding:6px 12px}
+html[data-theme][data-accent] .td-since{font-size:13px;color:var(--faint)}
+/* el selector de fecha y el de proyecto, al mismo tamano */
+html[data-theme][data-accent] .td-overlay .tdetail .sched-input,
+html[data-theme][data-accent] .td-overlay .tdetail select,
+html[data-theme][data-accent] .td-overlay .tdetail .pbtn,
+html[data-theme][data-accent] .td-overlay .tdetail .projctl button{
+  font-size:13.5px;padding:8px 13px;border-radius:12px;
+}
+
 </style>
 </head>
 <body>
@@ -3441,6 +3476,29 @@ function taskRow(t, opts){
         +'<button class="pbtn" data-act="projon" title="Turn this into a project">Make it a project</button>'
       +'</div>';
 
+  // ===== controles completos: viven DENTRO de la ventana de detalle =====
+  let ctrl='';
+  ctrl+=statusChip(t, false);
+  if(t.status==='Follow-up'){
+    ctrl+='<button class="chip person-chip" data-act="person" title="Follow up with...">'
+      +(t.person? '@'+esc(t.person) : '+ who?')+'<span class="dd">\u25be</span></button>';
+  }
+  if(!opts.hideBucket){
+    ctrl+='<button class="chip bucket-'+t.bucket+'" data-act="bucket" title="Move to...">'
+      +BUCKET_LABEL[t.bucket]+'<span class="dd">\u25be</span></button>';
+  }
+  ctrl+='<button class="chip" data-act="pin" title="'+(t.pinned?'Unpin':'Pin')+'">'
+    +(t.pinned?'\ud83d\udccc Pinned':'\ud83d\udccd Pin')+'</button>';
+  if((t.status==='In Progress'||t.status==='Follow-up') && t.statusSince){
+    const nSince=daysSince(t.statusSince);
+    if(nSince!==null && nSince>=0){
+      ctrl+='<span class="td-since">'+(nSince===0?'since today':nSince===1?'1 day':nSince+' days')+'</span>';
+    }
+  }
+  if(od) ctrl+='<span class="overdue-tag">Overdue</span>';
+  const tagCtrl = t.tags.map(tag=>'<span class="tagb">'+esc(tag)+'</span>').join('')
+    + '<button class="tagplus" data-act="tags" title="Add tag">+</button>';
+
   const stCls = t.status==='Follow-up' ? 'st-fu' : t.status==='In Progress' ? 'st-ip' : 'st-ns';
   return '<div class="task '+stCls+' '+(od?'overdue':'')+' '+(open?'open':'')+' '+(t.pinned?'pinned':'')+'" data-task="'+t.id+'">'
     +'<div class="trow" data-act="toggle">'
@@ -3454,6 +3512,8 @@ function taskRow(t, opts){
     +'<div class="tdetail">'
     +'<div class="td-head"><span class="td-title" data-act="titleedit" title="Click to rename">'+esc(t.title)+'</span>'
       +'<button class="td-close" data-act="closedetail" title="Close">\u2715</button></div>'
+    +'<div class="dlabel">Status</div><div class="td-ctrls">'+ctrl+'</div>'
+    +'<div class="dlabel">Tags</div><div class="td-ctrls">'+tagCtrl+'</div>'
     +schedRow
     +projRow
     +'<div class="dlabel">Subtasks</div>'+subs
