@@ -1977,18 +1977,29 @@ html[data-theme][data-accent] .side-rail .task{background:none;box-shadow:none}
 html[data-theme][data-accent] .side-rail .task:hover{background:none;box-shadow:none}
 
 /* ══════════ VENTANA DE DETALLE ══════════ */
-html[data-theme][data-accent] .task.open::after{
-  content:'';position:fixed;inset:0;z-index:290;
-  background:rgba(12,14,24,.44);
+/* la ventana vive en <body>, NUNCA dentro de un contenedor con scroll:
+   un position:fixed anidado en un scroller hace saltar y parpadear en Safari */
+html[data-theme][data-accent] .td-overlay{
+  position:fixed;inset:0;z-index:290;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
 }
-html[data-theme][data-accent] .task.open > .tdetail{
+html[data-theme][data-accent] .td-scrim{
+  position:absolute;inset:0;background:rgba(12,14,24,.44);
+}
+html[data-theme][data-accent] .td-overlay > .task{
+  position:relative;z-index:1;
+  width:min(880px,calc(100vw - 40px));
+  max-width:100%;margin:0;
+  background:none;border:none;box-shadow:none;border-radius:0;
+}
+html[data-theme][data-accent] .td-overlay > .task > .trow{display:none}
+html[data-theme][data-accent] .td-overlay .tdetail{
   display:block;
-  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
-  z-index:300;
-  width:min(580px,calc(100vw - 30px));
-  max-height:84vh;overflow-y:auto;overscroll-behavior:contain;
+  position:static;transform:none;
+  max-height:86vh;overflow-y:auto;overscroll-behavior:contain;
   padding:0 24px 24px;
-  border:1px solid var(--g-edge);border-top:1px solid var(--g-edge);
+  border:1px solid var(--g-edge);
   border-radius:26px;
   background:var(--g-thick);
   backdrop-filter:blur(44px) saturate(200%);
@@ -2024,7 +2035,6 @@ html[data-theme][data-accent] .td-close{
 html[data-theme][data-accent] .td-close:hover{transform:scale(1.08);color:var(--txt)}
 html[data-theme][data-accent] .td-close:active{transform:scale(.92)}
 /* dentro de la ventana la fila superior estorba */
-html[data-theme][data-accent] .task.open .trow{opacity:.55}
 html[data-theme][data-accent] .task.open .trow .caret{display:none}
 
 /* ══════════ PROYECTOS ACTIVOS: titulo primero ══════════ */
@@ -2070,9 +2080,8 @@ html[data-theme][data-accent] .fb-head label{
 }
 
 /* ---------- VENTANA DE DETALLE: mas grande y respirada ---------- */
-html[data-theme][data-accent] .task.open > .tdetail{
-  width:min(880px,calc(100vw - 40px));
-  max-height:88vh;
+html[data-theme][data-accent] .td-overlay .tdetail{
+  max-height:86vh;
   padding:0 34px 34px;
   border-radius:28px;
 }
@@ -2095,19 +2104,19 @@ html[data-theme][data-accent] .td-title .title-edit{
   background:var(--surface-hi);border:1px solid rgba(var(--gA),.5);
 }
 html[data-theme][data-accent] .td-close{width:34px;height:34px;font-size:14px;margin-top:3px}
-html[data-theme][data-accent] .task.open > .tdetail .dlabel{
+html[data-theme][data-accent] .td-overlay .tdetail .dlabel{
   font-size:13px;font-weight:560;color:var(--faint);margin:22px 0 9px;
 }
-html[data-theme][data-accent] .task.open > .tdetail .subtask{padding:7px 0}
-html[data-theme][data-accent] .task.open > .tdetail .subtask span{font-size:14.5px}
-html[data-theme][data-accent] .task.open > .tdetail .sub-add input,
-html[data-theme][data-accent] .task.open > .tdetail .nl-in{
+html[data-theme][data-accent] .td-overlay .tdetail .subtask{padding:7px 0}
+html[data-theme][data-accent] .td-overlay .tdetail .subtask span{font-size:14.5px}
+html[data-theme][data-accent] .td-overlay .tdetail .sub-add input,
+html[data-theme][data-accent] .td-overlay .tdetail .nl-in{
   padding:10px 14px;font-size:14px;border-radius:12px;
 }
-html[data-theme][data-accent] .task.open > .tdetail .nl-text{font-size:14px}
-html[data-theme][data-accent] .task.open > .tdetail .tdel{margin-top:26px;font-size:13px}
+html[data-theme][data-accent] .td-overlay .tdetail .nl-text{font-size:14px}
+html[data-theme][data-accent] .td-overlay .tdetail .tdel{margin-top:26px;font-size:13px}
 @media (max-width:700px){
-  html[data-theme][data-accent] .task.open > .tdetail{padding:0 20px 24px;border-radius:24px}
+  html[data-theme][data-accent] .td-overlay .tdetail{padding:0 20px 24px;border-radius:24px}
   html[data-theme][data-accent] .td-head{margin:0 -20px 8px;padding:20px 20px 13px;border-radius:24px 24px 0 0}
   html[data-theme][data-accent] .td-title,
   html[data-theme][data-accent] .td-title .title-edit{font-size:20px}
@@ -2119,8 +2128,8 @@ html[data-theme][data-accent] .ttitle:hover{text-decoration:none}
 
 /* ---------- sin animaciones que se repitan en cada render ---------- */
 html[data-theme][data-accent] .hero::before,
-html[data-theme][data-accent] .task.open > .tdetail,
-html[data-theme][data-accent] .task.open::after{animation:none!important}
+html[data-theme][data-accent] .td-overlay,
+html[data-theme][data-accent] .td-overlay .tdetail{animation:none!important}
 
 </style>
 </head>
@@ -3215,16 +3224,30 @@ function noteLogHtml(t){
   h+='</div>';
   return h;
 }
+/* Saca la tarea abierta del contenedor con scroll y la monta en <body>.
+   Mover un nodo con appendChild CONSERVA sus listeners, asi que todo el
+   detalle (subtareas, notas, borrar) sigue funcionando igual. */
+function mountOpenDetail(){
+  const prev=document.getElementById('tdOverlay');
+  if(prev) prev.remove();
+  if(!openTasks.size) return;
+  const el=document.querySelector('.task.open');
+  if(!el) return;
+  const ov=document.createElement('div');
+  ov.id='tdOverlay'; ov.className='td-overlay';
+  const scrim=document.createElement('div');
+  scrim.className='td-scrim';
+  scrim.addEventListener('click',()=>{ openTasks.clear(); render(); });
+  ov.appendChild(scrim);
+  ov.appendChild(el);
+  document.body.appendChild(ov);
+}
+
 function bindTaskEvents(container){
   container.querySelectorAll('.task').forEach(el=>{
     const id=el.dataset.task;
     const t=state.tasks.find(x=>x.id===id); if(!t) return;
     el.addEventListener('click', e=>{
-      // el fondo oscuro de la ventana es un ::after del propio .task
-      if(e.target===el){
-        if(openTasks.has(id)){ openTasks.delete(id); render(); }
-        return;
-      }
       const actEl=e.target.closest('[data-act]');
       const act=actEl?.dataset.act;
       // note-log controls use their own data-attributes (not data-act) — handle before the early return
@@ -3326,7 +3349,9 @@ function bindTaskEvents(container){
       }
       else if(act==='toggle'){
         if(e.target.closest('.tdetail')) return;
-        if(openTasks.has(id)) openTasks.delete(id); else openTasks.add(id);
+        const wasOpen = openTasks.has(id);
+        openTasks.clear();                 // la ventana es modal: una sola
+        if(!wasOpen) openTasks.add(id);
         render();
       }
     });
@@ -4097,7 +4122,13 @@ function _restoreScroll(m){
   const r=document.querySelector('.side-rail'); if(r && m.rail) r.scrollTop=m.rail;
   if(m.win) window.scrollTo(0, m.win);
 }
+let _rendering=false;
 function render(){
+  if(_rendering) return;               // corta cualquier render recursivo
+  _rendering=true;
+  try{ _render(); } finally { _rendering=false; }
+}
+function _render(){
   const memo = _scrollToTopNext ? null : _captureScroll();
   _scrollToTopNext=false;
   renderCore();
@@ -4150,6 +4181,7 @@ function renderCore(){
   if(view==='search') bindSearchBar();
 
   bindTaskEvents(main);
+  mountOpenDetail();
 
   // pipeline ghost: pull rule to today
   document.querySelectorAll('[data-pull]').forEach(b=>b.addEventListener('click',e=>{
