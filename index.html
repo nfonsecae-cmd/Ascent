@@ -2206,6 +2206,102 @@ html[data-theme][data-accent] .side-rail .notes-block,
 html[data-theme][data-accent] .side-rail .follow-block,
 html[data-theme][data-accent] .side-rail .proj-block{overflow:hidden}
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 7 — dos bugs, atacados en la causa
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ══ 1. IPHONE: scroll lateral IMPOSIBLE ══
+   overflow-x:hidden crea un contenedor scrolleable que iOS Safari a veces
+   sigue permitiendo arrastrar. overflow:clip no crea contenedor: no hay
+   nada que scrollear, punto. */
+html[data-theme][data-accent]{
+  overflow-x:hidden;      /* respaldo navegadores viejos */
+  overflow-x:clip;
+  max-width:100%;
+}
+html[data-theme][data-accent] body{
+  overflow-x:hidden;
+  overflow-x:clip;
+  max-width:100%;
+  position:relative;
+}
+html[data-theme][data-accent] .wrap{max-width:100%;overflow-x:clip}
+
+/* la barra superior: todo DENTRO del recuadro, siempre */
+@media (max-width:899px){
+  html[data-theme][data-accent] .wrap{padding-left:13px;padding-right:13px}
+  html[data-theme][data-accent] .topbar{
+    flex-wrap:nowrap;gap:7px;padding:9px 10px 9px 12px;
+    width:100%;max-width:100%;min-width:0;
+  }
+  /* sin esto, cada hijo flex se niega a encogerse por debajo de su contenido */
+  html[data-theme][data-accent] .topbar > *{min-width:0}
+  html[data-theme][data-accent] .brandrow{flex:0 1 auto;overflow:hidden;gap:7px}
+  html[data-theme][data-accent] .brandword{
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;
+  }
+  html[data-theme][data-accent] .kpi-pill{
+    flex:0 0 auto;margin-left:auto;padding:5px 9px;font-size:12px;
+  }
+  html[data-theme][data-accent] .kp-avg{display:none}   /* "+2.8 avg" se va */
+  html[data-theme][data-accent] .gear{width:30px;height:30px;font-size:13px;flex:0 0 auto}
+  html[data-theme][data-accent] .syncdot{flex:0 0 auto}
+  html[data-theme][data-accent] .hdate{
+    flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;
+  }
+  html[data-theme][data-accent] .weekgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  html[data-theme][data-accent] .ttitle,
+  html[data-theme][data-accent] .postit-text,
+  html[data-theme][data-accent] .td-title{overflow-wrap:anywhere}
+  html[data-theme][data-accent] .tmeta,
+  html[data-theme][data-accent] .trow{min-width:0}
+}
+@media (max-width:600px){
+  html[data-theme][data-accent] .hdate{display:none}
+  html[data-theme][data-accent] .weekgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:400px){
+  html[data-theme][data-accent] .brandword{display:none}
+}
+
+/* ══ 2. ESQUINAS: el resaltado del hover NUNCA toca el borde ══
+   Pintar el fondo de la fila entera obliga al navegador a recortarla con
+   el radio del padre, y al componer la capa del hover ese recorte se
+   pierde: por eso la esquina salta de curva a cuadrada. Solucion: el
+   resaltado es un rectangulo redondeado METIDO 6px hacia adentro, asi
+   nunca llega a la esquina y no hay nada que recortar. */
+html[data-theme][data-accent] .list-card .task,
+html[data-theme][data-accent] .list-card .task:hover{
+  background:none;box-shadow:none;transition:none;transform:none;
+}
+html[data-theme][data-accent] .list-card .task{position:relative;z-index:0}
+html[data-theme][data-accent] .list-card .task::after{
+  content:'';position:absolute;inset:3px 6px;
+  border-radius:13px;background:transparent;
+  transition:background .15s ease;
+  z-index:-1;pointer-events:none;
+}
+html[data-theme][data-accent] .list-card .task:hover::after{background:var(--surface-hi)}
+html[data-theme][data-accent] .list-card > *:first-child .task::after{inset:5px 6px 3px}
+html[data-theme][data-accent] .list-card > *:last-child .task::after{inset:3px 6px 5px}
+
+/* ══ 3. LA VENTANA DE DETALLE ══
+   backdrop-filter + border-radius es la combinacion que mas falla: el
+   desenfoque se pinta como un cuadrado detras del borde redondeado y el
+   navegador lo redibuja al entrar y salir el mouse. El velo oscuro ya
+   separa la ventana del fondo, asi que el desenfoque no aporta nada. */
+html[data-theme][data-accent] .td-overlay .tdetail{
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  background:var(--pop-bg);
+  overflow:hidden auto;
+}
+html[data-theme="light"][data-accent]{--pop-bg:rgba(252,253,255,.985)}
+html[data-theme="dark"][data-accent]{--pop-bg:rgba(26,28,37,.985)}
+html[data-theme][data-accent] .td-head{
+  background:var(--pop-bg);
+}
+
 </style>
 </head>
 <body>
