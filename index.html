@@ -2131,6 +2131,81 @@ html[data-theme][data-accent] .hero::before,
 html[data-theme][data-accent] .td-overlay,
 html[data-theme][data-accent] .td-overlay .tdetail{animation:none!important}
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 6 — movil sin scroll lateral + esquinas estables
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ---------- 1. NADA se sale de ancho en movil ---------- */
+@media (max-width:899px){
+  html[data-theme][data-accent],
+  html[data-theme][data-accent] body{
+    max-width:100%;overflow-x:hidden;
+  }
+  html[data-theme][data-accent] .wrap{max-width:100%;overflow-x:hidden}
+  /* la barra superior se aprieta en vez de empujar el engranaje fuera */
+  html[data-theme][data-accent] .topbar{
+    flex-wrap:nowrap;gap:8px;padding:9px 11px 9px 13px;min-width:0;
+  }
+  html[data-theme][data-accent] .brandrow{min-width:0;flex:0 1 auto;overflow:hidden}
+  html[data-theme][data-accent] .brandword{
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  html[data-theme][data-accent] .kpi-pill{margin-left:auto;flex:none}
+  html[data-theme][data-accent] .gear{margin-left:2px;flex:none}
+  html[data-theme][data-accent] .hdate{
+    flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  }
+  /* el contenido largo parte linea en vez de estirar la fila */
+  html[data-theme][data-accent] .ttitle,
+  html[data-theme][data-accent] .postit-text,
+  html[data-theme][data-accent] .td-title{overflow-wrap:anywhere}
+  html[data-theme][data-accent] .tmeta{min-width:0}
+  html[data-theme][data-accent] .chip,
+  html[data-theme][data-accent] .tagb{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  html[data-theme][data-accent] .weekgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  /* con poco ancho la fecha sobra: el KPI y el engranaje mandan */
+  html[data-theme][data-accent] .hdate{display:none}
+  html[data-theme][data-accent] .weekgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:420px){
+  html[data-theme][data-accent] .brandword{display:none}
+}
+
+/* ---------- 2. ESQUINAS QUE NO BAILAN ----------
+   overflow:hidden + border-radius deja de recortar cuando el hijo se
+   compone en su propia capa (pasa al hacer hover). Se le da su propio
+   radio a la primera y ultima fila para que el recorte deje de importar. */
+html[data-theme][data-accent] .list-card > *:first-child,
+html[data-theme][data-accent] .list-card > *:first-child > .trow{
+  border-top-left-radius:20px;border-top-right-radius:20px;
+}
+html[data-theme][data-accent] .list-card > *:last-child,
+html[data-theme][data-accent] .list-card > *:last-child > .trow{
+  border-bottom-left-radius:20px;border-bottom-right-radius:20px;
+}
+html[data-theme][data-accent] .list-card > .prio-wrap:first-child > .task,
+html[data-theme][data-accent] .list-card > .prio-wrap:first-child > .task > .trow{
+  border-top-left-radius:0;border-top-right-radius:20px;
+}
+html[data-theme][data-accent] .list-card > .prio-wrap:last-child > .task,
+html[data-theme][data-accent] .list-card > .prio-wrap:last-child > .task > .trow{
+  border-bottom-left-radius:0;border-bottom-right-radius:20px;
+}
+/* el fondo del hover se pinta en la fila, con transicion propia */
+html[data-theme][data-accent] .list-card .task{
+  transition:background .16s ease;
+}
+html[data-theme][data-accent] .list-card .task:hover{
+  background:var(--surface-hi);box-shadow:none;transform:none;
+}
+/* misma proteccion en las tarjetas del carril */
+html[data-theme][data-accent] .side-rail .notes-block,
+html[data-theme][data-accent] .side-rail .follow-block,
+html[data-theme][data-accent] .side-rail .proj-block{overflow:hidden}
+
 </style>
 </head>
 <body>
