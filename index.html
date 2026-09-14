@@ -2226,7 +2226,7 @@ html[data-theme][data-accent] body{
   max-width:100%;
   position:relative;
 }
-html[data-theme][data-accent] .wrap{max-width:100%;overflow-x:clip}
+/* OJO: .wrap NO lleva max-width aqui — pisaria el tope de 1400px centrado */
 
 /* la barra superior: todo DENTRO del recuadro, siempre */
 @media (max-width:899px){
@@ -2300,6 +2300,53 @@ html[data-theme="light"][data-accent]{--pop-bg:rgba(252,253,255,.985)}
 html[data-theme="dark"][data-accent]{--pop-bg:rgba(26,28,37,.985)}
 html[data-theme][data-accent] .td-head{
   background:var(--pop-bg);
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 8 — la esquina, de verdad esta vez
+   Causa real: un elemento con border-radius Y overflow:auto se promueve
+   a capa propia en cuanto el puntero activa la barra de scroll, y en esa
+   capa el recorte redondeado se pierde -> esquinas cuadradas con el mouse
+   encima, curvas al salir. No se arregla con radios extra.
+   Solucion: la ventana NO scrollea. Scrollea el overlay que la contiene.
+   Sin overflow en el panel no hay capa, no hay recorte, no hay bug.
+   ══════════════════════════════════════════════════════════════════════ */
+html[data-theme][data-accent] .td-overlay{
+  display:flex;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  padding:32px 20px;
+  align-items:flex-start;justify-content:center;
+}
+html[data-theme][data-accent] .td-scrim{
+  position:fixed;inset:0;   /* fijo: cubre aunque el overlay scrollee */
+}
+html[data-theme][data-accent] .td-overlay > .task{
+  margin:auto;              /* centra en ambos ejes sin cortar si es alto */
+  max-height:none;
+}
+html[data-theme][data-accent] .td-overlay .tdetail{
+  max-height:none;
+  overflow:visible;         /* <- lo que elimina el bug */
+  border-radius:28px;
+  background:var(--pop-bg);
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+/* sticky tambien fuerza capa propia: fuera */
+html[data-theme][data-accent] .td-head{
+  position:static;
+  border-radius:28px 28px 0 0;
+}
+@media (max-width:700px){
+  html[data-theme][data-accent] .td-overlay{padding:20px 14px}
+  html[data-theme][data-accent] .td-overlay .tdetail{border-radius:24px}
+  html[data-theme][data-accent] .td-head{border-radius:24px 24px 0 0}
+}
+
+/* ---------- escritorio ancho: que no quede un vacio enorme ---------- */
+@media (min-width:1600px){
+  html[data-theme][data-accent] main:has(.side-rail) .dash-main > *{max-width:1000px}
 }
 
 </style>
