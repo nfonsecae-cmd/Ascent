@@ -1681,6 +1681,196 @@ html[data-theme][data-accent] .sec-head{margin:30px 0 12px}
 html[data-theme][data-accent] .filterbar{margin:14px 0 2px}
 html[data-theme][data-accent] .prio-wrap{gap:10px}
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 3 — densidad y silencio
+   Regla: fila cerrada = solo lo que necesito leer.
+          fila abierta  = todos los controles.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ---------- la fila se lee como en el preview:
+     titulo arriba, datos debajo, alineados a la izquierda ---------- */
+html[data-theme][data-accent] .trow{
+  align-items:flex-start;
+  flex-wrap:wrap;
+  row-gap:0;
+  padding:12px 14px 4px;
+}
+html[data-theme][data-accent] .ck{margin-top:1px}
+html[data-theme][data-accent] .ttitle{
+  flex:1 1 auto;min-width:0;
+  font-size:14.5px;font-weight:490;line-height:1.35;
+}
+html[data-theme][data-accent] .tmeta{
+  flex:1 1 100%;
+  justify-content:flex-start;
+  margin-left:30px;
+  gap:7px;row-gap:6px;
+  padding:7px 0 8px;
+}
+html[data-theme][data-accent] .tmeta:empty{padding:0 0 6px}
+
+/* ---------- fila cerrada: fuera los controles ---------- */
+html[data-theme][data-accent] .task:not(.open) .trow .statcol,
+html[data-theme][data-accent] .task:not(.open) .trow .chip.bucket-quiet,
+html[data-theme][data-accent] .task:not(.open) .trow .tagplus,
+html[data-theme][data-accent] .task:not(.open) .trow .rowdel,
+html[data-theme][data-accent] .task:not(.open) .trow .src-tag,
+html[data-theme][data-accent] .task:not(.open) .trow .pinbtn:not(.on),
+html[data-theme][data-accent] .task:not(.open) .trow .caret,
+html[data-theme][data-accent] .task.st-ns:not(.open) .trow .chip.s-ns{
+  display:none;
+}
+/* "Not Started" no necesita etiqueta: el riel gris de la izquierda ya lo dice */
+html[data-theme][data-accent] .task:not(.open) .trow .chip .dd{display:none}
+html[data-theme][data-accent] .pinbtn.on{color:var(--blue-hi);opacity:1}
+
+/* fila abierta: todo vuelve */
+html[data-theme][data-accent] .task.open .trow .statcol{display:flex}
+html[data-theme][data-accent] .task.open .trow .caret{display:inline-block;opacity:.7}
+
+/* ---------- chips: solo los que informan ---------- */
+html[data-theme][data-accent] .chip.s-ip,
+html[data-theme][data-accent] .chip.s-fu{font-weight:540}
+html[data-theme][data-accent] .daytrack{
+  background:none!important;border:none!important;
+  color:var(--faint)!important;font-weight:470;padding:4px 0!important;
+}
+html[data-theme][data-accent] .track-stale{color:#C97A12!important;font-weight:560}
+html[data-theme][data-accent] .tagb{
+  background:none;border:1px solid var(--line);color:var(--faint);font-weight:470;
+}
+html[data-theme][data-accent] .sub-badge{
+  background:none;border:none;color:var(--faint);padding:4px 0;font-weight:470;
+}
+html[data-theme][data-accent] .chip.proj-ref,
+html[data-theme][data-accent] .chip.proj-badge{
+  background:none;border:1px solid var(--line);color:var(--muted);font-weight:490;
+}
+html[data-theme][data-accent] .overdue-tag{
+  text-transform:none;font-size:11.5px;letter-spacing:-.005em;
+}
+
+/* ---------- ritmo vertical mas apretado ---------- */
+html[data-theme][data-accent] .task{margin-bottom:5px}
+html[data-theme][data-accent] .sec-head{margin:26px 0 9px}
+html[data-theme][data-accent] .pin-band{
+  background:none;border:none;border-left:2px solid rgba(var(--gA),.7);
+  border-radius:0;padding:2px 0 2px 12px;margin:2px 0 14px;
+}
+html[data-theme][data-accent] .pin-label{
+  font-size:12px;color:var(--faint);font-weight:500;margin:0 0 6px;
+}
+html[data-theme][data-accent] .pin-band .task{background:none;box-shadow:none;border-color:transparent}
+
+/* ---------- barra de filtro: que no grite ---------- */
+html[data-theme][data-accent] .filterbar{
+  background:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  border:none;box-shadow:none;padding:2px 2px;margin:10px 0 0;gap:5px;
+}
+html[data-theme][data-accent] .fb-chip{
+  background:none;border:1px solid var(--line);color:var(--faint);
+  font-size:11.5px;padding:4px 11px;
+}
+html[data-theme][data-accent] .fb-chip.on{
+  background:linear-gradient(170deg,rgba(var(--gA),.22),rgba(var(--gA),.09));
+  border:1px solid rgba(var(--gA),.35);color:var(--txt);box-shadow:none;
+}
+html[data-theme][data-accent] .fb-label{color:var(--faint);font-size:11.5px;font-weight:470}
+
+/* ---------- columna central: ancho de lectura ---------- */
+@media (min-width:1220px){
+  html[data-theme][data-accent] main:has(.side-rail) .dash-main > *{
+    max-width:860px;
+  }
+}
+
+/* ---------- hero: anillo mas fino ---------- */
+html[data-theme][data-accent] .ring .val{
+  filter:drop-shadow(0 0 5px rgba(var(--gA),.55));
+}
+html[data-theme][data-accent] .ring .trk{stroke:var(--line)}
+html[data-theme][data-accent] .hero{margin-bottom:4px}
+
+/* ══════════ NOTAS: sin botones a la vista ══════════ */
+html[data-theme][data-accent] .postit{
+  position:relative;gap:0;padding:12px 14px;
+  border-left:2px solid transparent;
+}
+html[data-theme][data-accent] .postit.pinned{border-left-color:var(--blue-hi)}
+html[data-theme][data-accent] .postit-text{font-size:13.5px;line-height:1.45}
+html[data-theme][data-accent] .postit-pin,
+html[data-theme][data-accent] .postit-ord,
+html[data-theme][data-accent] .postit-del{
+  transition:opacity .16s ease;
+}
+@media (hover:hover){
+  html[data-theme][data-accent] .postit-pin,
+  html[data-theme][data-accent] .postit-ord,
+  html[data-theme][data-accent] .postit-del{opacity:0}
+  html[data-theme][data-accent] .postit:hover .postit-pin,
+  html[data-theme][data-accent] .postit:hover .postit-ord,
+  html[data-theme][data-accent] .postit:hover .postit-del{opacity:1}
+}
+@media (hover:none){
+  html[data-theme][data-accent] .postit-pin,
+  html[data-theme][data-accent] .postit-ord,
+  html[data-theme][data-accent] .postit-del{opacity:.3}
+}
+html[data-theme][data-accent] .postit-pin{
+  position:absolute;left:-2px;top:0;bottom:0;width:14px;
+  font-size:0;background:none;border:none;cursor:pointer;
+}
+html[data-theme][data-accent] .postit-ord{margin-left:6px}
+html[data-theme][data-accent] .postit-ord button{width:18px;height:15px;font-size:7px}
+
+/* ══════════ CARRIL: texto tranquilo, detalle al abrir ══════════ */
+/* chips del carril = texto plano mientras la fila esta cerrada */
+html[data-theme][data-accent] .side-rail .task:not(.open) .tmeta .chip,
+html[data-theme][data-accent] .side-rail .task:not(.open) .tmeta .tagb,
+html[data-theme][data-accent] .side-rail .task:not(.open) .tmeta .daytrack{
+  background:none!important;border:none!important;box-shadow:none!important;
+  padding:0!important;font-size:12px;font-weight:470;color:var(--faint)!important;
+}
+html[data-theme][data-accent] .side-rail .task:not(.open) .tmeta{
+  gap:10px;padding:4px 0 10px;
+}
+/* la seccion ya se llama Follow-up: la etiqueta en cada fila sobra */
+html[data-theme][data-accent] .side-rail .follow-list .task:not(.open) .chip.s-fu,
+html[data-theme][data-accent] .side-rail .task:not(.open) .sub-badge{display:none}
+html[data-theme][data-accent] .side-rail .task:not(.open) .person-chip{
+  color:var(--muted)!important;font-weight:520;
+}
+html[data-theme][data-accent] .side-rail .ttitle{font-size:13.5px;font-weight:500}
+html[data-theme][data-accent] .side-rail .trow{padding:11px 0 0}
+html[data-theme][data-accent] .side-rail .tmeta{margin-left:30px}
+
+/* proyectos: titulo + una linea + barra. Nada mas. */
+html[data-theme][data-accent] .projcard .task:not(.open) .tmeta{display:none}
+html[data-theme][data-accent] .projcard .task:not(.open) .trow{padding-bottom:8px}
+html[data-theme][data-accent] .projcard .ttitle{font-size:14px;font-weight:540}
+html[data-theme][data-accent] .pc-m{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;color:var(--faint);font-weight:470;margin:0 0 8px;
+}
+html[data-theme][data-accent] .pc-age,
+html[data-theme][data-accent] .pc-sub{font-size:12px;color:var(--faint)}
+html[data-theme][data-accent] .pc-pause{
+  margin-left:auto;background:none;border:1px solid var(--line);
+  color:var(--faint);font-size:11px;padding:3px 10px;border-radius:999px;cursor:pointer;
+  transition:opacity .16s ease;
+}
+@media (hover:hover){
+  html[data-theme][data-accent] .pc-pause{opacity:0}
+  html[data-theme][data-accent] .projcard:hover .pc-pause{opacity:1}
+}
+html[data-theme][data-accent] .pc-bar{margin-bottom:4px}
+
+/* ══════════ AGENDA: tarjetas mas bajas ══════════ */
+html[data-theme][data-accent] .wd{min-height:92px}
+html[data-theme][data-accent] .wk-legend{font-size:11px;color:var(--faint);margin-top:8px}
+html[data-theme][data-accent] .lg-hint{color:var(--faint)}
+
 </style>
 </head>
 <body>
@@ -1893,7 +2083,7 @@ function normalizeState(){
   if(!state.ui.theme) state.ui.theme = 'light';
   if(!state.ui.accent) state.ui.accent = 'ivory';
   /* Liquid Glass build: arranca en claro una sola vez, luego respeta tu eleccion */
-  if(!state.ui.glassV1){ state.ui.theme='light'; state.ui.accent='ivory'; state.ui.glassV1=1; }
+  if(!state.ui.glassV1){ state.ui.theme='light'; state.ui.accent='ivory'; state.ui.groupByStatus=false; state.ui.glassV1=1; }
   if(!Array.isArray(state.notes)) state.notes = [];
   if(!state.completions || typeof state.completions !== 'object') state.completions = {};
   if(typeof state.dailyTarget !== 'number') state.dailyTarget = 5;
@@ -2968,7 +3158,7 @@ function filterActive(){ return !!filterStatus; }
 
 // render a bucket's tasks: pinned band first, then collapsible status subgroups
 function renderBucketBody(tasks, bkey){
-  const ro={compactStatus:true, quietBucket:true};
+  const ro={compactStatus:false, quietBucket:true};
   const pinned = tasks.filter(t=>t.pinned);
   const rest = tasks.filter(t=>!t.pinned);
   let h='';
