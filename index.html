@@ -1871,6 +1871,189 @@ html[data-theme][data-accent] .wd{min-height:92px}
 html[data-theme][data-accent] .wk-legend{font-size:11px;color:var(--faint);margin-top:8px}
 html[data-theme][data-accent] .lg-hint{color:var(--faint)}
 
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIQUID GLASS · PASE 4
+   1. las tarjetas FLOTAN (superficie solida + sombra real)
+   2. Today y Prioridades = UNA tarjeta agrupada con separadores
+   3. el detalle sale en ventana, no expandiendo la fila
+   ══════════════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"][data-accent]{
+  --surface:rgba(255,255,255,.82);
+  --surface-hi:rgba(255,255,255,.97);
+  --lift:0 1px 2px rgba(20,24,44,.05), 0 18px 34px -18px rgba(20,24,44,.40);
+  --lift-hi:0 1px 2px rgba(20,24,44,.06), 0 26px 46px -20px rgba(20,24,44,.50);
+  --sheet:0 50px 100px -34px rgba(16,20,38,.55), 0 10px 30px -14px rgba(16,20,38,.28);
+}
+html[data-theme="dark"][data-accent]{
+  --surface:rgba(255,255,255,.065);
+  --surface-hi:rgba(255,255,255,.105);
+  --lift:0 1px 2px rgba(0,0,0,.4), 0 22px 40px -20px rgba(0,0,0,.85);
+  --lift-hi:0 1px 2px rgba(0,0,0,.5), 0 30px 54px -22px rgba(0,0,0,.95);
+  --sheet:0 50px 110px -30px rgba(0,0,0,.9), 0 10px 30px -14px rgba(0,0,0,.6);
+}
+
+/* ---------- superficies de CONTENIDO: sin backdrop-filter ----------
+   (un ancestro con backdrop-filter ancla los position:fixed y rompe
+    la ventana de detalle — por eso el blur se queda solo en el cromo) */
+html[data-theme][data-accent] .list-card,
+html[data-theme][data-accent] .side-rail .notes-block,
+html[data-theme][data-accent] .side-rail .follow-block,
+html[data-theme][data-accent] .side-rail .proj-block,
+html[data-theme][data-accent] .task,
+html[data-theme][data-accent] .wd,
+html[data-theme][data-accent] .hist-card,
+html[data-theme][data-accent] .hist-row,
+html[data-theme][data-accent] .mng-row,
+html[data-theme][data-accent] .pcard{
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+
+/* ══════════ TARJETA AGRUPADA (Today · Prioridades · listas) ══════════ */
+html[data-theme][data-accent] .list-card{
+  background:var(--surface);
+  border:1px solid var(--g-edge);
+  border-radius:20px;
+  box-shadow:inset 0 1px 0 var(--spec), var(--lift);
+  overflow:hidden;
+  margin:0 0 6px;
+}
+html[data-theme][data-accent] .list-card .task,
+html[data-theme][data-accent] .list-card .prio-wrap{
+  position:relative;
+  background:none;border:none;border-radius:0;box-shadow:none;margin:0;
+}
+html[data-theme][data-accent] .list-card .task{border-left:none!important}
+html[data-theme][data-accent] .list-card > .task + .task::before,
+html[data-theme][data-accent] .list-card > .prio-wrap + .prio-wrap::before{
+  content:'';position:absolute;left:44px;right:0;top:0;height:1px;background:var(--line);
+}
+html[data-theme][data-accent] .list-card .task:hover{
+  background:var(--surface-hi);box-shadow:none;
+}
+html[data-theme][data-accent] .list-card .trow{padding:13px 16px 5px}
+html[data-theme][data-accent] .list-card .tmeta{margin-left:30px}
+html[data-theme][data-accent] .list-card .empty{padding:22px 0}
+/* el bloque de fijadas vive dentro de la tarjeta, sin caja propia */
+html[data-theme][data-accent] .list-card .pin-band{
+  border:none;border-left:none;padding:6px 0 0;margin:0;background:none;
+}
+html[data-theme][data-accent] .list-card .pin-label{padding-left:16px;margin-bottom:2px}
+
+/* prioridades: numero + fila */
+html[data-theme][data-accent] .prio-list.list-card{padding:0}
+html[data-theme][data-accent] .prio-wrap{
+  display:flex;align-items:flex-start;gap:0;padding:0 0 0 14px;
+}
+html[data-theme][data-accent] .prio-n{
+  margin:14px 0 0;flex:none;
+}
+html[data-theme][data-accent] .prio-wrap .task{flex:1;min-width:0}
+html[data-theme][data-accent] .prio-wrap .trow{padding-left:10px}
+html[data-theme][data-accent] .prio-wrap .tmeta{margin-left:10px}
+
+/* filas sueltas (vistas sin tarjeta) siguen flotando solas */
+html[data-theme][data-accent] .task{
+  background:var(--surface);
+  box-shadow:inset 0 1px 0 var(--spec), var(--lift);
+}
+html[data-theme][data-accent] .task:hover{box-shadow:inset 0 1px 0 var(--spec), var(--lift-hi)}
+html[data-theme][data-accent] .task.st-ns{background:var(--surface)}
+html[data-theme][data-accent] .task.st-ns:hover{background:var(--surface-hi)}
+
+/* ══════════ ELEVACION REAL EN TODAS LAS TARJETAS ══════════ */
+html[data-theme][data-accent] .side-rail .notes-block,
+html[data-theme][data-accent] .side-rail .follow-block,
+html[data-theme][data-accent] .side-rail .proj-block{
+  background:var(--surface);
+  box-shadow:inset 0 1px 0 var(--spec), var(--lift);
+}
+html[data-theme][data-accent] .wd{
+  background:var(--surface);
+  box-shadow:inset 0 1px 0 var(--spec), var(--lift);
+}
+html[data-theme][data-accent] .wd:hover{box-shadow:inset 0 1px 0 var(--spec), var(--lift-hi)}
+html[data-theme][data-accent] .hero{box-shadow:inset 0 1px 0 var(--spec), var(--lift-hi)}
+html[data-theme][data-accent] .postit{
+  background:var(--surface-hi);box-shadow:none;border:1px solid var(--line);
+}
+html[data-theme][data-accent] .side-rail .task{background:none;box-shadow:none}
+html[data-theme][data-accent] .side-rail .task:hover{background:none;box-shadow:none}
+
+/* ══════════ VENTANA DE DETALLE ══════════ */
+html[data-theme][data-accent] .task.open::after{
+  content:'';position:fixed;inset:0;z-index:290;
+  background:rgba(12,14,24,.34);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  animation:tdFade .2s ease both;
+}
+html[data-theme][data-accent] .task.open > .tdetail{
+  display:block;
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:300;
+  width:min(580px,calc(100vw - 30px));
+  max-height:84vh;overflow-y:auto;overscroll-behavior:contain;
+  padding:0 24px 24px;
+  border:1px solid var(--g-edge);border-top:1px solid var(--g-edge);
+  border-radius:26px;
+  background:var(--g-thick);
+  backdrop-filter:blur(44px) saturate(200%);
+  -webkit-backdrop-filter:blur(44px) saturate(200%);
+  box-shadow:inset 0 1px 0 var(--spec), var(--sheet);
+  animation:tdIn .28s cubic-bezier(.32,.72,0,1) both;
+  scrollbar-width:thin;
+}
+@keyframes tdFade{from{opacity:0}to{opacity:1}}
+@keyframes tdIn{from{opacity:0;transform:translate(-50%,-46%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){
+  html[data-theme][data-accent] .task.open > .tdetail,
+  html[data-theme][data-accent] .task.open::after{animation:none}
+}
+/* cabecera pegajosa de la ventana */
+html[data-theme][data-accent] .td-head{
+  position:sticky;top:0;z-index:2;
+  display:flex;align-items:flex-start;gap:12px;
+  margin:0 -24px 6px;padding:22px 24px 14px;
+  background:linear-gradient(to bottom,var(--pop-bg) 72%,transparent);
+  border-radius:26px 26px 0 0;
+}
+html[data-theme][data-accent] .td-title{
+  flex:1;min-width:0;font-size:19px;font-weight:620;letter-spacing:-.026em;
+  line-height:1.3;color:var(--txt);
+}
+html[data-theme][data-accent] .td-close{
+  flex:none;width:30px;height:30px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--muted);
+  background:var(--g-thin);border:1px solid var(--g-edge);
+  transition:transform .18s cubic-bezier(.32,.72,0,1),color .18s;
+}
+html[data-theme][data-accent] .td-close:hover{transform:scale(1.08);color:var(--txt)}
+html[data-theme][data-accent] .td-close:active{transform:scale(.92)}
+/* dentro de la ventana la fila superior estorba */
+html[data-theme][data-accent] .task.open .trow{opacity:.55}
+html[data-theme][data-accent] .task.open .trow .caret{display:none}
+body:has(.task.open){overflow:hidden}
+
+/* ══════════ PROYECTOS ACTIVOS: titulo primero ══════════ */
+html[data-theme][data-accent] .projcard{display:flex;flex-direction:column}
+html[data-theme][data-accent] .projcard .task{order:1}
+html[data-theme][data-accent] .projcard .pc-m{order:2;margin:0 0 9px 30px}
+html[data-theme][data-accent] .projcard .pc-bar{order:3;margin:0 0 4px 30px}
+html[data-theme][data-accent] .projcard .trow{padding:12px 0 4px}
+
+/* ══════════ FOLLOW-UP: una linea, nada mas ══════════ */
+html[data-theme][data-accent] .side-rail .follow-list .task{
+  border-left:none;padding-left:0;
+}
+html[data-theme][data-accent] .side-rail .follow-list .task .ck{
+  border-color:var(--fu);
+}
+html[data-theme][data-accent] .side-rail .task:not(.open) .tmeta{
+  padding:2px 0 11px;
+}
+
 </style>
 </head>
 <body>
@@ -2925,6 +3108,8 @@ function taskRow(t, opts){
     +'</span></span>'
     +'</div>'
     +'<div class="tdetail">'
+    +'<div class="td-head"><span class="td-title">'+esc(t.title)+'</span>'
+      +'<button class="td-close" data-act="closedetail" title="Close">\u2715</button></div>'
     +schedRow
     +projRow
     +'<div class="dlabel">Subtasks</div>'+subs
@@ -2967,6 +3152,11 @@ function bindTaskEvents(container){
     const id=el.dataset.task;
     const t=state.tasks.find(x=>x.id===id); if(!t) return;
     el.addEventListener('click', e=>{
+      // el fondo oscuro de la ventana es un ::after del propio .task
+      if(e.target===el){
+        if(openTasks.has(id)){ openTasks.delete(id); render(); }
+        return;
+      }
       const actEl=e.target.closest('[data-act]');
       const act=actEl?.dataset.act;
       // note-log controls use their own data-attributes (not data-act) — handle before the early return
@@ -3061,6 +3251,10 @@ function bindTaskEvents(container){
         e.stopPropagation();
         const inp=el.querySelector('[data-act="notelogadd"]');
         if(inp && inp.value.trim()){ addTaskNote(id, inp.value); }
+      }
+      else if(act==='closedetail'){
+        e.stopPropagation();
+        openTasks.delete(id); render();
       }
       else if(act==='toggle'){
         if(e.target.closest('.tdetail')) return;
@@ -3326,7 +3520,7 @@ function renderDashboard(){
   h+=filterBar();
   const tOpen=state.ui.bucketOpen.Today;
   h+=secHead('Today', today.length, '', BUCKET_COLOR.Today, 'Today', tOpen);
-  if(tOpen) h+= today.length? renderBucketBody(today,'Today') : '<div class="empty">The day is clear. Add what must be done.</div>';
+  if(tOpen) h+= today.length? '<div class="list-card">'+renderBucketBody(today,'Today')+'</div>' : '<div class="empty">The day is clear. Add what must be done.</div>';
   const wOpen=state.ui.bucketOpen.Week;
   // ===== AGENDA · próximos 7 días desde MAÑANA =====
   if(!filterActive()){
@@ -3372,7 +3566,7 @@ function renderDashboard(){
   h+=secHead('Week priorities', prios.length, '', BUCKET_COLOR.Week, 'Prio', prOpen);
   if(prOpen){
     h+= prios.length
-      ? '<div class="prio-list">'+prios.map((t,i)=>
+      ? '<div class="prio-list list-card">'+prios.map((t,i)=>
           '<div class="prio-wrap"><span class="prio-n">'+(i+1)+'</span>'+taskRow(t,{quietBucket:true})+'</div>'
         ).join('')+'</div>'
       : '<div class="empty">No priorities set for this week.</div>';
@@ -3406,8 +3600,8 @@ function renderList(list){
         const gid='repo:'+k;
         const gOpen=state.ui.bucketOpen[gid]!==false;
         h+=secHead(k, g.length, '', BUCKET_COLOR.Later, gid, gOpen);
-        if(gOpen) h+= g.sort((a,b)=>a.createdAt-b.createdAt)
-          .map(t=>taskRow(t,{quietBucket:true})).join('');
+        if(gOpen) h+= '<div class="list-card">'+g.sort((a,b)=>a.createdAt-b.createdAt)
+          .map(t=>taskRow(t,{quietBucket:true})).join('')+'</div>';
       });
     }
   } else {
@@ -4322,6 +4516,16 @@ window.startAscentApp = async function(){
   requestAnimationFrame(applyTheme);
   setInterval(()=>{ generateFromRules(); promoteDueScheduled(); render(); }, 60*60*1000);
 };
+
+/* Esc cierra la ventana de detalle */
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Escape') return;
+  if(typeof openTasks !== 'undefined' && openTasks.size){
+    const ae=document.activeElement;
+    if(ae && (ae.tagName==='INPUT' || ae.tagName==='TEXTAREA')) return;
+    openTasks.clear(); render();
+  }
+});
 </script>
 
 <!-- ================= FIREBASE (cloud sync) ================= -->
